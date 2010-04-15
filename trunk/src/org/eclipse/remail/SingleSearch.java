@@ -11,6 +11,9 @@ import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -18,6 +21,7 @@ import org.eclipse.remail.modules.MailSearch;
 import org.eclipse.remail.modules.PostgreSearch;
 import org.eclipse.remail.modules.MboxSearch;
 import org.eclipse.remail.modules.MboxCore;
+import org.eclipse.remail.modules.ProjectSearch;
 import org.eclipse.remail.preferences.PreferenceConstants;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
@@ -35,7 +39,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class SingleSearch extends AbstractHandler
 {
-	
+
 	IPreferenceStore store;
 
 	/**
@@ -49,21 +53,58 @@ public class SingleSearch extends AbstractHandler
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
 				.getActiveMenuSelection(event);
 		Object firstElement = selection.getFirstElement();
-		if (!firstElement.getClass().getName().contains("CompilationUnit"))
-		{
-			MessageDialog.openInformation(HandlerUtil.getActiveShell(event),
-					"Information", "Selected object is not a class");
-		} else
+		System.out.println(firstElement.getClass().getName());
+		if (firstElement.getClass().getName().contains("CompilationUnit"))
 		{
 			ICompilationUnit cu = (ICompilationUnit) firstElement;
 			IResource res = cu.getResource();
 			String name = res.getName();
 			IPath fullPath = res.getProjectRelativePath();
 			Search search = new Search();
-			LinkedList<Mail> mailList = search.Execute(name, fullPath.toString(), false);
+			LinkedList<Mail> mailList = search.Execute(name, fullPath
+					.toString(), false);
 			Search.updateMailView(mailList);
+		} else if (firstElement.getClass().getName().contains("JavaProject"))
+		{
+			System.out.println("JP");
+			IJavaProject javaProject = (IJavaProject) firstElement;
+			this.projectSearch(javaProject);
+			
+		} else
+		{
+			MessageDialog.openInformation(HandlerUtil.getActiveShell(event),
+					"Information", "Selected object is not a class");
 		}
 		return null;
+	}
+	
+	public void projectSearch(IJavaProject javaProject)
+	{
+		IPackageFragment[] packageFragments = null;
+		try
+		{
+			LinkedList<ICompilationUnit> compList = new LinkedList<ICompilationUnit>();
+			packageFragments = javaProject.getPackageFragments();
+			for (IPackageFragment pf : packageFragments)
+			{
+				//IResource pfres = pf.getResource();
+				//System.out.println(pfres.getName());
+				ICompilationUnit[] compilationUnits = pf.getCompilationUnits();
+				for (ICompilationUnit cu : compilationUnits)
+				{
+//					IResource cures = cu.getResource();
+//					String name = cures.getName();
+//					System.out.println(name);
+					compList.add(cu);
+				}
+			}
+			Thread thr = new Thread( new ProjectSearch(javaProject, compList) );
+			thr.start();
+		} catch (JavaModelException e)
+		{
+			e.printStackTrace();
+
+		}
 	}
 
 }

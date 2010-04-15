@@ -1,5 +1,7 @@
 package org.eclipse.remail.decorators;
 
+import java.sql.*;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -17,9 +19,35 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 		String name = res.getName();
 		if (name.contains(".java"))
 		{
-			Search search = new Search();
-			int count = search.Execute(name, res.getFullPath().toString(), true).size();
-			decoration.addSuffix(" (" + count + ")");
+			try
+			{
+				Class.forName("org.sqlite.JDBC");
+			} catch (ClassNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace(); return;
+			}
+			Connection conn;
+			try
+			{
+				conn = DriverManager.getConnection("jdbc:sqlite:remail.db");
+				Statement stat = conn.createStatement();
+				ResultSet rs = stat.executeQuery("select hits from "
+						+ res.getProject().getName() + " where name = '" + name
+						+ "';");
+				if (rs.next())
+				{
+					System.out.println(name + ": " + rs.getString("hits"));
+					decoration.addSuffix(" (" + rs.getString("hits") + ")");
+				}
+				rs.close();
+				conn.close();
+			} catch (SQLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 	}
 

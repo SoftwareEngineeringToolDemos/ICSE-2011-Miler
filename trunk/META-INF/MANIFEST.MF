@@ -13,5 +13,6 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/postgresql-8.4-701.jdbc4.jar,
+ lib/sqlitejdbc-v056.jar,
  lib/commons-lang-2.4.jar,
  .
