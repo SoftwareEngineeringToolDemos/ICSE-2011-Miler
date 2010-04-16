@@ -1,5 +1,6 @@
 package org.eclipse.remail.decorators;
 
+import java.io.File;
 import java.sql.*;
 
 import org.eclipse.core.resources.IResource;
@@ -25,15 +26,16 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 			} catch (ClassNotFoundException e)
 			{
 				// TODO Auto-generated catch block
-				e.printStackTrace(); return;
+				e.printStackTrace();
 			}
 			Connection conn;
 			try
 			{
-				conn = DriverManager.getConnection("jdbc:sqlite:remail.db");
+				conn = DriverManager.getConnection("jdbc:sqlite:"
+						+ res.getProject().getLocation().toString()
+						+ File.separator + "remail.db");
 				Statement stat = conn.createStatement();
-				ResultSet rs = stat.executeQuery("select hits from "
-						+ res.getProject().getName() + " where name = '" + name
+				ResultSet rs = stat.executeQuery("select hits from hits where name = '" + name
 						+ "';");
 				if (rs.next())
 				{

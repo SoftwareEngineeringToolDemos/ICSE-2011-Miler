@@ -69,7 +69,13 @@ public class SingleSearch extends AbstractHandler
 			System.out.println("JP");
 			IJavaProject javaProject = (IJavaProject) firstElement;
 			this.projectSearch(javaProject);
-			
+
+		} else if (firstElement.getClass().getName().contains("PackageFragment"))
+		{
+			System.out.println("PF");
+			IPackageFragment packageFragment = (IPackageFragment) firstElement;
+			this.packageSearch(packageFragment);
+
 		} else
 		{
 			MessageDialog.openInformation(HandlerUtil.getActiveShell(event),
@@ -77,7 +83,29 @@ public class SingleSearch extends AbstractHandler
 		}
 		return null;
 	}
-	
+
+
+	private void packageSearch(IPackageFragment packageFragment)
+	{
+		ICompilationUnit[] compilationUnits = null;
+		try
+		{
+			compilationUnits = packageFragment.getCompilationUnits();
+		} catch (JavaModelException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		LinkedList<ICompilationUnit> compList = new LinkedList<ICompilationUnit>();
+		for (ICompilationUnit cu : compilationUnits)
+		{
+			compList.add(cu);
+		}
+		Thread thr = new Thread(new ProjectSearch(packageFragment.getResource(), compList));
+		thr.start();
+	}
+
+
 	public void projectSearch(IJavaProject javaProject)
 	{
 		IPackageFragment[] packageFragments = null;
@@ -87,18 +115,18 @@ public class SingleSearch extends AbstractHandler
 			packageFragments = javaProject.getPackageFragments();
 			for (IPackageFragment pf : packageFragments)
 			{
-				//IResource pfres = pf.getResource();
-				//System.out.println(pfres.getName());
+				// IResource pfres = pf.getResource();
+				// System.out.println(pfres.getName());
 				ICompilationUnit[] compilationUnits = pf.getCompilationUnits();
 				for (ICompilationUnit cu : compilationUnits)
 				{
-//					IResource cures = cu.getResource();
-//					String name = cures.getName();
-//					System.out.println(name);
+					// IResource cures = cu.getResource();
+					// String name = cures.getName();
+					// System.out.println(name);
 					compList.add(cu);
 				}
 			}
-			Thread thr = new Thread( new ProjectSearch(javaProject, compList) );
+			Thread thr = new Thread(new ProjectSearch(javaProject.getResource(), compList));
 			thr.start();
 		} catch (JavaModelException e)
 		{

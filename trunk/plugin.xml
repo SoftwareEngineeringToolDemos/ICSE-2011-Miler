@@ -132,7 +132,7 @@
          <decorator
             objectClass="org.eclipse.core.resources.IResource"
             adaptable="true"
-            label="%DecoratorStandard.name"
+            label="REmail"
             state="true"
             lightweight= "true"
             quadrant = "BOTTOM_RIGHT"
