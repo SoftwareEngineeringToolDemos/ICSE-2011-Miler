@@ -5,7 +5,7 @@ package org.eclipse.remail.preferences;
  */
 public class PreferenceConstants {
 
-	public static final String P_MBOX_PATH = "mboxPath";
+	public static final String P_MBOX_PATH = "mboxPath2";
 	
 	public static final String P_POSTGRE_LOGIN = "postgreLogin";
 	

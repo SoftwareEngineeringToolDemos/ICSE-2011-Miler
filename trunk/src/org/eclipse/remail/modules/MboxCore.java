@@ -24,7 +24,7 @@ public class MboxCore {
 	public LinkedList<Mail> getMailsByClassname(String classname) {
 		mailList = new LinkedList<Mail>();
 		try {
-			BufferedReader f = prepareRead(store.getString(PreferenceConstants.P_MBOX_PATH));
+			BufferedReader f = prepareRead(getFirstPath(store.getString(PreferenceConstants.P_MBOX_PATH)));
 			f.readLine();
 			// System.out.println(line);
 			while (getNextMail(f, classname))
@@ -35,6 +35,11 @@ public class MboxCore {
 		}
 		//System.out.println("ThunderSource OK");
 		return mailList;
+	}
+
+	public String getFirstPath(String pathlist)
+	{
+		return pathlist.split(File.pathSeparator)[0];
 	}
 
 	private boolean getNextMail(BufferedReader f, String classname)

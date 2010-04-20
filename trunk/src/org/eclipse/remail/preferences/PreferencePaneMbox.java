@@ -34,8 +34,9 @@ public class PreferencePaneMbox extends FieldEditorPreferencePage implements
 	 */
 	public void createFieldEditors()
 	{
-		addField(new FileFieldEditor(PreferenceConstants.P_MBOX_PATH,
-				"&Mailist MBox file:", getFieldEditorParent()));
+		addField(new FilePathEditor(PreferenceConstants.P_MBOX_PATH, "Active &Mailist MBox file:", "Select File", getFieldEditorParent()));
+//		addField(new FileFieldEditor(PreferenceConstants.P_MBOX_PATH,
+//				"&Mailist MBox file:", getFieldEditorParent()));
 		addField(new FileFieldEditor(PreferenceConstants.P_MILER,
 				"Miler JAR location:", getFieldEditorParent()));
 	}
