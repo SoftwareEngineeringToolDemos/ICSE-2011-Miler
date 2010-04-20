@@ -1,16 +1,20 @@
 package org.eclipse.remail;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
+import org.eclipse.remail.util.SQLiteMailListConstructor;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.*;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jface.text.IMarkSelection;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -65,7 +69,7 @@ public class MailView extends ViewPart
 		{
 			Mail mail = (Mail) parentElement;
 			LinkedList<Mail> mailList = (LinkedList<Mail>) viewer.getInput();
-			//System.out.println("|getChildren|");
+			// System.out.println("|getChildren|");
 
 			LinkedList<Mail> children = new LinkedList<Mail>();
 
@@ -84,7 +88,7 @@ public class MailView extends ViewPart
 		{
 			Mail mail = (Mail) element;
 			LinkedList<Mail> mailList = (LinkedList<Mail>) viewer.getInput();
-			//System.out.println("|getParent|");
+			// System.out.println("|getParent|");
 			LinkedList<Mail> threadMails = new LinkedList<Mail>();
 			for (Mail m : mailList)
 			{
@@ -113,7 +117,7 @@ public class MailView extends ViewPart
 		{
 			Mail mail = (Mail) element;
 			LinkedList<Mail> mailList = (LinkedList<Mail>) viewer.getInput();
-			//.println("|hasChildren|");
+			// .println("|hasChildren|");
 
 			LinkedList<Mail> threadMails = new LinkedList<Mail>();
 			for (Mail m : mailList)
@@ -123,7 +127,7 @@ public class MailView extends ViewPart
 			}
 			if (threadMails.size() < 2)
 			{
-				//System.out.println("|WTFhasChildren-false|");
+				// System.out.println("|WTFhasChildren-false|");
 				return false;
 			}
 			Mail parent = threadMails.get(0);
@@ -134,11 +138,11 @@ public class MailView extends ViewPart
 			}
 			if (parent == mail)
 			{
-				//System.out.println("|hasChildren-true|");
+				// System.out.println("|hasChildren-true|");
 				return true;
 			} else
 			{
-				//System.out.println("|hasChildren-fallse|");
+				// System.out.println("|hasChildren-fallse|");
 				return false;
 			}
 
@@ -160,6 +164,57 @@ public class MailView extends ViewPart
 			return df.format(mail.getTimestamp()) + " " + author + ": "
 					+ mail.getSubject();
 		}
+	}
+
+	private ISelectionListener listener = new ISelectionListener()
+	{
+		public void selectionChanged(IWorkbenchPart sourcepart,
+				ISelection selection)
+		{
+			// we ignore our own selections
+			if (sourcepart != MailView.this)
+			{
+				processSelection(sourcepart, selection);
+			}
+		}
+	};
+
+	public void processSelection(IWorkbenchPart sourcepart, ISelection selection)
+	{
+		// System.out.println("SELECTION ");
+		// setContentDescription(sourcepart.getTitle() + " ("
+		//	+ selection.getClass().getName() + ")");
+		//System.out.println(selection.getClass().getName());
+		if (selection instanceof IStructuredSelection)
+		{
+			IStructuredSelection ss = (IStructuredSelection) selection;
+			System.out.println(" Str");
+			System.out.println(ss.getClass());
+			if (ss.getFirstElement() instanceof ICompilationUnit)
+				System.out.println("heyyyyyyyy");
+				this.loadFromCache((ICompilationUnit) ss.getFirstElement());
+		}
+	}
+
+	private void loadFromCache(ICompilationUnit compilationUnit)
+	{
+		String name = compilationUnit.getResource().getName();
+		name = name.split("\\.")[0];
+		SQLiteMailListConstructor mailListConstructor = new SQLiteMailListConstructor(compilationUnit.getResource());
+		LinkedList<Mail> mailList = new LinkedList<Mail>();
+		try
+		{
+			mailList = mailListConstructor.getResultMailList(name);
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		MailView.getViewer().setInput(mailList);
 	}
 
 	/**
@@ -186,6 +241,9 @@ public class MailView extends ViewPart
 		// tableColumn.setText(columnNames[i]);
 		// tableColumn.setWidth(columnWidths[i]);
 		// }
+
+		getSite().getWorkbenchWindow().getSelectionService()
+				.addSelectionListener(listener);
 		viewer.setContentProvider(new MailTreeContentProvider());
 		viewer.setLabelProvider(new MailTreeLabelProvider());
 		makeActions();
@@ -232,7 +290,7 @@ public class MailView extends ViewPart
 				ISelection selection = viewer.getSelection();
 				Mail mail = (Mail) ((IStructuredSelection) selection)
 						.getFirstElement();
-				//System.out.println(" dude ");
+				// System.out.println(" dude ");
 				if (!viewer.getExpandedState(mail))
 					viewer.expandToLevel(mail, 1);
 				else

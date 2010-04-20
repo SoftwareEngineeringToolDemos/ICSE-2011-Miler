@@ -60,7 +60,8 @@ public class MboxCore {
 					{
 						// TODO Auto-generated catch block
 						date = null;
-						e.printStackTrace();
+						continue;
+						//e.printStackTrace();
 					}
 				} else if (line.startsWith("From:")) {
 					author = line.substring(6);
