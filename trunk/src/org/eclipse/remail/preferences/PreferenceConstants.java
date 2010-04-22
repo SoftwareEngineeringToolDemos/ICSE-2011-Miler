@@ -29,4 +29,12 @@ public class PreferenceConstants {
 	
 	public static final String P_MILER = "milerJar";
 	
+	public static final String P_FILTER_SUBJECT = "filterSubject";
+	
+	public static final String P_FILTER_AUTHOR = "filterAuthor";
+	
+	public static final String P_FILTER_SUBJECT_EXCLUDE = "filterSubjectEx";
+	
+	public static final String P_FILTER_AUTHOR_EXCLUDE = "filterAuthorEx";
+	
 }

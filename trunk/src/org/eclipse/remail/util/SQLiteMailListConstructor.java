@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.remail.Mail;
+import org.eclipse.remail.Search;
 
 public class SQLiteMailListConstructor
 {
@@ -59,6 +60,7 @@ public class SQLiteMailListConstructor
 			mailList.add(mail);
 		}
 		rs.close();
+		mailList = Search.applyMessageFilters(mailList);
 		if (mailList.size() > 0)
 			return mailList;
 		return null;

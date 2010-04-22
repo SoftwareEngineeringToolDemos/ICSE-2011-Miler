@@ -214,7 +214,8 @@ public class MailView extends ViewPart
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		MailView.getViewer().setInput(mailList);
+		Search.updateMailView(mailList);
+		//MailView.getViewer().setInput(mailList);
 	}
 
 	/**

@@ -120,6 +120,12 @@
             id="org.eclipse.remail.preferences.PreferencePanePostgre"
             name="PostgreSQL">
       </page>
+      <page
+            category="org.eclipse.remail.preferences.PreferencePane"
+            class="org.eclipse.remail.preferences.PreferencePaneFilters"
+            id="org.eclipse.remail.preferences.PreferencePaneFilters"
+            name="Message Filters">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

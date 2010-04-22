@@ -18,6 +18,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.P_SOURCE, "mbox");
+		//store.setValue(PreferenceConstants.P_FILTER_SUBJECT, "");
 	}
 
 }

@@ -103,7 +103,75 @@ public class Search
 		}
 		return null;
 	}
-
+	
+	/**
+	 * Gives true, if string "what" matches one of the filters specified in 
+	 * preferences.
+	 * @param store
+	 * @param what
+	 * @param where - If the value is 1, subject filters are used, if 2, author
+	 * filters are used.
+	 * @return
+	 */
+	private static Boolean matchAgainstFilters (IPreferenceStore store, String what, int where)
+	{
+		String filter = null;
+		if (where == 1)
+			filter = store.getString(PreferenceConstants.P_FILTER_SUBJECT);
+		else if (where == 2)
+			filter = store.getString(PreferenceConstants.P_FILTER_AUTHOR);
+		String[] filters = filter.split(";");
+		System.out.println(filter);
+		for (String fltr : filters)
+		{
+			if(!fltr.matches(""))
+				if(what.contains(fltr))
+					return true;
+		}
+		return false;
+	}
+	
+	public static LinkedList<Mail> applyMessageFilters(LinkedList<Mail> mailList)
+	{
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		if (store.getString(PreferenceConstants.P_FILTER_SUBJECT).matches("") && store.getString(PreferenceConstants.P_FILTER_AUTHOR).matches(""))
+			return mailList;
+		LinkedList<Mail> filteredMailList = new LinkedList<Mail>();
+		for (Mail mail : mailList)
+		{
+			Boolean putInList = true;
+			Boolean hit = matchAgainstFilters(store, mail.getSubject(), 1);
+			if (store.getString(PreferenceConstants.P_FILTER_SUBJECT_EXCLUDE).contains("excluded"))
+			{
+				if(hit)
+					putInList = false;
+			}
+			else
+			{
+				if(hit)
+					putInList = true;
+				else
+					putInList = false;
+			}
+			hit = matchAgainstFilters(store, mail.getAuthor(), 2);
+			if (store.getString(PreferenceConstants.P_FILTER_AUTHOR_EXCLUDE).contains("excluded"))
+			{
+				if(hit)
+					putInList = false;
+			}
+			else
+			{
+				if(hit)
+					putInList = true;
+				else
+					putInList = false;
+			}
+			if(putInList)
+				filteredMailList.add(mail);
+		}
+		return filteredMailList;
+	}
+	
 	/**
 	 * Convenience method which sets the input of the MailView view
 	 * 
