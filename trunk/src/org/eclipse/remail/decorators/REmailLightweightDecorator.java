@@ -35,13 +35,20 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 						+ res.getProject().getLocation().toString()
 						+ File.separator + "remail.db");
 				Statement stat = conn.createStatement();
-				ResultSet rs = stat.executeQuery("select hits from hits where name = '" + name
-						+ "';");
-				if (rs.next())
+				//ResultSet rs = stat.executeQuery("select hits from hits where name = '" + name
+				//		+ "';");
+				name = name.split("\\.")[0];
+				ResultSet rs = stat.executeQuery("select count(*) from " + name + ";");
+				if(rs.next())
 				{
-					System.out.println(name + ": " + rs.getString("hits"));
-					decoration.addSuffix(" (" + rs.getString("hits") + ")");
+					System.out.println(name + ": " + rs.getInt(1));
+					decoration.addSuffix(" (" + rs.getInt(1) + ")");
 				}
+				//				if (rs.next())
+//				{
+//					System.out.println(name + ": " + rs.getString("hits"));
+//					decoration.addSuffix(" (" + rs.getString("hits") + ")");
+//				}
 				rs.close();
 				conn.close();
 			} catch (SQLException e)
