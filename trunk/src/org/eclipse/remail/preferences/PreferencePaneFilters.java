@@ -1,5 +1,6 @@
 package org.eclipse.remail.preferences;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.preference.*;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
@@ -44,7 +45,37 @@ public class PreferencePaneFilters extends FieldEditorPreferencePage implements
 				new String[][] { { "Excluded", "excluded" },
 						{ "Included", "included" }, }, getFieldEditorParent()));
 	}
-
+	
+	@Override
+	public boolean performOk()
+	{
+		try
+		{
+			Activator.getDefault().getWorkbench().getDecoratorManager().setEnabled("org.eclipse.remail.decorators.REmailLightweightDecorator", false);
+			Activator.getDefault().getWorkbench().getDecoratorManager().setEnabled("org.eclipse.remail.decorators.REmailLightweightDecorator", true);
+		} catch (CoreException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return super.performOk();
+	}
+	
+	@Override
+	protected void performApply()
+	{
+		try
+		{
+			Activator.getDefault().getWorkbench().getDecoratorManager().setEnabled("org.eclipse.remail.decorators.REmailLightweightDecorator", false);
+			Activator.getDefault().getWorkbench().getDecoratorManager().setEnabled("org.eclipse.remail.decorators.REmailLightweightDecorator", true);
+		} catch (CoreException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		super.performApply();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

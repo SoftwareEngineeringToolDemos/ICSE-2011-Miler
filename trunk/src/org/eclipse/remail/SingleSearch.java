@@ -23,6 +23,7 @@ import org.eclipse.remail.modules.MboxSearch;
 import org.eclipse.remail.modules.MboxCore;
 import org.eclipse.remail.modules.ProjectSearch;
 import org.eclipse.remail.preferences.PreferenceConstants;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PartInitException;
@@ -52,38 +53,41 @@ public class SingleSearch extends AbstractHandler
 		store = Activator.getDefault().getPreferenceStore();
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
 				.getActiveMenuSelection(event);
-		Object firstElement = selection.getFirstElement();
-		System.out.println(firstElement.getClass().getName());
-		if (firstElement.getClass().getName().contains("CompilationUnit"))
+		for (Object sel : selection.toList())
 		{
-			ICompilationUnit cu = (ICompilationUnit) firstElement;
-			IResource res = cu.getResource();
-			String name = res.getName();
-			IPath fullPath = res.getProjectRelativePath();
-			Search search = new Search();
-			LinkedList<Mail> mailList = search.Execute(name, fullPath
-					.toString(), false);
-			Search.updateMailView(mailList);
-		} else if (firstElement.getClass().getName().contains("JavaProject"))
-		{
-			System.out.println("JP");
-			IJavaProject javaProject = (IJavaProject) firstElement;
-			this.projectSearch(javaProject);
+			System.out.println(sel.getClass().getName());
+			if (sel.getClass().getName().contains("CompilationUnit"))
+			{
+				ICompilationUnit cu = (ICompilationUnit) sel;
+				LinkedList<ICompilationUnit> compList = new LinkedList<ICompilationUnit>();
+				compList.add(cu);
+//				Display display = Display.getCurrent();
+//				display.asyncExec(new ProjectSearch(cu.getResource(), compList));
+				 Thread thr = new Thread(new ProjectSearch(cu.getResource(),
+				 compList));
+				 thr.start();
+				 //Search.updateMailView(mailList);
+			} else if (sel.getClass().getName().contains("JavaProject"))
+			{
+				System.out.println("JP");
+				IJavaProject javaProject = (IJavaProject) sel;
+				this.projectSearch(javaProject);
 
-		} else if (firstElement.getClass().getName().contains("PackageFragment"))
-		{
-			System.out.println("PF");
-			IPackageFragment packageFragment = (IPackageFragment) firstElement;
-			this.packageSearch(packageFragment);
+			} else if (sel.getClass().getName().contains("PackageFragment"))
+			{
+				System.out.println("PF");
+				IPackageFragment packageFragment = (IPackageFragment) sel;
+				this.packageSearch(packageFragment);
 
-		} else
-		{
-			MessageDialog.openInformation(HandlerUtil.getActiveShell(event),
-					"Information", "Selected object is not a class");
+			} else
+			{
+				// MessageDialog.openInformation(
+				// HandlerUtil.getActiveShell(event), "Information",
+				// "Selected object is not a class");
+			}
 		}
 		return null;
 	}
-
 
 	private void packageSearch(IPackageFragment packageFragment)
 	{
@@ -101,10 +105,10 @@ public class SingleSearch extends AbstractHandler
 		{
 			compList.add(cu);
 		}
-		Thread thr = new Thread(new ProjectSearch(packageFragment.getResource(), compList));
+		Thread thr = new Thread(new ProjectSearch(
+				packageFragment.getResource(), compList));
 		thr.start();
 	}
-
 
 	public void projectSearch(IJavaProject javaProject)
 	{
@@ -126,7 +130,8 @@ public class SingleSearch extends AbstractHandler
 					compList.add(cu);
 				}
 			}
-			Thread thr = new Thread(new ProjectSearch(javaProject.getResource(), compList));
+			Thread thr = new Thread(new ProjectSearch(
+					javaProject.getResource(), compList));
 			thr.start();
 		} catch (JavaModelException e)
 		{

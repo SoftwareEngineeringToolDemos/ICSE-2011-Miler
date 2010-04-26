@@ -188,23 +188,24 @@ public class MailView extends ViewPart
 		if (selection instanceof IStructuredSelection)
 		{
 			IStructuredSelection ss = (IStructuredSelection) selection;
-			System.out.println(" Str");
-			System.out.println(ss.getClass());
+			//System.out.println(" Str");
+			//System.out.println(ss.getClass());
 			if (ss.getFirstElement() instanceof ICompilationUnit)
-				System.out.println("heyyyyyyyy");
+				//System.out.println("heyyyyyyyy");
 				this.loadFromCache((ICompilationUnit) ss.getFirstElement());
 		}
 	}
 
 	private void loadFromCache(ICompilationUnit compilationUnit)
 	{
-		String name = compilationUnit.getResource().getName();
-		name = name.split("\\.")[0];
+		//String name = compilationUnit.getResource().getName();
+		//name = name.split("\\.")[0];
 		SQLiteMailListConstructor mailListConstructor = new SQLiteMailListConstructor(compilationUnit.getResource());
 		LinkedList<Mail> mailList = new LinkedList<Mail>();
 		try
 		{
-			mailList = mailListConstructor.getResultMailList(name);
+			mailList = mailListConstructor.getResultMailList();
+			System.out.println("|"+mailList.size()+"|");
 		} catch (SQLException e)
 		{
 			// TODO Auto-generated catch block

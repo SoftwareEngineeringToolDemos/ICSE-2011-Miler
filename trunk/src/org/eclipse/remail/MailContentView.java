@@ -69,7 +69,7 @@ public class MailContentView extends ViewPart {
 //						+ "</font></b>");
 //		System.out.println(text);
 		text = text.replaceAll("\\n", "<br/>\n");
-		System.out.print(text);
+		//System.out.print(text);
 		browser.setText(text);
 
 	}

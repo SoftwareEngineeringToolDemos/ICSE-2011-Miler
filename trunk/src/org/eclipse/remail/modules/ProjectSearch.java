@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.remail.Activator;
 import org.eclipse.remail.Mail;
+import org.eclipse.remail.MailView;
 import org.eclipse.remail.Search;
 
 public class ProjectSearch implements Runnable
@@ -65,61 +66,85 @@ public class ProjectSearch implements Runnable
 				+ File.separator + "remail.db");
 		stat = conn.createStatement();
 		// stat.executeUpdate("drop table if exists "+ this.projectName +";");
-		stat.executeUpdate("create table hits (name, hits);");
+		//stat.executeUpdate("create table hits (name, hits);");
+		stat.executeUpdate("create table if not exists emails (permalink, subject, date, author, threadlink, text);");
+		stat.executeUpdate("create table if not exists classes (id INTEGER PRIMARY KEY AUTOINCREMENT, name, path);");
+		stat.executeUpdate("create table if not exists hits (id INTEGER, permalink);");
 	}
 
 	private void searchAll() throws Exception
 	{
 		// this.prepareFile();
-		PreparedStatement prep = conn
-				.prepareStatement("insert into hits values (?, ?);");
+//		PreparedStatement prep = conn
+//				.prepareStatement("insert into hits values (?, ?);");
 		for (ICompilationUnit cu : compList)
 		{
-			this.searchCompilationUnit(cu, prep);
+			this.searchCompilationUnit(cu);
 		}
-		conn.setAutoCommit(false);
-		prep.executeBatch();
-		conn.setAutoCommit(true);
+//		conn.setAutoCommit(false);
+//		prep.executeBatch();
+//		conn.setAutoCommit(true);
 		conn.close();
 		
 		Activator.getDefault().getWorkbench().getDecoratorManager().setEnabled("org.eclipse.remail.decorators.REmailLightweightDecorator", false);
 		Activator.getDefault().getWorkbench().getDecoratorManager().setEnabled("org.eclipse.remail.decorators.REmailLightweightDecorator", true);
+		
 	}
 
-	private  void makeMailResultTable(String name, LinkedList<Mail> MailList) throws SQLException
+	private  void saveResults(String name, String path, LinkedList<Mail> MailList) throws SQLException
 	{
 		name = name.split("\\.")[0];
-		stat.executeUpdate("drop table if exists " + name + ";");
-		stat.executeUpdate("create table " + name + " (id, subject, date, author, permalink, threadlink, text, classname);");
-		PreparedStatement classPrep = conn.prepareStatement("insert into " + name + " values (?,?,?,?,?,?,?,?)");
+		ResultSet rs = stat.executeQuery("select count(*) from classes where name = '" + name + "' and path = '"+path+"';");
+		rs.next();
+		if(rs.getInt(1) == 0){
+			stat.executeUpdate("insert into classes (name, path) values('"+name+"','"+path+"')");
+		}
+		rs.close();
+		rs = stat.executeQuery("select id from classes where name = '" + name + "' and path = '"+path+"';");
+		rs.next();
+		int id = rs.getInt(1);
+		rs.close();
+		//stat.executeUpdate("drop table if exists " + name + ";");
+		//stat.executeUpdate("create table " + name + " (id, subject, date, author, permalink, threadlink, text, classname);");
+		PreparedStatement mailPrep = conn.prepareStatement("insert into emails values (?,?,?,?,?,?);");
+		PreparedStatement hitsPrep = conn.prepareStatement("insert into hits values (?,?);");
 		for (Mail mail : MailList)
 		{
-			classPrep.setString(1, "0");
-			classPrep.setString(2, mail.getSubject());
-			classPrep.setString(3, String.valueOf(mail.getTimestamp().getTime()));
-			//classPrep.setString(3, mail.getTimestamp().toString());
-			classPrep.setString(4, mail.getAuthor());
-			classPrep.setString(5, mail.getPermalink());
-			classPrep.setString(6, mail.getThreadlink());
-			classPrep.setString(7, mail.getText());
-			classPrep.setString(8, mail.getClassname());
-			classPrep.addBatch();
+			ResultSet rs2 = stat.executeQuery("select count(*) from emails where permalink = '" + mail.getPermalink() + "';");
+			rs2.next();
+			if(rs2.getInt(1) == 0){
+				//classPrep.setString(1, "0");
+				mailPrep.setString(1, mail.getPermalink());
+				mailPrep.setString(2, mail.getSubject());
+				mailPrep.setString(3, String.valueOf(mail.getTimestamp().getTime()));
+				//classPrep.setString(3, mail.getTimestamp().toString());
+				mailPrep.setString(4, mail.getAuthor());
+				//classPrep.setString(5, mail.getPermalink());
+				mailPrep.setString(5, mail.getThreadlink());
+				mailPrep.setString(6, mail.getText());
+				//classPrep.setString(7, mail.getClassname());
+				mailPrep.addBatch();
+			}
+			hitsPrep.setInt(1, id);
+			hitsPrep.setString(2, mail.getPermalink());
+			hitsPrep.addBatch();
 		}
+		stat.executeUpdate("delete from hits where id = "+id+";");
 		conn.setAutoCommit(false);
-		classPrep.executeBatch();
+		mailPrep.executeBatch();
+		hitsPrep.executeBatch();
 		conn.setAutoCommit(true);
 	}
 	
-	private void insertHitsRow(String name, int count, PreparedStatement prep) throws SQLException
-	{
-		stat.executeUpdate("delete from hits where name = '"+name+"'");
-		prep.setString(1, name);
-		prep.setString(2, String.valueOf(count));
-		prep.addBatch();
-	}
+//	private void insertHitsRow(String name, int count, PreparedStatement prep) throws SQLException
+//	{
+//		stat.executeUpdate("delete from hits where name = '"+name+"'");
+//		prep.setString(1, name);
+//		prep.setString(2, String.valueOf(count));
+//		prep.addBatch();
+//	}
 	
-	private void searchCompilationUnit(ICompilationUnit cu,
-			PreparedStatement prep) throws Exception
+	private void searchCompilationUnit(ICompilationUnit cu) throws Exception
 	{
 		IResource res = cu.getResource();
 		String name = res.getName();
@@ -127,10 +152,12 @@ public class ProjectSearch implements Runnable
 		
 		IPath fullPath = res.getProjectRelativePath();
 		Search search = new Search();
-		LinkedList<Mail> MailList = search.Execute(name, fullPath.toString(), true);
+		LinkedList<Mail> mailList = search.Execute(name, fullPath.toString(), true);
 		
-		this.makeMailResultTable(name, MailList);
-		this.insertHitsRow(name, MailList.size(), prep);
+		this.saveResults(name, fullPath.toString(), mailList);
+//		if (this.compList.size() == 1)
+//			Search.updateMailView(mailList);
+		//this.insertHitsRow(name, MailList.size(), prep);
 	}
 
 	@Override
