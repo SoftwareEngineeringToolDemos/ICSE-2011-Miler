@@ -59,46 +59,33 @@ public class ContentDecorator
 						"    padding-right: 5px;\n" + 
 						"    width: 1%;\n" + 
 						"}\n" + 
-						"#level1, #level6, #level11{\n" + 
+						"#level1, #level4, #level7, #level10, #level13, #level16{\n" + 
 						"	border-left-style:solid;\n" + 
 						"	border-width:2px;\n" + 
 						"	border-color: #0000ff;\n" + 
 						"	padding-left: 4px;\n" + 
 						"	margin-left: 5px;\n" + 
-						"	background: #ffffff;\n" + 
+						"	background: #ffffff;\n" +
+						"	color: #0000ff\n" + 
 						"}\n" + 
-						"#level2, #level7, #level12{\n" + 
+						"#level2, #level5, #level8, #level11, #level14, #level17{\n" + 
 						"	border-left-style:solid;\n" + 
 						"	border-width:2px;\n" + 
-						"	border-color: #00ff00;\n" + 
+						"	border-color: #669900;\n" + 
 						"	padding-left: 4px;\n" + 
 						"	margin-left: 5px;\n" + 
-						"	background: #ffffff;\n" + 
+						"	background: #ffffff;\n" +
+						"	color: #669900\n" + 
 						"}\n" + 
-						"#level3, #level8, #level13{\n" + 
+						"#level3, #level6, #level9, #level12, #level15, #level18{\n" + 
 						"	border-left-style:solid;\n" + 
 						"	border-width:2px;\n" + 
-						"	border-color: #ff0000;\n" + 
+						"	border-color: #993333;\n" + 
 						"	padding-left: 4px;\n" + 
 						"	margin-left: 5px;\n" + 
-						"	background: #ffffff;\n" + 
+						"	background: #ffffff;\n" +
+						"	color: #993333\n" + 
 						"}\n" + 
-						"#level4, #level9, #level14{\n" + 
-						"	border-left-style:solid;\n" + 
-						"	border-width:2px;\n" + 
-						"	border-color: #00ffff;\n" + 
-						"	padding-left: 4px;\n" + 
-						"	margin-left: 5px;\n" + 
-						"	background: #ffffff;\n" + 
-						"}\n" + 
-						"#level5, #level10, #level15{\n" + 
-						"	border-left-style:solid;\n" + 
-						"	border-width:2px;\n" + 
-						"	border-color: #000000;\n" + 
-						"	padding-left: 4px;\n" + 
-						"	margin-left: 5px;\n" + 
-						"	background: #ffffff;\n" + 
-						"}" +
 						"</style>" + "</head> " + "" + "<body>	" + ""
 				+ "<div id=\"topcontainer\">\n");
 				postText = "</div>\n</body>\n</html>\n";
@@ -110,8 +97,8 @@ public class ContentDecorator
 		String author = mail.getAuthor().replaceAll(
 				"^(.+)\\s*\\(.*@.*\\).*$", "$1");
 		String subject = mail.getSubject();
-		if(subject.length() > 30)
-			subject = subject.substring(0, 30) + "...";
+		if(subject.length() > 50)
+			subject = subject.substring(0, 50) + "...";
 		text = "<table id=\"headers\">\n" + 
 				"<tbody>\n" + 
 				"<tr><th>Subject:</th><td>"+ subject +"</td></tr>\n" + 

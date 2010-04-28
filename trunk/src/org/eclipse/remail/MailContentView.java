@@ -49,9 +49,8 @@ public class MailContentView extends ViewPart {
 				e.printStackTrace();
 				return;
 			}
-		} else if (Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SOURCE) == "mbox") {
-			text = mail.getText();
-		}
+			mail.setText(text);
+		} 
 		
 		ContentDecorator cd = new ContentDecorator(mail);
 		cd.highLightPreviousMessages();
@@ -59,9 +58,6 @@ public class MailContentView extends ViewPart {
 		cd.insertHeader();		
 		text = cd.getText();
 		
-		System.out.println("-----------------------------------");
-		System.out.println(text);
-		System.out.println("-----------------------------------");
 		browser.setText(text);
 
 	}
