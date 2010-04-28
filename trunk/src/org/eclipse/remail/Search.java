@@ -121,7 +121,7 @@ public class Search
 		else if (where == 2)
 			filter = store.getString(PreferenceConstants.P_FILTER_AUTHOR);
 		String[] filters = filter.split(";");
-		System.out.println(filter);
+		//System.out.println(filter);
 		for (String fltr : filters)
 		{
 			if(!fltr.matches(""))

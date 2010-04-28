@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.remail.modules.PostgreCore;
 import org.eclipse.remail.preferences.PreferenceConstants;
+import org.eclipse.remail.util.ContentDecorator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite; //import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.part.ViewPart;
@@ -51,25 +52,16 @@ public class MailContentView extends ViewPart {
 		} else if (Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SOURCE) == "mbox") {
 			text = mail.getText();
 		}
-		// uncomment to use the jFace text viewer instead of the mozilla engine
-
-		// text = text.replaceAll("\\<br/>", "\n");
-		// text = text.replaceAll("\\<.*?>", "");
-		// //text = text.substring(196);
-		// text = StringEscapeUtils.unescapeHtml(text);
-		// Document document = new Document(text);
-		// textViewer.setDocument(document);
-
-		//browser.setUrl("http://www.google.com");
-		//browser.setText(text);
-		text = text.replaceAll(mail.getClassname(), "<b><font color=\"red\">"
-				+ mail.getClassname() + "</font></b>");
-//		text = text.replaceAll(mail.getClassname().toLowerCase(),
-//				"<b><font color=\"red\">" + mail.getClassname().toLowerCase()
-//						+ "</font></b>");
-//		System.out.println(text);
-		text = text.replaceAll("\\n", "<br/>\n");
-		//System.out.print(text);
+		
+		ContentDecorator cd = new ContentDecorator(mail);
+		cd.highLightPreviousMessages();
+		cd.makeHTML();
+		cd.insertHeader();		
+		text = cd.getText();
+		
+		System.out.println("-----------------------------------");
+		System.out.println(text);
+		System.out.println("-----------------------------------");
 		browser.setText(text);
 
 	}
