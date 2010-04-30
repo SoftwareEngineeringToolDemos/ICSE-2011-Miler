@@ -10,10 +10,12 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -24,8 +26,11 @@ import org.eclipse.remail.modules.MboxCore;
 import org.eclipse.remail.modules.ProjectSearch;
 import org.eclipse.remail.preferences.PreferenceConstants;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -53,31 +58,29 @@ public class SingleSearch extends AbstractHandler
 		store = Activator.getDefault().getPreferenceStore();
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
 				.getActiveMenuSelection(event);
+		this.launchSearch(selection);
+		return null;
+	}
+
+	private void launchSearch(IStructuredSelection selection)
+	{
+		LinkedList<ICompilationUnit> compList = new LinkedList<ICompilationUnit>();
 		for (Object sel : selection.toList())
 		{
-			System.out.println(sel.getClass().getName());
+
 			if (sel.getClass().getName().contains("CompilationUnit"))
 			{
 				ICompilationUnit cu = (ICompilationUnit) sel;
-				LinkedList<ICompilationUnit> compList = new LinkedList<ICompilationUnit>();
 				compList.add(cu);
-//				Display display = Display.getCurrent();
-//				display.asyncExec(new ProjectSearch(cu.getResource(), compList));
-				 Thread thr = new Thread(new ProjectSearch(cu.getResource(),
-				 compList));
-				 thr.start();
-				 //Search.updateMailView(mailList);
 			} else if (sel.getClass().getName().contains("JavaProject"))
 			{
-				System.out.println("JP");
 				IJavaProject javaProject = (IJavaProject) sel;
-				this.projectSearch(javaProject);
-
+				compList = this.projectSearch(javaProject);
+				break;
 			} else if (sel.getClass().getName().contains("PackageFragment"))
 			{
-				System.out.println("PF");
 				IPackageFragment packageFragment = (IPackageFragment) sel;
-				this.packageSearch(packageFragment);
+				this.packageSearch(packageFragment, compList);
 
 			} else
 			{
@@ -86,10 +89,19 @@ public class SingleSearch extends AbstractHandler
 				// "Selected object is not a class");
 			}
 		}
-		return null;
+		IWorkbenchPartSite site = Activator.getDefault().getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage().getActivePart()
+				.getSite();
+		IViewSite vsite = (IViewSite) site;
+		IActionBars bars = vsite.getActionBars();
+		IStatusLineManager statusLine = bars.getStatusLineManager();
+		IProgressMonitor pm = statusLine.getProgressMonitor();
+		Thread thr = new Thread(new ProjectSearch(compList, pm));
+		thr.start();
 	}
 
-	private void packageSearch(IPackageFragment packageFragment)
+	private void packageSearch(IPackageFragment packageFragment,
+			LinkedList<ICompilationUnit> compList)
 	{
 		ICompilationUnit[] compilationUnits = null;
 		try
@@ -100,44 +112,33 @@ public class SingleSearch extends AbstractHandler
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		LinkedList<ICompilationUnit> compList = new LinkedList<ICompilationUnit>();
 		for (ICompilationUnit cu : compilationUnits)
 		{
 			compList.add(cu);
 		}
-		Thread thr = new Thread(new ProjectSearch(
-				packageFragment.getResource(), compList));
-		thr.start();
 	}
 
-	public void projectSearch(IJavaProject javaProject)
+	public LinkedList<ICompilationUnit> projectSearch(IJavaProject javaProject)
 	{
 		IPackageFragment[] packageFragments = null;
+		LinkedList<ICompilationUnit> compList = new LinkedList<ICompilationUnit>();
 		try
 		{
-			LinkedList<ICompilationUnit> compList = new LinkedList<ICompilationUnit>();
 			packageFragments = javaProject.getPackageFragments();
 			for (IPackageFragment pf : packageFragments)
 			{
-				// IResource pfres = pf.getResource();
-				// System.out.println(pfres.getName());
 				ICompilationUnit[] compilationUnits = pf.getCompilationUnits();
 				for (ICompilationUnit cu : compilationUnits)
 				{
-					// IResource cures = cu.getResource();
-					// String name = cures.getName();
-					// System.out.println(name);
 					compList.add(cu);
 				}
 			}
-			Thread thr = new Thread(new ProjectSearch(
-					javaProject.getResource(), compList));
-			thr.start();
 		} catch (JavaModelException e)
 		{
 			e.printStackTrace();
 
 		}
+		return compList;
 	}
 
 }

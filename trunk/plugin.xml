@@ -6,42 +6,64 @@
       <menuContribution
             locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
          <command
-               commandId="org.eclipse.remail.SingleSearch"
+               commandId="org.eclipse.remail.SingleSearchClass"
                label="REmail Search"
                style="push">
+            <visibleWhen>
+               <with
+                     variable="activeMenuSelection">
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.jdt.core.ICompilationUnit">
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.remail.SingleSearchProject"
+               label="REmail Search"
+               style="push">
+            <visibleWhen>
+               <with
+                     variable="activeMenuSelection">
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.remail.SingleSearchPackage"
+               label="REmail Search"
+               style="push">
+            <visibleWhen>
+               <with
+                     variable="activeMenuSelection">
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.jdt.core.IPackageFragment">
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
          </command>
       </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
-            description="searchInsensitive"
-            id="org.eclipse.emailrecommender.searchInsensitive"
-            name="searchInsensitive">
+            id="org.eclipse.remail.SingleSearchClass"
+            name="Search">
       </command>
       <command
-            description="searchSensitive"
-            id="org.eclipse.emailrecommender.searchSensitive"
-            name="searchSensitive">
+            id="org.eclipse.remail.SingleSearchProject"
+            name="Search">
       </command>
       <command
-            id="org.eclipse.emailrecommender.searchStrict"
-            name="searchStrict">
-      </command>
-      <command
-            id="org.eclipse.emailrecommender.searchLoose"
-            name="searchLoose">
-      </command>
-      <command
-            id="org.eclipse.emailrecommender.searchDict"
-            name="searchDict">
-      </command>
-      <command
-            id="org.eclipse.emailrecommender.searchCamel"
-            name="searchCamel">
-      </command>
-      <command
-            id="org.eclipse.remail.SingleSearch"
+            id="org.eclipse.remail.SingleSearchPackage"
             name="Search">
       </command>
    </extension>
@@ -51,31 +73,15 @@
          point="org.eclipse.ui.handlers">
       <handler
             class="org.eclipse.remail.SingleSearch"
-            commandId="org.eclipse.emailrecommender.searchInsensitive">
+            commandId="org.eclipse.remail.SingleSearchClass">
       </handler>
       <handler
             class="org.eclipse.remail.SingleSearch"
-            commandId="org.eclipse.emailrecommender.searchSensitive">
+            commandId="org.eclipse.remail.SingleSearchProject">
       </handler>
       <handler
             class="org.eclipse.remail.SingleSearch"
-            commandId="org.eclipse.emailrecommender.searchLoose">
-      </handler>
-      <handler
-            class="org.eclipse.remail.Search"
-            commandId="org.eclipse.emailrecommender.searchStrict">
-      </handler>
-      <handler
-            class="org.eclipse.remail.SingleSearch"
-            commandId="org.eclipse.emailrecommender.searchDict">
-      </handler>
-      <handler
-            class="org.eclipse.remail.SingleSearch"
-            commandId="org.eclipse.emailrecommender.searchCamel">
-      </handler>
-      <handler
-            class="org.eclipse.remail.SingleSearch"
-            commandId="org.eclipse.remail.SingleSearch">
+            commandId="org.eclipse.remail.SingleSearchPackage">
       </handler>
    </extension>
    <extension

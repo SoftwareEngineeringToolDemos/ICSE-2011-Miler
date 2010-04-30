@@ -90,6 +90,7 @@ public class SQLiteMailListConstructor
 			mailList.add(mail);
 			rs2.close();
 		}
+		conn.close();
 		mailList = Search.applyMessageFilters(mailList);
 		if (mailList.size() > 0)
 			return mailList;
