@@ -204,12 +204,10 @@ public class ProjectSearch implements Runnable
 		IResource res = cu.getResource();
 		String name = res.getName();
 		System.out.println(name);
-
 		IPath fullPath = res.getProjectRelativePath();
 		Search search = new Search();
 		LinkedList<Mail> mailList = search.Execute(name, fullPath.toString(),
 				true);
-
 		try
 		{
 			this.saveResults(name, fullPath.toString(), mailList);
