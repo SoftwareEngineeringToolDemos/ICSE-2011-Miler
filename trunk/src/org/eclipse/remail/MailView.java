@@ -280,7 +280,8 @@ public class MailView extends ViewPart
 								"Error in showing the view: " + e.getMessage());
 						e.printStackTrace();
 					}
-					MailContentView.setMail(mail);
+					MailContentView mw = new MailContentView();
+					mw.setMail(mail);
 				}
 			}
 		};

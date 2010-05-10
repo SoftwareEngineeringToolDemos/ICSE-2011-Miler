@@ -8,6 +8,7 @@ import java.util.LinkedList;
 
 import java.sql.*;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -97,6 +98,7 @@ public class ProjectSearch implements Runnable
 			for (ICompilationUnit cu : compList)
 			{
 				this.searchCompilationUnit(cu);
+				System.out.println("Notak");
 			}
 		} finally
 		{

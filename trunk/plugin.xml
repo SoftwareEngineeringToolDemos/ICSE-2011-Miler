@@ -154,7 +154,28 @@
             %DecoratorStandard.desc
          </description>
     </decorator>
-         
    </extension>
-
+   <extension
+         id="remailmarker"
+         name="Remail Marker"
+         point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.taskmarker"/>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension point="org.eclipse.ui.editorActions"> 
+<editorContribution 
+      id="org.eclipse.remail.markerInit" 
+   targetID="org.eclipse.jdt.ui.CompilationUnitEditor">
+   <action
+         id="org.eclipse.remail.editor.action1" 
+         label="Editor Action 1" 
+         icon="icons/sample.gif"
+         tooltip="Tooltip for Editor Action 1"
+      toolbarPath="Normal/additions"
+         class="org.eclipse.remail.editor.markerInitActionDelegate"> 
+      </action> 
+   </editorContribution> 
+</extension>
 </plugin>

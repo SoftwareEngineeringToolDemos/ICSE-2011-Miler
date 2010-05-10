@@ -36,7 +36,7 @@ public class MailContentView extends ViewPart {
 
 	}
 
-	public static void setMail(Mail mail) {
+	public void setMail(Mail mail) {
 		String text = "";
 		if (Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SOURCE) == "postgre") {
 			PostgreCore search = new PostgreCore(Activator.connString,
@@ -57,7 +57,6 @@ public class MailContentView extends ViewPart {
 		cd.makeHTML();
 		cd.insertHeader();		
 		text = cd.getText();
-		
 		browser.setText(text);
 
 	}
