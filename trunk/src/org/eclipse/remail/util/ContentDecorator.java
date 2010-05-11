@@ -113,7 +113,7 @@ public class ContentDecorator
 		int level = 0;
 		int indent = 0;
 		String newText = "";
-		String[] lines = text.split("\\n");
+		String[] lines = text.split("\\r?\\n");
 		for (String line : lines)
 		{
 			if(!line.startsWith(">"))
