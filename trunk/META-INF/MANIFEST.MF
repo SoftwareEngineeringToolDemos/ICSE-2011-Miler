@@ -10,10 +10,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources;bundle-version="3.5.1",
  org.eclipse.jface.text;bundle-version="3.5.1",
  org.eclipse.ui.ide;bundle-version="3.5.1",
- org.eclipse.ui.editors;bundle-version="3.5.0"
+ org.eclipse.ui.editors;bundle-version="3.5.0",
+ org.eclipse.jdt.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/postgresql-8.4-701.jdbc4.jar,
  lib/sqlitejdbc-v056.jar,
  lib/commons-lang-2.4.jar,
  .
+Import-Package: org.eclipse.jdt.ui.text.java

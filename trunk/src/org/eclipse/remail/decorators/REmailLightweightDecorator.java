@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.Search;
 import org.eclipse.remail.util.SQLiteMailListConstructor;
+import org.eclipse.swt.graphics.Color;
 
 public class REmailLightweightDecorator implements ILightweightLabelDecorator
 {
@@ -30,7 +31,8 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 		//	System.out.println("Sulin");
 		if (JavaCore.create(res) instanceof ICompilationUnit)
 		{
-			decoration.addSuffix(" (" + this.getMailList(res).size() + ")");	
+			if((mailList = this.getMailList(res)) != null)
+				decoration.addSuffix(" (" + this.getMailList(res).size() + ")");	
 		}
 		else if (JavaCore.create(res) instanceof IPackageFragment)
 		{
@@ -49,7 +51,9 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 			{
 				mailList = Mail.mergeMailLists(mailList, this.getMailList(cu.getResource()));
 			}
-			decoration.addSuffix(" (" + mailList.size() + ")");	
+			if (mailList != null && compilationUnits.length > 0)
+				decoration.addSuffix(" (" + mailList.size() + ")");	
+			//decoration.setForegroundColor(new Color(null, 0, 0, 254));
 		}
 	}
 
@@ -73,7 +77,7 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 					+ res.getProject().getLocation().toString()
 					+ File.separator + "remail.db");
 			Statement stat = conn.createStatement();
-			stat.executeUpdate("create table if not exists emails (permalink, subject, date, author, threadlink, text);");
+			stat.executeUpdate("create table if not exists emails (permalink, subject, date, author, threadlink, text, visible);");
 			stat.executeUpdate("create table if not exists classes (id INTEGER PRIMARY KEY AUTOINCREMENT, name, path);");
 			stat.executeUpdate("create table if not exists hits (id INTEGER, permalink);");
 			//ResultSet rs = stat.executeQuery("select hits from hits where name = '" + name

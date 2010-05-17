@@ -41,28 +41,6 @@ public class ProjectSearch implements Runnable
 		this.progressMonitor = pm;
 	}
 
-	private void prepareFile()
-	{
-		try
-		{
-			String filePath = this.project.getLocation() + File.separator
-					+ ".remail";
-			File file = new File(filePath);
-
-			// Create file if it does not exist
-			if (!file.createNewFile())
-			{
-				file.delete();
-				file.createNewFile();
-			}
-			out = new FileOutputStream(filePath);
-			p = new PrintStream(out);
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	private void prepareSQLite() throws Exception
 	{
 		Class.forName("org.sqlite.JDBC");
@@ -72,19 +50,13 @@ public class ProjectSearch implements Runnable
 		stat = conn.createStatement();
 		// stat.executeUpdate("drop table if exists "+ this.projectName +";");
 		// stat.executeUpdate("create table hits (name, hits);");
-		stat
-				.executeUpdate("create table if not exists emails (permalink, subject, date, author, threadlink, text);");
-		stat
-				.executeUpdate("create table if not exists classes (id INTEGER PRIMARY KEY AUTOINCREMENT, name, path);");
-		stat
-				.executeUpdate("create table if not exists hits (id INTEGER, permalink);");
+		stat.executeUpdate("create table if not exists emails (permalink, subject, date, author, threadlink, text, visible);");
+		stat.executeUpdate("create table if not exists classes (id INTEGER PRIMARY KEY AUTOINCREMENT, name, path);");
+		stat.executeUpdate("create table if not exists hits (id INTEGER, permalink);");
 	}
 
 	private void searchAll() throws Exception
 	{
-		// this.prepareFile();
-		// PreparedStatement prep = conn
-		// .prepareStatement("insert into hits values (?, ?);");
 		try
 		{
 			Display.getDefault().asyncExec(new Runnable()
@@ -98,7 +70,6 @@ public class ProjectSearch implements Runnable
 			for (ICompilationUnit cu : compList)
 			{
 				this.searchCompilationUnit(cu);
-				System.out.println("Notak");
 			}
 		} finally
 		{
@@ -126,79 +97,7 @@ public class ProjectSearch implements Runnable
 							"org.eclipse.remail.decorators.REmailLightweightDecorator",
 							true);
 		}
-
-		// conn.setAutoCommit(false);
-		// prep.executeBatch();
-		// conn.setAutoCommit(true);
-
 	}
-
-	private void saveResults(String name, String path, LinkedList<Mail> MailList)
-			throws SQLException
-	{
-		name = name.split("\\.")[0];
-		ResultSet rs = stat
-				.executeQuery("select count(*) from classes where name = '"
-						+ name + "' and path = '" + path + "';");
-		rs.next();
-		if (rs.getInt(1) == 0)
-		{
-			stat.executeUpdate("insert into classes (name, path) values('"
-					+ name + "','" + path + "')");
-		}
-		rs.close();
-		rs = stat.executeQuery("select id from classes where name = '" + name
-				+ "' and path = '" + path + "';");
-		rs.next();
-		int id = rs.getInt(1);
-		rs.close();
-		// stat.executeUpdate("drop table if exists " + name + ";");
-		// stat.executeUpdate("create table " + name +
-		// " (id, subject, date, author, permalink, threadlink, text, classname);");
-		PreparedStatement mailPrep = conn
-				.prepareStatement("insert into emails values (?,?,?,?,?,?);");
-		PreparedStatement hitsPrep = conn
-				.prepareStatement("insert into hits values (?,?);");
-		for (Mail mail : MailList)
-		{
-			ResultSet rs2 = stat
-					.executeQuery("select count(*) from emails where permalink = '"
-							+ mail.getPermalink() + "';");
-			rs2.next();
-			if (rs2.getInt(1) == 0)
-			{
-				// classPrep.setString(1, "0");
-				mailPrep.setString(1, mail.getPermalink());
-				mailPrep.setString(2, mail.getSubject());
-				mailPrep.setString(3, String.valueOf(mail.getTimestamp()
-						.getTime()));
-				// classPrep.setString(3, mail.getTimestamp().toString());
-				mailPrep.setString(4, mail.getAuthor());
-				// classPrep.setString(5, mail.getPermalink());
-				mailPrep.setString(5, mail.getThreadlink());
-				mailPrep.setString(6, mail.getText());
-				// classPrep.setString(7, mail.getClassname());
-				mailPrep.addBatch();
-			}
-			hitsPrep.setInt(1, id);
-			hitsPrep.setString(2, mail.getPermalink());
-			hitsPrep.addBatch();
-		}
-		stat.executeUpdate("delete from hits where id = " + id + ";");
-		conn.setAutoCommit(false);
-		mailPrep.executeBatch();
-		hitsPrep.executeBatch();
-		conn.setAutoCommit(true);
-	}
-
-	// private void insertHitsRow(String name, int count, PreparedStatement
-	// prep) throws SQLException
-	// {
-	// stat.executeUpdate("delete from hits where name = '"+name+"'");
-	// prep.setString(1, name);
-	// prep.setString(2, String.valueOf(count));
-	// prep.addBatch();
-	// }
 
 	private void searchCompilationUnit(ICompilationUnit cu)
 			throws SQLException, InterruptedException
@@ -231,6 +130,65 @@ public class ProjectSearch implements Runnable
 		// if (this.compList.size() == 1)
 		// Search.updateMailView(mailList);
 		// this.insertHitsRow(name, MailList.size(), prep);
+	}
+
+	private void saveResults(String name, String path, LinkedList<Mail> MailList)
+			throws SQLException
+	{
+		name = name.split("\\.")[0];
+		ResultSet rs = stat
+				.executeQuery("select count(*) from classes where name = '"
+						+ name + "' and path = '" + path + "';");
+		rs.next();
+		if (rs.getInt(1) == 0)
+		{
+			stat.executeUpdate("insert into classes (name, path) values('"
+					+ name + "','" + path + "')");
+		}
+		rs.close();
+		rs = stat.executeQuery("select id from classes where name = '" + name
+				+ "' and path = '" + path + "';");
+		rs.next();
+		int id = rs.getInt(1);
+		rs.close();
+		// stat.executeUpdate("drop table if exists " + name + ";");
+		// stat.executeUpdate("create table " + name +
+		// " (id, subject, date, author, permalink, threadlink, text, classname);");
+		PreparedStatement mailPrep = conn
+				.prepareStatement("insert into emails values (?,?,?,?,?,?,?);");
+		PreparedStatement hitsPrep = conn
+				.prepareStatement("insert into hits values (?,?);");
+		for (Mail mail : MailList)
+		{
+			ResultSet rs2 = stat
+					.executeQuery("select count(*) from emails where permalink = '"
+							+ mail.getPermalink() + "';");
+			rs2.next();
+			if (rs2.getInt(1) == 0)
+			{
+				// classPrep.setString(1, "0");
+				mailPrep.setString(1, mail.getPermalink());
+				mailPrep.setString(2, mail.getSubject());
+				mailPrep.setString(3, String.valueOf(mail.getTimestamp()
+						.getTime()));
+				// classPrep.setString(3, mail.getTimestamp().toString());
+				mailPrep.setString(4, mail.getAuthor());
+				// classPrep.setString(5, mail.getPermalink());
+				mailPrep.setString(5, mail.getThreadlink());
+				mailPrep.setString(6, mail.getText());
+				mailPrep.setBoolean(7, true);
+				// classPrep.setString(7, mail.getClassname());
+				mailPrep.addBatch();
+			}
+			hitsPrep.setInt(1, id);
+			hitsPrep.setString(2, mail.getPermalink());
+			hitsPrep.addBatch();
+		}
+		stat.executeUpdate("delete from hits where id = " + id + ";");
+		conn.setAutoCommit(false);
+		mailPrep.executeBatch();
+		hitsPrep.executeBatch();
+		conn.setAutoCommit(true);
 	}
 
 	@Override

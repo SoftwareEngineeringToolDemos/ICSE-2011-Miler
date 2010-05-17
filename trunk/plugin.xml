@@ -178,4 +178,14 @@
       </action> 
    </editorContribution> 
 </extension>
+   <extension
+         point="org.eclipse.jdt.ui.javaEditorTextHovers">
+      <hover
+            activate="false"
+            class="org.eclipse.remail.editor.MailHover"
+            description="Cool Hover"
+            id="REmail.hover1"
+            label="Hooover">
+      </hover>
+   </extension>
 </plugin>

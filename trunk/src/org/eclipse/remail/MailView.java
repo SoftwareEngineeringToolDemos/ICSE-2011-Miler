@@ -6,12 +6,17 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import org.eclipse.remail.util.SQLiteMailListConstructor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.part.*;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.text.IMarkSelection;
 import org.eclipse.jface.text.ITextSelection;
@@ -28,16 +33,10 @@ public class MailView extends ViewPart
 
 	public static final String ID = "org.eclipse.emailrecommender.MailView";
 	public MailContentView mailContentView = null; // instance of the content
-	// view
-
-	private static TreeViewer viewer;
+	private static ContainerCheckedTreeViewer viewer;
 	private Action selectionChangedAction;
 	private Action doubleClickAction;
-
-	// TODO
-	class NameSorter extends ViewerSorter
-	{
-	}
+	private IResource activeResource;
 
 	/**
 	 * The constructor.
@@ -150,85 +149,97 @@ public class MailView extends ViewPart
 		}
 	}
 
+	// public class MailTreeLabelProvider extends LabelProvider implements
+	// ILabelProvider
+	// {
+	// @Override
+	// public String getText(Object element)
+	// {
+	// SimpleDateFormat df = new SimpleDateFormat("dd.MM. yyyy HH:mm");
+	// Mail mail = (Mail) element;
+	// // String author = mail.getAuthor().split("(")[0];
+	// String author = mail.getAuthor().replaceAll(
+	// "^(.+)\\s*\\(.*@.*\\).*$", "$1");
+	// return df.format(mail.getTimestamp()) + " " + author + ": "
+	// + mail.getSubject();
+	// }
+	// }
+
 	public class MailTreeLabelProvider extends LabelProvider implements
-			ILabelProvider
+			ITableLabelProvider
 	{
+
 		@Override
-		public String getText(Object element)
+		public Image getColumnImage(Object element, int columnIndex)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getColumnText(Object element, int columnIndex)
 		{
 			SimpleDateFormat df = new SimpleDateFormat("dd.MM. yyyy HH:mm");
 			Mail mail = (Mail) element;
 			// String author = mail.getAuthor().split("(")[0];
 			String author = mail.getAuthor().replaceAll(
 					"^(.+)\\s*\\(.*@.*\\).*$", "$1");
-			return df.format(mail.getTimestamp()) + " " + author + ": "
-					+ mail.getSubject();
-		}
-	}
-
-	private ISelectionListener listener = new ISelectionListener()
-	{
-		public void selectionChanged(IWorkbenchPart sourcepart,
-				ISelection selection)
-		{
-			// we ignore our own selections
-			if (sourcepart != MailView.this)
+			switch (columnIndex)
 			{
-				processSelection(sourcepart, selection);
+				case 0:
+					return df.format(mail.getTimestamp());
+
+				case 1:
+					return author;
+
+				case 2:
+					return mail.getSubject();
 			}
-		}
-	};
-
-	public void processSelection(IWorkbenchPart sourcepart, ISelection selection)
-	{
-		// System.out.println("SELECTION ");
-		// setContentDescription(sourcepart.getTitle() + " ("
-		//	+ selection.getClass().getName() + ")");
-		//System.out.println(selection.getClass().getName());
-		if (selection instanceof IStructuredSelection)
-		{
-			IStructuredSelection ss = (IStructuredSelection) selection;
-			//System.out.println(" Str");
-			//System.out.println(ss.getClass());
-			if (ss.getFirstElement() instanceof ICompilationUnit)
-				//System.out.println("heyyyyyyyy");
-				this.loadFromCache((ICompilationUnit) ss.getFirstElement());
+			return null;
 		}
 	}
 
-	private void loadFromCache(ICompilationUnit compilationUnit)
-	{
-		//String name = compilationUnit.getResource().getName();
-		//name = name.split("\\.")[0];
-		SQLiteMailListConstructor mailListConstructor = new SQLiteMailListConstructor(compilationUnit.getResource());
-		LinkedList<Mail> mailList = new LinkedList<Mail>();
-		try
-		{
-			mailList = mailListConstructor.getResultMailList();
-			System.out.println("|"+mailList.size()+"|");
-		} catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Search.updateMailView(mailList);
-		//MailView.getViewer().setInput(mailList);
-	}
+	public class CheckStateProvider implements ICheckStateProvider{
 
+		@Override
+		public boolean isChecked(Object element)
+		{
+			// TODO Auto-generated method stub
+			MailStateChecker mailStateChecker = new MailStateChecker((Mail)element, activeResource);
+			return mailStateChecker.isVisible();
+		}
+
+		@Override
+		public boolean isGrayed(Object element)
+		{
+			// TODO Auto-generated method stub
+			return false;
+		}} 
+	
+	public class CheckStateListener implements ICheckStateListener 
+	{
+		@Override
+		public void checkStateChanged(CheckStateChangedEvent event)
+		{
+			boolean checked = event.getChecked();
+			Mail mail = (Mail) event.getElement();
+			MailStateChecker mailStateChecker = new MailStateChecker(mail, activeResource);
+			mailStateChecker.changeState(checked);
+			//loadFromCache((ICompilationUnit)activeResource);
+		}
+	}
+	
 	/**
 	 * This is a callback that will allows to create the view controls
 	 */
 	public void createPartControl(Composite parent)
 	{
-		viewer = new TreeViewer(parent, SWT.SINGLE /*
-													 * | SWT.FULL_SELECTION |
-													 * SWT.H_SCROLL |
-													 * SWT.V_SCROLL
-													 */);
+		viewer = new ContainerCheckedTreeViewer(parent, SWT.SINGLE /*
+															 * |
+															 * SWT.FULL_SELECTION
+															 * | SWT.H_SCROLL |
+															 * SWT.V_SCROLL
+															 */);
 		// viewer.setContentProvider(new ArrayContentProvider());
 		// final Table table = viewer.getTable();
 		// table.setHeaderVisible(true);
@@ -244,10 +255,30 @@ public class MailView extends ViewPart
 		// tableColumn.setWidth(columnWidths[i]);
 		// }
 
+		Tree tree = viewer.getTree();
+		tree.setHeaderVisible(true);
+		String[] columnNames = new String[] { "Date", "Author", "Subject" };
+		int[] columnWidths = new int[] { 140, 150, 500 };
+		int[] columnAlignments = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT };
+		for (int i = 0; i < columnNames.length; i++)
+		{
+			TreeColumn treeColumn = new TreeColumn(tree, columnAlignments[i]);
+			treeColumn.setText(columnNames[i]);
+			treeColumn.setWidth(columnWidths[i]);
+//			treeColumn.pack();
+		}
+
 		getSite().getWorkbenchWindow().getSelectionService()
 				.addSelectionListener(listener);
 		viewer.setContentProvider(new MailTreeContentProvider());
+		// DecoratingLabelProvider decoratingLabelProvider = new
+		// DecoratingLabelProvider(
+		// new MailTreeLabelProvider(), new MailLabelDecorator());
+
 		viewer.setLabelProvider(new MailTreeLabelProvider());
+		viewer.setCheckStateProvider(new CheckStateProvider());
+		viewer.addCheckStateListener(new CheckStateListener());
+		
 		makeActions();
 		hookActions();
 	}
@@ -321,6 +352,63 @@ public class MailView extends ViewPart
 				doubleClickAction.run();
 			}
 		});
+	}
+
+	private ISelectionListener listener = new ISelectionListener()
+	{
+		public void selectionChanged(IWorkbenchPart sourcepart,
+				ISelection selection)
+		{
+			// we ignore our own selections
+			if (sourcepart != MailView.this)
+			{
+				processSelection(sourcepart, selection);
+			}
+		}
+	};
+
+	public void processSelection(IWorkbenchPart sourcepart, ISelection selection)
+	{
+		// System.out.println("SELECTION ");
+		// setContentDescription(sourcepart.getTitle() + " ("
+		// + selection.getClass().getName() + ")");
+		// System.out.println(selection.getClass().getName());
+		if (selection instanceof IStructuredSelection)
+		{
+			IStructuredSelection ss = (IStructuredSelection) selection;
+			// System.out.println(" Str");
+			// System.out.println(ss.getClass());
+			if (ss.getFirstElement() instanceof ICompilationUnit)
+				// System.out.println("heyyyyyyyy");
+				this.activeResource = ((ICompilationUnit) ss.getFirstElement()).getResource();
+				this.loadFromCache((ICompilationUnit) ss.getFirstElement());
+		}
+	}
+
+	private void loadFromCache(ICompilationUnit compilationUnit)
+	{
+		// String name = compilationUnit.getResource().getName();
+		// name = name.split("\\.")[0];
+		SQLiteMailListConstructor mailListConstructor = new SQLiteMailListConstructor(
+				this.activeResource);
+		LinkedList<Mail> mailList = new LinkedList<Mail>();
+		try
+		{
+			if ((mailList = mailListConstructor.getResultMailList()) == null)
+				Search.updateMailView(new LinkedList<Mail>());
+			else
+				Search.updateMailView(mailList);
+			System.out.println("|" + mailList.size() + "|");
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// MailView.getViewer().setInput(mailList);
 	}
 
 	public static TreeViewer getViewer()

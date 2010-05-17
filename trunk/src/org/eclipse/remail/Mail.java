@@ -140,6 +140,8 @@ public class Mail implements Comparable
 	public static LinkedList<Mail> mergeMailLists(LinkedList<Mail> mailList,
 			LinkedList<Mail> mailList2)
 	{
+		if (mailList == null || mailList2 == null)
+			return null;
 		LinkedList<Mail> mailList3 = new LinkedList<Mail>();
 		for (Mail m2 : mailList2)
 		{

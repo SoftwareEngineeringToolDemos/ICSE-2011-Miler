@@ -148,7 +148,7 @@ public class markerInitActionDelegate implements IEditorActionDelegate
 				+ project.getLocation().toString() + File.separator
 				+ "remail.db");
 		stat = conn.createStatement();
-		stat.executeUpdate("create table if not exists emails (permalink, subject, date, author, threadlink, text);");
+		stat.executeUpdate("create table if not exists emails (permalink, subject, date, author, threadlink, text, visible);");
 		stat.executeUpdate("create table if not exists classes (id INTEGER PRIMARY KEY AUTOINCREMENT, name, path);");
 		stat.executeUpdate("create table if not exists hits (id INTEGER, permalink);");
 	}

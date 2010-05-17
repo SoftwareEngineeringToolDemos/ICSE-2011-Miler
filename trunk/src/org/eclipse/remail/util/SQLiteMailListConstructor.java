@@ -38,7 +38,7 @@ public class SQLiteMailListConstructor
 				+ project.getLocation().toString() + File.separator
 				+ "remail.db");
 		stat = conn.createStatement();
-		stat.executeUpdate("create table if not exists emails (permalink, subject, date, author, threadlink, text);");
+		stat.executeUpdate("create table if not exists emails (permalink, subject, date, author, threadlink, text, visible);");
 		stat.executeUpdate("create table if not exists classes (id INTEGER PRIMARY KEY AUTOINCREMENT, name, path);");
 		stat.executeUpdate("create table if not exists hits (id INTEGER, permalink);");
 	}
@@ -68,7 +68,7 @@ public class SQLiteMailListConstructor
 		{
 			rs.close();
 			conn.close();
-			return mailList;
+			return null;
 		}
 		rs = stat.executeQuery("select permalink from hits where id="+id+";");
 		//System.out.println(rs.getInt(1));
