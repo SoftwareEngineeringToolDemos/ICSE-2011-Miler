@@ -1,8 +1,10 @@
-package org.eclipse.remail;
+package org.eclipse.remail.views;
 
 import java.sql.SQLException;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.eclipse.remail.Activator;
+import org.eclipse.remail.Mail;
 import org.eclipse.remail.modules.PostgreCore;
 import org.eclipse.remail.preferences.PreferenceConstants;
 import org.eclipse.remail.util.ContentDecorator;

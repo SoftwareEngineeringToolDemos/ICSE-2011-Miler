@@ -1,0 +1,80 @@
+<class-diagram version="0.9.86" automaticImage="PNG" icons="true" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <interface corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.modules.MailSearch" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/modules/MailSearch.java" binary="false">    
+    <position x="456" y="111" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.modules.PostgreSearch" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/modules/PostgreSearch.java" binary="false">    
+    <position x="489" y="284" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.modules.MboxSearch" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/modules/MboxSearch.java" binary="false">    
+    <position x="215" y="188" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.modules.MboxCore" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/modules/MboxCore.java" binary="false">    
+    <position x="179" y="326" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.modules.PostgreCore" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/modules/PostgreCore.java" binary="false">    
+    <position x="294" y="362" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <association>    
+    <source project="REmail" name="org.eclipse.remail.modules.PostgreSearch" 
+      file="/REmail/src/org/eclipse/remail/modules/PostgreSearch.java" binary="false" navigable="false">      
+      <attribute name="search"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="REmail" name="org.eclipse.remail.modules.PostgreCore" 
+      file="/REmail/src/org/eclipse/remail/modules/PostgreCore.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization>    
+    <source project="REmail" name="org.eclipse.remail.modules.MboxSearch" 
+      file="/REmail/src/org/eclipse/remail/modules/MboxSearch.java" binary="false"/>    
+    <target project="REmail" name="org.eclipse.remail.modules.MailSearch" 
+      file="/REmail/src/org/eclipse/remail/modules/MailSearch.java" binary="false"/>  
+  </realization>  
+  <association>    
+    <source project="REmail" name="org.eclipse.remail.modules.MboxSearch" 
+      file="/REmail/src/org/eclipse/remail/modules/MboxSearch.java" binary="false" navigable="false">      
+      <attribute name="source"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="REmail" name="org.eclipse.remail.modules.MboxCore" 
+      file="/REmail/src/org/eclipse/remail/modules/MboxCore.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization>    
+    <source project="REmail" name="org.eclipse.remail.modules.PostgreSearch" 
+      file="/REmail/src/org/eclipse/remail/modules/PostgreSearch.java" binary="false"/>    
+    <target project="REmail" name="org.eclipse.remail.modules.MailSearch" 
+      file="/REmail/src/org/eclipse/remail/modules/MailSearch.java" binary="false"/>  
+  </realization>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="false"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

@@ -72,15 +72,15 @@
          name="lars"
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.eclipse.remail.SingleSearch"
+            class="org.eclipse.remail.SelectionProcessor"
             commandId="org.eclipse.remail.SingleSearchClass">
       </handler>
       <handler
-            class="org.eclipse.remail.SingleSearch"
+            class="org.eclipse.remail.SelectionProcessor"
             commandId="org.eclipse.remail.SingleSearchProject">
       </handler>
       <handler
-            class="org.eclipse.remail.SingleSearch"
+            class="org.eclipse.remail.SelectionProcessor"
             commandId="org.eclipse.remail.SingleSearchPackage">
       </handler>
    </extension>
@@ -92,7 +92,7 @@
       </category>
       <view
             category="org.eclipse.emailrecommender.category1"
-            class="org.eclipse.remail.MailView"
+            class="org.eclipse.remail.views.MailView"
             icon="icons/sample.gif"
             id="org.eclipse.emailrecommender.MailView"
             name="E-mails"
@@ -100,7 +100,7 @@
       </view>
       <view
             category="org.eclipse.emailrecommender.category1"
-            class="org.eclipse.remail.MailContentView"
+            class="org.eclipse.remail.views.MailContentView"
             icon="icons/sample.gif"
             id="org.eclipse.emailrecommender.MailContentView"
             name="E-mail Content"

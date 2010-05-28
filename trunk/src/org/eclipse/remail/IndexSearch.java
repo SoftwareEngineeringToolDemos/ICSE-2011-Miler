@@ -1,4 +1,4 @@
-package org.eclipse.remail.modules;
+package org.eclipse.remail;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,13 +15,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.remail.Activator;
-import org.eclipse.remail.Mail;
-import org.eclipse.remail.MailView;
-import org.eclipse.remail.Search;
 import org.eclipse.swt.widgets.Display;
 
-public class ProjectSearch implements Runnable
+public class IndexSearch implements Runnable
 {
 	LinkedList<ICompilationUnit> compList;
 	IProject project;
@@ -32,7 +28,7 @@ public class ProjectSearch implements Runnable
 	Statement stat;
 	IProgressMonitor progressMonitor;
 
-	public ProjectSearch(LinkedList<ICompilationUnit> compList,
+	public IndexSearch(LinkedList<ICompilationUnit> compList,
 			IProgressMonitor pm)
 	{
 		this.project = compList.get(0).getResource().getProject();

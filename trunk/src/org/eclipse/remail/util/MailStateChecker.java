@@ -1,4 +1,4 @@
-package org.eclipse.remail;
+package org.eclipse.remail.util;
 
 import java.io.File;
 import java.sql.Connection;
@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.remail.Mail;
 
 public class MailStateChecker
 {

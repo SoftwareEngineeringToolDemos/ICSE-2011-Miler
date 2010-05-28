@@ -23,7 +23,6 @@ import org.eclipse.remail.modules.MailSearch;
 import org.eclipse.remail.modules.PostgreSearch;
 import org.eclipse.remail.modules.MboxSearch;
 import org.eclipse.remail.modules.MboxCore;
-import org.eclipse.remail.modules.ProjectSearch;
 import org.eclipse.remail.preferences.PreferenceConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
@@ -43,7 +42,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * @author vita
  * 
  */
-public class SingleSearch extends AbstractHandler
+public class SelectionProcessor extends AbstractHandler
 {
 
 	IPreferenceStore store;
@@ -96,7 +95,7 @@ public class SingleSearch extends AbstractHandler
 		IActionBars bars = vsite.getActionBars();
 		IStatusLineManager statusLine = bars.getStatusLineManager();
 		IProgressMonitor pm = statusLine.getProgressMonitor();
-		Thread thr = new Thread(new ProjectSearch(compList, pm));
+		Thread thr = new Thread(new IndexSearch(compList, pm));
 		thr.start();
 	}
 

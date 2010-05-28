@@ -1,10 +1,13 @@
-package org.eclipse.remail;
+package org.eclipse.remail.views;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import org.eclipse.remail.Mail;
+import org.eclipse.remail.Search;
+import org.eclipse.remail.util.MailStateChecker;
 import org.eclipse.remail.util.SQLiteMailListConstructor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;

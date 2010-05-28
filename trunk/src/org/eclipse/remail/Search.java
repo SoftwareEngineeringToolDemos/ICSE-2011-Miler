@@ -9,6 +9,7 @@ import org.eclipse.remail.modules.MailSearch;
 import org.eclipse.remail.modules.MboxSearch;
 import org.eclipse.remail.modules.PostgreSearch;
 import org.eclipse.remail.preferences.PreferenceConstants;
+import org.eclipse.remail.views.MailView;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PartInitException;
