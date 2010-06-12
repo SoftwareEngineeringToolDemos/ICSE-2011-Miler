@@ -1,0 +1,90 @@
+<class-diagram version="0.9.86" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.views.MailView.CheckStateProvider" 
+    project="REmail" file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false">    
+    <position x="218" y="346" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.views.MailView.CheckStateListener" 
+    project="REmail" file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false">    
+    <position x="404" y="354" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.views.MailView.MailTreeLabelProvider" 
+    project="REmail" file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false">    
+    <position x="606" y="357" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.views.MailView.MailTreeContentProvider" 
+    project="REmail" file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false">    
+    <position x="650" y="214" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.views.MailView" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false">    
+    <position x="464" y="215" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false"/>      
+      <operations public="true" package="true" protected="true" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.views.MailContentView" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/views/MailContentView.java" binary="false">    
+    <position x="214" y="216" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <nesting>    
+    <source project="REmail" name="org.eclipse.remail.views.MailView" 
+      file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false"/>    
+    <target project="REmail" name="org.eclipse.remail.views.MailView.CheckStateListener" 
+      file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false"/>  
+  </nesting>  
+  <nesting>    
+    <source project="REmail" name="org.eclipse.remail.views.MailView" 
+      file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false"/>    
+    <target project="REmail" name="org.eclipse.remail.views.MailView.CheckStateProvider" 
+      file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false"/>  
+  </nesting>  
+  <association>    
+    <source project="REmail" name="org.eclipse.remail.views.MailView" 
+      file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false" navigable="false">      
+      <attribute name="mailContentView"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="REmail" name="org.eclipse.remail.views.MailContentView" 
+      file="/REmail/src/org/eclipse/remail/views/MailContentView.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting>    
+    <source project="REmail" name="org.eclipse.remail.views.MailView" 
+      file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false"/>    
+    <target project="REmail" name="org.eclipse.remail.views.MailView.MailTreeLabelProvider" 
+      file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false"/>  
+  </nesting>  
+  <nesting>    
+    <source project="REmail" name="org.eclipse.remail.views.MailView" 
+      file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false"/>    
+    <target project="REmail" name="org.eclipse.remail.views.MailView.MailTreeContentProvider" 
+      file="/REmail/src/org/eclipse/remail/views/MailView.java" binary="false"/>  
+  </nesting>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

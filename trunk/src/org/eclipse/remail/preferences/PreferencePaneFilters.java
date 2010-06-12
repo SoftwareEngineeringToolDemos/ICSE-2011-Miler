@@ -31,14 +31,14 @@ public class PreferencePaneFilters extends FieldEditorPreferencePage implements
 		// { "Author", "author" }
 		// }, getFieldEditorParent()));
 		addField(new FilterListEditor(PreferenceConstants.P_FILTER_SUBJECT,
-				"Messages with Subject matching following Reg.Expressions should be:",
+				"Messages with Subject matching following should be:",
 				getFieldEditorParent()));
 		addField(new ComboFieldEditor(
 				PreferenceConstants.P_FILTER_SUBJECT_EXCLUDE, "",
 				new String[][] { { "Excluded", "excluded" },
 						{ "Included", "included" }, }, getFieldEditorParent()));
 		addField(new FilterListEditor(PreferenceConstants.P_FILTER_AUTHOR,
-				"Messages with Author matching following Reg.Expressions should be:",
+				"Messages with Author matching following should be:",
 				getFieldEditorParent()));
 		addField(new ComboFieldEditor(
 				PreferenceConstants.P_FILTER_AUTHOR_EXCLUDE, "",

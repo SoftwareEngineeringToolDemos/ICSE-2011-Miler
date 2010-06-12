@@ -1,0 +1,64 @@
+<class-diagram version="0.9.86" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.IndexSearch" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/IndexSearch.java" binary="false">    
+    <position x="172" y="269" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.SelectionProcessor" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/SelectionProcessor.java" binary="false">    
+    <position x="48" y="44" width="259" height="127"/>    
+    <display autosize="false" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.Search" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/Search.java" binary="false">    
+    <position x="432" y="266" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.Mail" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/Mail.java" binary="false">    
+    <position x="437" y="128" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <dependency>    
+    <source project="REmail" name="org.eclipse.remail.IndexSearch" 
+      file="/REmail/src/org/eclipse/remail/IndexSearch.java" binary="false"/>    
+    <target project="REmail" name="org.eclipse.remail.Search" file="/REmail/src/org/eclipse/remail/Search.java" 
+      binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="REmail" name="org.eclipse.remail.SelectionProcessor" 
+      file="/REmail/src/org/eclipse/remail/SelectionProcessor.java" binary="false"/>    
+    <target project="REmail" name="org.eclipse.remail.IndexSearch" 
+      file="/REmail/src/org/eclipse/remail/IndexSearch.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="REmail" name="org.eclipse.remail.Search" file="/REmail/src/org/eclipse/remail/Search.java" 
+      binary="false"/>    
+    <target project="REmail" name="org.eclipse.remail.Mail" file="/REmail/src/org/eclipse/remail/Mail.java" 
+      binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="REmail" name="org.eclipse.remail.IndexSearch" 
+      file="/REmail/src/org/eclipse/remail/IndexSearch.java" binary="false"/>    
+    <target project="REmail" name="org.eclipse.remail.Mail" file="/REmail/src/org/eclipse/remail/Mail.java" 
+      binary="false"/>  
+  </dependency>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="false"/>    
+    <operations public="true" package="true" protected="true" private="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

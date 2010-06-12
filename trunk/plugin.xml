@@ -93,7 +93,7 @@
       <view
             category="org.eclipse.emailrecommender.category1"
             class="org.eclipse.remail.views.MailView"
-            icon="icons/sample.gif"
+            icon="icons/remail.png"
             id="org.eclipse.emailrecommender.MailView"
             name="E-mails"
             restorable="true">
@@ -101,7 +101,7 @@
       <view
             category="org.eclipse.emailrecommender.category1"
             class="org.eclipse.remail.views.MailContentView"
-            icon="icons/sample.gif"
+            icon="icons/remail.png"
             id="org.eclipse.emailrecommender.MailContentView"
             name="E-mail Content"
             restorable="true">
@@ -171,7 +171,7 @@
    <action
          id="org.eclipse.remail.editor.action1" 
          label="Editor Action 1" 
-         icon="icons/sample.gif"
+         icon="icons/remail.png"
          tooltip="Tooltip for Editor Action 1"
       toolbarPath="Normal/additions"
          class="org.eclipse.remail.editor.markerInitActionDelegate"> 
