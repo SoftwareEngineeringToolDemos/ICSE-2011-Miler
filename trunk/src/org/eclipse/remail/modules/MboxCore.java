@@ -69,7 +69,11 @@ public class MboxCore {
 						//e.printStackTrace();
 					}
 				} else if (line.startsWith("From:")) {
-					author = line.substring(6);
+					//System.out.println(line);
+					if(line.length() == 5)
+						author = "";
+					else
+						author = line.substring(6);
 				} else if (line.startsWith("Subject:")) {
 					subject = line.substring(9);
 				} else if (line.startsWith("X-Permalink:")) {
