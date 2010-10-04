@@ -1,4 +1,4 @@
-package org.eclipse.remail;
+package org.eclipse.remail; 
 
 import java.util.Date;
 import java.util.LinkedList;
