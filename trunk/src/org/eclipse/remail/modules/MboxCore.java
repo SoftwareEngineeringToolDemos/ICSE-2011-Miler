@@ -45,7 +45,9 @@ public class MboxCore {
 	private boolean getNextMail(BufferedReader f, String classname)
 			throws IOException {
 		Date date = null;
-		SimpleDateFormat df = new SimpleDateFormat("MMM dd HH:mm:ss z yyyy");
+		// Old - pre-July 2010 markmail format
+		//SimpleDateFormat df = new SimpleDateFormat("MMM dd HH:mm:ss z yyyy");
+		SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
 		String author = "";
 		String permalink = "";
 		String threadlink = "";
@@ -59,12 +61,14 @@ public class MboxCore {
 				// System.out.println(line);
 				if (line.startsWith("Date:")) {
 					try
-					{ // eg. Thu Jan 01 09:19:42 CET 2009	
-						date = df.parse(line.substring(10));
+					{ // eg. Thu Jan 01 09:19:42 CET 2009
+						System.out.println(line.substring(6));
+						date = df.parse(line.substring(6));
 					} catch (ParseException e)
 					{
 						// TODO Auto-generated catch block
 						date = null;
+						System.out.println('n');
 						continue;
 						//e.printStackTrace();
 					}
@@ -93,10 +97,13 @@ public class MboxCore {
 				text.append(line + "\n");
 			}
 		}
+		
 		if (hit == true) {
-			if(date != null)
+			System.out.println("|");
+			if(date != null) {
+				System.out.println("X");
 			mailList.add(new Mail(0, subject, date, author, permalink,
-					threadlink, text.toString(), classname));
+					threadlink, text.toString(), classname)); }
 		}
 		if (line == null)
 			return false;

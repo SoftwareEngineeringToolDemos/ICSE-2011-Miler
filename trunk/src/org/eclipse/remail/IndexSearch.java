@@ -105,6 +105,7 @@ public class IndexSearch implements Runnable
 		Search search = new Search();
 		LinkedList<Mail> mailList = search.Execute(name, fullPath.toString(),
 				true);
+		System.out.println("---" + mailList.size() + "---");
 		try
 		{
 			this.saveResults(name, fullPath.toString(), mailList);
