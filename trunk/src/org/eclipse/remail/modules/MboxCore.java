@@ -62,7 +62,7 @@ public class MboxCore {
 				if (line.startsWith("Date:")) {
 					try
 					{ // eg. Thu Jan 01 09:19:42 CET 2009
-						System.out.println(line.substring(6));
+						//System.out.println(line.substring(6));
 						date = df.parse(line.substring(6));
 					} catch (ParseException e)
 					{
