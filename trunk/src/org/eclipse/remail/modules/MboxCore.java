@@ -58,11 +58,9 @@ public class MboxCore {
 		boolean hit = false;
 		while (((line = f.readLine()) != null) && !line.startsWith("From ")) {
 			if (!body) {
-				// System.out.println(line);
 				if (line.startsWith("Date:")) {
 					try
-					{ // eg. Thu Jan 01 09:19:42 CET 2009
-						//System.out.println(line.substring(6));
+					{ 
 						date = df.parse(line.substring(6));
 					} catch (ParseException e)
 					{

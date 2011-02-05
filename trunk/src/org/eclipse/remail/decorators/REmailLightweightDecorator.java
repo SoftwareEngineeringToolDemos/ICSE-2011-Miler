@@ -17,6 +17,11 @@ import org.eclipse.remail.Search;
 import org.eclipse.remail.util.SQLiteMailListConstructor;
 import org.eclipse.swt.graphics.Color;
 
+/**
+ * Class implements creation of package explorer decoration, taking care of the class results numbering
+ * @author vita
+ *
+ */
 public class REmailLightweightDecorator implements ILightweightLabelDecorator
 {
 
