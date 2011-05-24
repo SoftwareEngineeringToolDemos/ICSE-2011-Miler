@@ -11,6 +11,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * A custom helper dialog used in preferences
+ * @author vhumpa
+ *
+ */
 public class TextInputDialog extends Dialog
 {
 	String result;
@@ -42,21 +47,16 @@ public class TextInputDialog extends Dialog
 		rowLayout.spacing = 0;
 		rowLayout.fill = true;
 	    shell.setLayout(new FillLayout());
-		// Your code goes here (widget creation, set result, etc).
 	    text = new Text(shell, SWT.SINGLE | SWT.BORDER);
 	    text.setSize(200, 50);
-	    //text.setSize(width, height)
-	    //text.setS
 		final Button button = new Button(shell, SWT.PUSH);
 	      button.setText("Save");
 	      button.addSelectionListener(new SelectionAdapter() {
 	         public void widgetSelected(SelectionEvent event) {
-	           //button.setText("I Was Clicked");
 	        	 result = text.getText();
 	        	 shell.close();
 	         }
 	      });
-		// --Your code...
 		shell.open();
 		Display display = parent.getDisplay();
 		while (!shell.isDisposed())

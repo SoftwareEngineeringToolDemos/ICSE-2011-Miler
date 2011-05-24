@@ -2,7 +2,6 @@ package org.eclipse.remail;
 
 import java.util.LinkedList;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.remail.modules.MailSearch;
@@ -14,8 +13,17 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * Class through which the search is organized. Execute() method utilizes
+ * one of the search modules from the modules package to provide search
+ * with chosen source of e-mails. This is in context of searching for a
+ * single compilation unit only. Index search is responsible in instantiating
+ * this class separately for each compilation unit in question.
+ * 
+ * @author V. Humpa
+ *
+ */
 public class Search
 {
 	public MailSearch search = null;
@@ -26,11 +34,18 @@ public class Search
 		store = Activator.getDefault().getPreferenceStore();
 	}
 
+	/**
+	 * Utilizes one of the search modules from the modules package to provide search
+	 * on chosen source of e-mails and in fact runs the search.
+	 * @param name
+	 * @param path
+	 * @param hidden
+	 * @return filtered list
+	 */
 	public LinkedList<Mail> Execute(String name, String path, Boolean hidden)
 	{
 		LinkedList<Mail> mailList = null;
-		name = name.split("\\.")[0]; // gets the filename without the
-		// extension
+		name = name.split("\\.")[0]; // gets the filename without the extension
 		try
 		{
 			if (store.getString(PreferenceConstants.P_SOURCE) == "postgre")
@@ -122,7 +137,6 @@ public class Search
 		else if (where == 2)
 			filter = store.getString(PreferenceConstants.P_FILTER_AUTHOR);
 		String[] filters = filter.split(";");
-		//System.out.println(filter);
 		for (String fltr : filters)
 		{
 			if(!fltr.matches(""))
@@ -131,7 +145,13 @@ public class Search
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Submits the list of Mail objects to the currently active filters and returns
+	 * new list that have been filtered accordingly
+	 * @param mailList
+	 * @return
+	 */
 	public static LinkedList<Mail> applyMessageFilters(LinkedList<Mail> mailList)
 	{
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
@@ -180,12 +200,6 @@ public class Search
 	 */
 	public static void updateMailView(LinkedList<Mail> mailList)
 	{
-		/*
-		 * if (mailList.size() == 0) MessageDialog.openInformation(null,
-		 * "Sorry", "No e-mails found."); else
-		 * MessageDialog.openInformation(null, "Result", mailList.size() +
-		 * " e-mails found.");
-		 */
 		MailView.getViewer().setInput(mailList);
 	}
 }

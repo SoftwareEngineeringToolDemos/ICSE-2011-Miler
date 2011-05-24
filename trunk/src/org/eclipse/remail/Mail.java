@@ -9,10 +9,7 @@ import java.util.LinkedList;
  * when its needed by the MailContentView. (To save the data flow between DB and
  * the plugin)
  * 
- * Remark 1: Now the content is included for the use with Mbox data source. When
- * DB is used it is still not used.
- * 
- * @author vita
+ * @author V. Humpa
  */
 public class Mail implements Comparable
 {
@@ -126,6 +123,9 @@ public class Mail implements Comparable
 		return text;
 	}
 
+	/**
+	 * Implements mandatory method from Comparable, allows for <,> operation
+	 */
 	@Override
 	public int compareTo(Object o)
 	{
@@ -137,6 +137,12 @@ public class Mail implements Comparable
 		return 0;
 	}
 
+	/**
+	 * Merges two lists of Mail into one, intersection compared by permalink values
+	 * @param mailList
+	 * @param mailList2
+	 * @return
+	 */
 	public static LinkedList<Mail> mergeMailLists(LinkedList<Mail> mailList,
 			LinkedList<Mail> mailList2)
 	{

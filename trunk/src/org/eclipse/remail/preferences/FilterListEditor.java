@@ -1,16 +1,18 @@
 package org.eclipse.remail.preferences;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.dialogs.InputDialog;
-
 import org.eclipse.jface.preference.ListEditor;
 import org.eclipse.jface.window.Window;
-import org.eclipse.remail.util.TextInputDialog;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ * A field editor to edit filter strings.
+ * 
+ * @author V. Humpa
+ */
 public class FilterListEditor extends ListEditor
 {
 	/**

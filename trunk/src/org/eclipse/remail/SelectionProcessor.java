@@ -1,45 +1,32 @@
 package org.eclipse.remail;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.LinkedList;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.remail.modules.MailSearch;
-import org.eclipse.remail.modules.PostgreSearch;
-import org.eclipse.remail.modules.MboxSearch;
-import org.eclipse.remail.modules.MboxCore;
-import org.eclipse.remail.preferences.PreferenceConstants;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
- * Main class to implement search. It is registered as handler for the package
- * explorer menu extension point. For the actual search in the DB, the
- * PosgreSearch class methods are used.
+ * This class is listed inside plugin.xml as a handler for the REmail
+ * search command, which serves as an initiator of search and is shown in the context (right
+ * click) menu of the Package Explorer. Since user can select multiple classes, packages, or the
+ * project itself, the task of SelectionProcessor is to produce a list of the actual classes
+ * o be submitted to the search. SelectionProcessor then submits the list to the IndexSearch to
+ * continue the work.
  * 
- * @author vita
+ * @author V. Humpa
  * 
  */
 public class SelectionProcessor extends AbstractHandler
@@ -61,6 +48,11 @@ public class SelectionProcessor extends AbstractHandler
 		return null;
 	}
 
+	/**
+	 * Sorts out the given selection and launches a new tread controlled by
+	 * IndexSearch instance
+	 * @param selection
+	 */
 	private void launchSearch(IStructuredSelection selection)
 	{
 		LinkedList<ICompilationUnit> compList = new LinkedList<ICompilationUnit>();
@@ -81,11 +73,6 @@ public class SelectionProcessor extends AbstractHandler
 				IPackageFragment packageFragment = (IPackageFragment) sel;
 				this.packageSearch(packageFragment, compList);
 
-			} else
-			{
-				// MessageDialog.openInformation(
-				// HandlerUtil.getActiveShell(event), "Information",
-				// "Selected object is not a class");
 			}
 		}
 		IWorkbenchPartSite site = Activator.getDefault().getWorkbench()
@@ -99,6 +86,11 @@ public class SelectionProcessor extends AbstractHandler
 		thr.start();
 	}
 
+	/**
+	 * Retrieves the list of classes to be searched against from a package
+	 * @param packageFragment
+	 * @param compList
+	 */
 	private void packageSearch(IPackageFragment packageFragment,
 			LinkedList<ICompilationUnit> compList)
 	{
@@ -108,7 +100,6 @@ public class SelectionProcessor extends AbstractHandler
 			compilationUnits = packageFragment.getCompilationUnits();
 		} catch (JavaModelException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for (ICompilationUnit cu : compilationUnits)
@@ -116,7 +107,12 @@ public class SelectionProcessor extends AbstractHandler
 			compList.add(cu);
 		}
 	}
-
+	
+	/**
+	 * Retrieves the list of classes to be searched against from an entire project
+	 * @param javaProject
+	 * @return
+	 */
 	public LinkedList<ICompilationUnit> projectSearch(IJavaProject javaProject)
 	{
 		IPackageFragment[] packageFragments = null;

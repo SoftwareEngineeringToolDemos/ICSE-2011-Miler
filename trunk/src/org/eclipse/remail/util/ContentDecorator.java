@@ -4,6 +4,14 @@ import java.text.SimpleDateFormat;
 
 import org.eclipse.remail.Mail;
 
+/**
+ * The purpose of this class is to provide a fuctionality
+ * to create HTML "pretty" view of an e-email in the 
+ * E-mail content view. Transfers the body in the HTML
+ * and replaces the >>> structure with div tag structure
+ * @author V. Humpa
+ *
+ */
 public class ContentDecorator
 {
 	private Mail mail;
@@ -15,7 +23,6 @@ public class ContentDecorator
 	{
 		this.mail = mail;
 		this.text = mail.getText();
-		//makeHTML();
 	}
 
 	public void makeHTML()

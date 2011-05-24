@@ -1,10 +1,11 @@
 package org.eclipse.remail.preferences;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.preference.*;
-import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.jface.preference.ComboFieldEditor;
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.remail.Activator;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class PreferencePaneFilters extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage
@@ -24,12 +25,6 @@ public class PreferencePaneFilters extends FieldEditorPreferencePage implements
 	 */
 	public void createFieldEditors()
 	{
-		// addField(new ComboFieldEditor(PreferenceConstants.P_FILTER_SUBJECT,
-		// "Subject",
-		// new String[][] { /*{ "Case Insensitive", "searchInsensitive" },*/
-		// { "Subject", "subject" },
-		// { "Author", "author" }
-		// }, getFieldEditorParent()));
 		addField(new FilterListEditor(PreferenceConstants.P_FILTER_SUBJECT,
 				"Messages with Subject matching following should be:",
 				getFieldEditorParent()));

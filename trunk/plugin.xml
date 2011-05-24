@@ -7,9 +7,10 @@
             locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
          <command
                commandId="org.eclipse.remail.SingleSearchClass"
+               icon="icons/remail.png"
                label="REmail Search"
                style="push">
-            <visibleWhen>
+			<visibleWhen>
                <with
                      variable="activeMenuSelection">
                   <iterate>
@@ -22,6 +23,7 @@
          </command>
          <command
                commandId="org.eclipse.remail.SingleSearchProject"
+               icon="icons/remail.png"
                label="REmail Search"
                style="push">
             <visibleWhen>
@@ -37,6 +39,7 @@
          </command>
          <command
                commandId="org.eclipse.remail.SingleSearchPackage"
+               icon="icons/remail.png"
                label="REmail Search"
                style="push">
             <visibleWhen>
@@ -170,9 +173,9 @@
    targetID="org.eclipse.jdt.ui.CompilationUnitEditor">
    <action
          id="org.eclipse.remail.editor.action1" 
-         label="Editor Action 1" 
+         label="Mark classes" 
          icon="icons/remail.png"
-         tooltip="Tooltip for Editor Action 1"
+         tooltip="REmail: Mark discussed classes"
       toolbarPath="Normal/additions"
          class="org.eclipse.remail.editor.markerInitActionDelegate"> 
       </action> 

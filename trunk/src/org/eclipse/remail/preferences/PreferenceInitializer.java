@@ -2,7 +2,6 @@ package org.eclipse.remail.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-
 import org.eclipse.remail.Activator;
 
 /**
@@ -18,7 +17,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.P_SOURCE, "mbox");
-		//store.setValue(PreferenceConstants.P_FILTER_SUBJECT, "");
 	}
 
 }

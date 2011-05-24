@@ -14,6 +14,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.Search;
 
+/**
+ * This class provides for obtaining Mail objects
+ * cached in the SQLite DB
+ * @author vhumpa
+ *
+ */
 public class SQLiteMailListConstructor
 {
 	private IProject project;
@@ -71,14 +77,12 @@ public class SQLiteMailListConstructor
 			return null;
 		}
 		rs = stat.executeQuery("select permalink from hits where id="+id+";");
-		//System.out.println(rs.getInt(1));
 		LinkedList<String> permaList = new LinkedList<String>();
 		while(rs.next())
 			permaList.add(rs.getString(1));
 		rs.close();
 		for (String permalink : permaList)
 		{
-			//System.out.println(permalink);
 			ResultSet rs2 = stat.executeQuery("select * from emails where permalink='"+permalink+"'");
 			rs2.next();
 			Date date = new Date();

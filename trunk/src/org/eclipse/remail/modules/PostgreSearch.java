@@ -5,8 +5,15 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.remail.*;
+import org.eclipse.remail.Mail;
 
+/**
+* MailSearch implementation that allows for the linking search using different
+* linking methods using postgre storage.
+* 
+* @author V. Humpa
+*
+*/
 public class PostgreSearch implements MailSearch {
 
 	private PostgreCore search;
@@ -21,14 +28,11 @@ public class PostgreSearch implements MailSearch {
 		try {
 			mailList = search.caseInsensitiveSearch(name);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return mailList;
-		//Search.updateMailView(mailList);
 	}
 
 	/**
@@ -46,14 +50,11 @@ public class PostgreSearch implements MailSearch {
 		try {
 			mailList = search.caseSensitiveSearch(name);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return mailList;
-		//Search.updateMailView(mailList);
 	}
 
 	/**
@@ -95,13 +96,10 @@ public class PostgreSearch implements MailSearch {
 			mailList = search.StrictRegexpSearch(restOfPackage,
 					packageLastPart, name);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//Search.updateMailView(mailList);
 		return mailList;
 	}
 
@@ -125,13 +123,10 @@ public class PostgreSearch implements MailSearch {
 		try {
 			mailList = search.LooseRegexpSearch(entirePackage, name);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//Search.updateMailView(mailList);
 		return mailList;
 	}
 
@@ -161,7 +156,6 @@ public class PostgreSearch implements MailSearch {
 				return this.caseSensitiveSearch(name);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

@@ -10,6 +10,12 @@ import java.sql.Statement;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.remail.Mail;
 
+/**
+ * The backbone of the selective removal.
+ * 
+ * @author V. Humpa
+ *
+ */
 public class MailStateChecker
 {
 	private Connection conn;

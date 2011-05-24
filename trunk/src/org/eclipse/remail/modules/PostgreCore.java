@@ -3,8 +3,12 @@
  */
 package org.eclipse.remail.modules;
 
-import java.io.*;
-import java.sql.*;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.Locale;
 
@@ -14,7 +18,7 @@ import org.eclipse.remail.Mail;
 /**
  * Implementation of the lightweight search methods using POSTGRESQL
  * 
- * @author vita
+ * @author V. Humpa
  */
 public class PostgreCore
 {
@@ -23,7 +27,6 @@ public class PostgreCore
 
     /**
      * Initiates the driver and sets up the connection to the database.
-     * Connection information are stored as static members in the Activator
      * 
      * @param conn_string
      * @param login
@@ -60,7 +63,7 @@ public class PostgreCore
                 + "%' order by timestamp");
         mailList.clear();
         while (rs.next())
-            //mailList.add(new Mail(rs.getInt("id"), rs.getString("subject"), rs.getString("timestamp"), classname_orig));
+            mailList.add(new Mail(rs.getInt("id"), rs.getString("subject"), rs.getDate("timestamp"), classname_orig));
         conn.close();
         return mailList;
     }
@@ -72,7 +75,7 @@ public class PostgreCore
                 + "%' order by timestamp");
         mailList.clear();
         while (rs.next())
-            //mailList.add(new Mail(rs.getInt("id"), rs.getString("subject"), rs.getString("timestamp"), classname));
+            mailList.add(new Mail(rs.getInt("id"), rs.getString("subject"), rs.getDate("timestamp"), classname));
         conn.close();
         return mailList;
     }
@@ -90,7 +93,7 @@ public class PostgreCore
                 + "(\\.java|\\.class|\\s+)' order by timestamp");
         mailList.clear();
         while (rs.next())
-            //mailList.add(new Mail(rs.getInt("id"), rs.getString("subject"), rs.getString("timestamp"), classname));
+            mailList.add(new Mail(rs.getInt("id"), rs.getString("subject"), rs.getDate("timestamp"), classname));
         conn.close();
         return mailList;
     }
@@ -106,7 +109,7 @@ public class PostgreCore
                 + ")?(\\.|\\\\|/|\\s)" + classname + "(\\.java|\\.class|\\s+|\"|,)' order by timestamp");
         mailList.clear();
         while (rs.next())
-            //mailList.add(new Mail(rs.getInt("id"), rs.getString("subject"), rs.getString("timestamp"), classname));
+            mailList.add(new Mail(rs.getInt("id"), rs.getString("subject"), rs.getDate("timestamp"), classname));
         conn.close();
         return mailList;
     }

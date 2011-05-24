@@ -1,13 +1,18 @@
 package org.eclipse.remail.modules;
 
 import java.util.LinkedList;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.remail.Mail;
-import org.eclipse.remail.Search;
 
+/**
+ * MailSearch implementation that allows for the linking search using different
+ * linking methods from the MBOX source
+ * 
+ * @author V. Humpa
+ *
+ */
 public class MboxSearch implements MailSearch
 {
 
@@ -20,6 +25,9 @@ public class MboxSearch implements MailSearch
 		mailList = new LinkedList<Mail>();
 	}
 
+	/**
+	 * Implements the CamelCase method.
+	 */
 	@Override
 	public LinkedList<Mail> camelCaseSearch(String path, String name)
 	{
@@ -31,6 +39,10 @@ public class MboxSearch implements MailSearch
 
 	}
 
+	/**
+	 * Implements the dictionary method - which is not supported with MBox,
+	 * so it really just calls similarly performing CamelCase instead.
+	 */
 	@Override
 	public LinkedList<Mail> dictionarySearch(String path, String name)
 	{
@@ -38,6 +50,9 @@ public class MboxSearch implements MailSearch
 
 	}
 
+	/**
+	 * Implements the Loose Regular expression linking method.
+	 */
 	@Override
 	public LinkedList<Mail> looseRegexpSearch(String path, String name)
 	{
@@ -46,14 +61,9 @@ public class MboxSearch implements MailSearch
 				+ "(\\.java|\\.class)", "");
 		entirePackage = entirePackage.replaceFirst("src/", "");
 		entirePackage = entirePackage.replaceAll("/", "(\\\\.|\\\\\\\\|/)");
-//		System.out.println(entirePackage);
-//		System.out.println(".*(\\s*)(" + entirePackage + ")?(\\.|\\\\|/|\\s)"
-//				+ name + "(\\.java|\\.class|\\s+|\"|,).*");
 		Pattern p = Pattern.compile(".*(\\s*)(" + entirePackage
 				+ ")?(\\.|\\\\|/)" + name + "(\\.java|\\.class|\\s+|\"|,).*",
 				Pattern.DOTALL | Pattern.MULTILINE);
-		// Pattern p = Pattern.compile(".*"+name+".*",Pattern.DOTALL |
-		// Pattern.MULTILINE);
 		LinkedList<Mail> mailList2 = new LinkedList<Mail>();
 		for (Mail mail : mailList)
 		{
@@ -61,17 +71,17 @@ public class MboxSearch implements MailSearch
 				mailList2.add(mail);
 		}
 		return mailList2;
-		//Search.updateMailView(mailList2);
 	}
 
+	/**
+	 * Implements the Strict Regular expression method.
+	 */
 	@Override
 	public LinkedList<Mail> strictRegexpSearch(String path, String name)
 	{
 		String packageLastPart = "";
 		String restOfPackage = "";
-		if (path.split("/").length > 2) // at least src/ + one package part
-		// have
-		// to be present
+		if (path.split("/").length > 2)
 		{
 			packageLastPart = path.split("/")[path.split("/").length - 2];
 			restOfPackage = path.replaceFirst("src/", "");
@@ -79,9 +89,6 @@ public class MboxSearch implements MailSearch
 					+ "/" + name + "(\\.java|\\.class)", "");
 			restOfPackage = restOfPackage.replaceAll("/", "(\\\\.|\\\\\\\\|/)");
 			mailList = source.getMailsByClassname(name);
-//			System.out.println(".*(\\s*)(" + restOfPackage + ")?(\\.|\\\\|/|\\s)"
-//					+ packageLastPart + "(\\.|\\\\|/)" + name
-//					+ "(\\.java|\\.class|\\s+).*");
 			Pattern p = Pattern.compile(".*(\\s*)(" + restOfPackage
 					+ ")?(\\.|\\\\|/|\\s)" + packageLastPart + "(\\.|\\\\|/)"
 					+ name + "(\\.java|\\.class|\\s+).*", Pattern.DOTALL
@@ -92,7 +99,6 @@ public class MboxSearch implements MailSearch
 				if (p.matcher(mail.getText()).matches())
 					mailList2.add(mail);
 			}
-			//Search.updateMailView(mailList2);
 			return mailList2;
 		} else
 		{
@@ -103,26 +109,23 @@ public class MboxSearch implements MailSearch
 		}
 	}
 
+	/**
+	 * Just returns null as insensitive method has been dropped
+	 * from REmail
+	 */
 	@Override
 	public LinkedList<Mail> caseInsensitiveSearch(String name)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Implements the Case Sensitive method.
+	 */
 	@Override
 	public LinkedList<Mail> caseSensitiveSearch(String name)
 	{
-		// System.out.println("HEYYYY");
 		return source.getMailsByClassname(name);
-		// System.out.println(mailList.get(0).getAuthor().split("(")[0]);
-		//Search.updateMailView(mailList);
-		// System.out.println(mailList.get(2).getTimestamp());
-		// System.out.println(mailList.get(2).getText());
-		// System.out.println(mailList.get(2).getAuthor());
-		// System.out.println(mailList.get(2).getSubject());
-		// System.out.println(mailList.get(2).getThreadlink());
-		// System.out.println(mailList.get(2).getPermalink());
 	}
 
 }

@@ -2,21 +2,32 @@ package org.eclipse.remail;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedList;
 
-import java.sql.*;
-
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.widgets.Display;
 
+/**
+ * Based on the given list of classes to search, IndexSearch commits the linking
+ * and subsequently indexing process on all of them. It depends on the remail.modules.Search
+ * class. IndexSearch needs to manipulate UI to inform the user about the progress of the
+ * search, which is the reason why it has been included outside the non-UI modules package.
+ * Inside IndexSearch, we use the Eclipse status bar progressMonitor extension to work with
+ * the progress bar that notifies users about proceedings of the search.
+ * 
+ * @author V. Humpa
+ */
 public class IndexSearch implements Runnable
 {
 	LinkedList<ICompilationUnit> compList;
@@ -44,8 +55,6 @@ public class IndexSearch implements Runnable
 				+ project.getLocation().toString() + File.separator
 				+ "remail.db");
 		stat = conn.createStatement();
-		// stat.executeUpdate("drop table if exists "+ this.projectName +";");
-		// stat.executeUpdate("create table hits (name, hits);");
 		stat.executeUpdate("create table if not exists emails (permalink, subject, date, author, threadlink, text, visible);");
 		stat.executeUpdate("create table if not exists classes (id INTEGER PRIMARY KEY AUTOINCREMENT, name, path);");
 		stat.executeUpdate("create table if not exists hits (id INTEGER, permalink);");
@@ -111,8 +120,6 @@ public class IndexSearch implements Runnable
 			this.saveResults(name, fullPath.toString(), mailList);
 		} catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
 			System.out.println("oops");
 			Thread.sleep(10);
 			this.saveResults(name, fullPath.toString(), mailList);
@@ -124,9 +131,6 @@ public class IndexSearch implements Runnable
 				progressMonitor.worked(1);
 			}
 		});
-		// if (this.compList.size() == 1)
-		// Search.updateMailView(mailList);
-		// this.insertHitsRow(name, MailList.size(), prep);
 	}
 
 	private void saveResults(String name, String path, LinkedList<Mail> MailList)
@@ -148,9 +152,6 @@ public class IndexSearch implements Runnable
 		rs.next();
 		int id = rs.getInt(1);
 		rs.close();
-		// stat.executeUpdate("drop table if exists " + name + ";");
-		// stat.executeUpdate("create table " + name +
-		// " (id, subject, date, author, permalink, threadlink, text, classname);");
 		PreparedStatement mailPrep = conn
 				.prepareStatement("insert into emails values (?,?,?,?,?,?,?);");
 		PreparedStatement hitsPrep = conn
@@ -163,18 +164,14 @@ public class IndexSearch implements Runnable
 			rs2.next();
 			if (rs2.getInt(1) == 0)
 			{
-				// classPrep.setString(1, "0");
 				mailPrep.setString(1, mail.getPermalink());
 				mailPrep.setString(2, mail.getSubject());
 				mailPrep.setString(3, String.valueOf(mail.getTimestamp()
 						.getTime()));
-				// classPrep.setString(3, mail.getTimestamp().toString());
 				mailPrep.setString(4, mail.getAuthor());
-				// classPrep.setString(5, mail.getPermalink());
 				mailPrep.setString(5, mail.getThreadlink());
 				mailPrep.setString(6, mail.getText());
 				mailPrep.setBoolean(7, true);
-				// classPrep.setString(7, mail.getClassname());
 				mailPrep.addBatch();
 			}
 			hitsPrep.setInt(1, id);
@@ -197,7 +194,6 @@ public class IndexSearch implements Runnable
 			this.searchAll();
 		} catch (Exception e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

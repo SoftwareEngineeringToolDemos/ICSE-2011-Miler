@@ -1,6 +1,9 @@
 package org.eclipse.remail.modules;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,6 +14,13 @@ import org.eclipse.remail.Activator;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.preferences.PreferenceConstants;
 
+/**
+ * Implements the core of searching through the mbox file for e-mails
+ * Basic is the getMailsByClassname, that returns a list of Mail objects
+ * that have a classname mentioned in them (Body or any header, really)
+ * @author V. Humpa
+ *
+ */
 public class MboxCore {
 
 	String lastFrom;
@@ -24,29 +34,24 @@ public class MboxCore {
 	public LinkedList<Mail> getMailsByClassname(String classname) {
 		mailList = new LinkedList<Mail>();
 		try {
-			BufferedReader f = prepareRead(getFirstPath(store.getString(PreferenceConstants.P_MBOX_PATH)));
+			BufferedReader f = prepareRead(getFirstPath(store
+					.getString(PreferenceConstants.P_MBOX_PATH)));
 			f.readLine();
-			// System.out.println(line);
 			while (getNextMail(f, classname))
 				;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//System.out.println("ThunderSource OK");
 		return mailList;
 	}
 
-	public String getFirstPath(String pathlist)
-	{
+	public String getFirstPath(String pathlist) {
 		return pathlist.split(File.pathSeparator)[0];
 	}
 
 	private boolean getNextMail(BufferedReader f, String classname)
 			throws IOException {
 		Date date = null;
-		// Old - pre-July 2010 markmail format
-		//SimpleDateFormat df = new SimpleDateFormat("MMM dd HH:mm:ss z yyyy");
 		SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
 		String author = "";
 		String permalink = "";
@@ -59,20 +64,15 @@ public class MboxCore {
 		while (((line = f.readLine()) != null) && !line.startsWith("From ")) {
 			if (!body) {
 				if (line.startsWith("Date:")) {
-					try
-					{ 
+					try {
 						date = df.parse(line.substring(6));
-					} catch (ParseException e)
-					{
-						// TODO Auto-generated catch block
+					} catch (ParseException e) {
 						date = null;
 						System.out.println('n');
 						continue;
-						//e.printStackTrace();
 					}
 				} else if (line.startsWith("From:")) {
-					//System.out.println(line);
-					if(line.length() == 5)
+					if (line.length() == 5)
 						author = "";
 					else
 						author = line.substring(6);
@@ -89,19 +89,18 @@ public class MboxCore {
 			} else {
 				if (line.contains(classname)) {
 					hit = true;
-					// System.out.println(date);
-					// System.out.print("1");
 				}
 				text.append(line + "\n");
 			}
 		}
-		
+
 		if (hit == true) {
 			System.out.println("|");
-			if(date != null) {
+			if (date != null) {
 				System.out.println("X");
-			mailList.add(new Mail(0, subject, date, author, permalink,
-					threadlink, text.toString(), classname)); }
+				mailList.add(new Mail(0, subject, date, author, permalink,
+						threadlink, text.toString(), classname));
+			}
 		}
 		if (line == null)
 			return false;
@@ -111,26 +110,10 @@ public class MboxCore {
 
 	private static BufferedReader prepareRead(String filePath)
 			throws java.io.IOException {
-		/*
-		 * char[] buf = new char[512]; StringBuilder builder = new
-		 * StringBuilder(); FileReader reader = new FileReader(filePath);
-		 * BufferedReader buffReader = new BufferedReader(reader); try { int
-		 * len; while (((len = buffReader.read(buf, 0, buf.length)) != -1)) {
-		 * builder.append(buf, 0, len); } } finally { buffReader.close(); }
-		 * return builder;
-		 */
-
 		File f = new File(filePath);
 		FileReader fr = new FileReader(f);
 		BufferedReader buffReader = new BufferedReader(fr);
 
 		return buffReader;
-
-		// char[] c = new char[(int) f.length()];
-		// fr.read(c, 0, (int) f.length());
-		//		
-		// fr.close();
-		// System.out.print(c);
-		// return c;
 	}
 }

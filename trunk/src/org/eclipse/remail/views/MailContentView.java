@@ -2,18 +2,16 @@ package org.eclipse.remail.views;
 
 import java.sql.SQLException;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.remail.Activator;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.modules.PostgreCore;
 import org.eclipse.remail.preferences.PreferenceConstants;
 import org.eclipse.remail.util.ContentDecorator;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite; //import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.text.*; //import org.apache.commons.lang.StringEscapeUtils;
-import org.eclipse.swt.browser.*;
 
 /**
  * Implements the view showing the content of selected email.

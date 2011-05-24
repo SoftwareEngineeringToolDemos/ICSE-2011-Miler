@@ -5,6 +5,12 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.ui.IEditorPart;
 
+/**
+ * Part of a future plan to provide REmail extension the the "javadoc"
+ * hovers
+ * @author V. HUmpa
+ *
+ */
 public class MailHover implements IJavaEditorTextHover
 {
 

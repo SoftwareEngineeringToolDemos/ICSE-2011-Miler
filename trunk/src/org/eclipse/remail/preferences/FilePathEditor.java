@@ -19,11 +19,12 @@ import java.util.StringTokenizer;
 
 import org.eclipse.jface.preference.ListEditor;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 
 /**
  * A field editor to edit file paths. (Modified from PathEditor)
+ * 
+ * @author V. Humpa
  */
 public class FilePathEditor extends ListEditor
 {

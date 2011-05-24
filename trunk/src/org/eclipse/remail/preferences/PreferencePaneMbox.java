@@ -1,19 +1,21 @@
 package org.eclipse.remail.preferences;
 
-import org.eclipse.jface.preference.*;
-import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.remail.Activator;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
  * This class represents a preference page that is contributed to the
- * Preferences dialog. By subclassing <samp>FieldEditorPreferencePage</samp>, we
+ * Preferences dialog. By subclassing FieldEditorPreferencePage, we
  * can use the field support built into JFace that allows us to create a page
  * that is small and knows how to save, restore and apply itself.
- * <p>
  * This page is used to modify preferences only. They are stored in the
  * preference store that belongs to the main plug-in class. That way,
  * preferences can be accessed directly via the preference store.
+ * 
+ * @author V. Humpa
  */
 
 public class PreferencePaneMbox extends FieldEditorPreferencePage implements
@@ -35,10 +37,9 @@ public class PreferencePaneMbox extends FieldEditorPreferencePage implements
 	public void createFieldEditors()
 	{
 		addField(new FilePathEditor(PreferenceConstants.P_MBOX_PATH, "Active &Mailist MBox file:", "Select File", getFieldEditorParent()));
-//		addField(new FileFieldEditor(PreferenceConstants.P_MBOX_PATH,
-//				"&Mailist MBox file:", getFieldEditorParent()));
-		addField(new FileFieldEditor(PreferenceConstants.P_MILER,
-				"Miler JAR location:", getFieldEditorParent()));
+		// A future request
+//		addField(new FileFieldEditor(PreferenceConstants.P_MILER,
+//				"Miler JAR location:", getFieldEditorParent()));
 	}
 
 	/*
