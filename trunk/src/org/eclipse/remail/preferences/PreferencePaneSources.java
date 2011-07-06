@@ -40,7 +40,7 @@ public class PreferencePaneSources extends FieldEditorPreferencePage implements
 				PreferenceConstants.P_SOURCE,
 				"Mailing list source:",
 				1,
-				new String[][] { { "&Thnuderbird (Mbox)", "mbox" },
+				new String[][] { { "&Thunderbird (Mbox)", "mbox" },
 						{ "Po&stgreSQL", "postgre" } },
 				getFieldEditorParent()));
 	}

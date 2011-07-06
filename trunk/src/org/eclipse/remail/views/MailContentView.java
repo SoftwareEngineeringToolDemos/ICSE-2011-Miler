@@ -24,18 +24,18 @@ import org.eclipse.ui.part.ViewPart;
 public class MailContentView extends ViewPart {
 	// not used, can easily be switched if by chance the MOZILLA backend is not
 	// available on the target platform
-	public static TextViewer textViewer;
+//	public static TextViewer textViewer;
 
-//	public static Browser browser; // currently used - shows email as html
+	public static Browser browser; // currently used - shows email as html
 
 	@Override
 	public void createPartControl(Composite parent) {
-		//browser = new Browser(parent, SWT.MOZILLA);
+		browser = new Browser(parent, SWT.MOZILLA);
 		// uncomment to use the jFace text viewer instead of the mozilla browser
 
-		textViewer = new TextViewer(parent, SWT.MULTI | SWT.V_SCROLL |
-		SWT.WRAP);
-		textViewer.setEditable(false);
+//		textViewer = new TextViewer(parent, SWT.MULTI | SWT.V_SCROLL |
+//		SWT.WRAP);
+//		textViewer.setEditable(false);
 
 	}
 
@@ -56,20 +56,20 @@ public class MailContentView extends ViewPart {
 		} 
 		
 		//comment the following lines to use the Mozilla browser
-		text = mail.getText();
-		text = text.replaceAll("\\<br/>","\n");
-		text = text.replaceAll("\\<.*?>",""); 
-		text = StringEscapeUtils.unescapeHtml(text);
-		Document document = new Document(text);
-		textViewer.setDocument(document);
+//		text = mail.getText();
+//		text = text.replaceAll("\\<br/>","\n");
+//		text = text.replaceAll("\\<.*?>",""); 
+//		text = StringEscapeUtils.unescapeHtml(text);
+//		Document document = new Document(text);
+//		textViewer.setDocument(document);
 	
 		//uncomment the following to use the Mozilla browser	
-//		ContentDecorator cd = new ContentDecorator(mail);
-//		cd.highLightPreviousMessages();
-//		cd.makeHTML();
-//		cd.insertHeader();		
-//		text = cd.getText();
-//		browser.setText(text);
+		ContentDecorator cd = new ContentDecorator(mail);
+		cd.highLightPreviousMessages();
+		cd.makeHTML();
+		cd.insertHeader();		
+		text = cd.getText();
+		browser.setText(text);
 
 	}
 

@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.remail.couchdb.util.CouchDBSearch;
 import org.eclipse.remail.modules.MailSearch;
 import org.eclipse.remail.modules.MboxSearch;
 import org.eclipse.remail.modules.PostgreSearch;
@@ -59,6 +60,8 @@ public class Search
 						store.getString(PreferenceConstants.P_POSTGRE_PASSWORD));
 			else if (store.getString(PreferenceConstants.P_SOURCE) == "mbox")
 				search = (MboxSearch) new MboxSearch();
+			else if (store.getString(PreferenceConstants.P_SOURCE).equals("couchdb"))
+				search = (CouchDBSearch) new CouchDBSearch();
 			if (!hidden)
 				try
 				{
