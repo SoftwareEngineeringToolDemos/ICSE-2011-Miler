@@ -29,19 +29,20 @@ public class CouchDBSearch implements MailSearch{
 		CaseSensitiveView csv = new CaseSensitiveView(name, dbname);
 		csv.setDatabase(db);
 		csv.addView();
-		System.out.println(csv.getMapURI());
-		System.out.println(csv.getMapFunction());
+//		System.out.println(csv.getMapURI());
+//		System.out.println(csv.getMapFunction());
 		
 		//get the view 
 		HttpGetView hgv = new HttpGetView(csv.getMapURI());
 		String response= hgv.sendRequest();
-		System.out.println("Response: \n"+response);
+//		System.out.println("Response: \n"+response);
 		
 		//parse the view result to get a java object out of the json
 		CouchDBResponse cdbr = CouchDBResponse.parseJson(response);
-		System.out.println(cdbr.toString());
+//		System.out.println(cdbr.toString());
 
-		// TODO Auto-generated method stub
+		mailList=MailConverter.convertCouchDBResponseToArrayListMail(cdbr, name);
+		System.out.println(mailList);
 		return mailList;
 	}
 
