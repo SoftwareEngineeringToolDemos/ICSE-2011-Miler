@@ -39,16 +39,6 @@ public class MailMessage extends Document {
 		this.put(BodyFieldName, body);
 	}
 
-//	public static String viewCaseSensitiveSearch(String name, Database db) {
-//		String map="{\"javalanguage\": {\"map\": \"function(doc) { if (doc._id == '123')  emit(null, doc) } \"}}";
-//		
-//		Document doc = new Document();
-//		doc.setId("_design/couchview");
-//		doc.put("views", map); 
-//		db.saveDocument(doc);
-//		return map;
-//	}
-
 	public String getStart() {
 		return start;
 	}

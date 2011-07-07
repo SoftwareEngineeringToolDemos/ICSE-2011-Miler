@@ -1,14 +1,9 @@
 package org.eclipse.remail.couchdb.util;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.LinkedList;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.eclipse.remail.Mail;
+import org.eclipse.remail.couchdb.helper.CouchDBResponse;
+import org.eclipse.remail.couchdb.helper.HttpGetView;
 import org.eclipse.remail.modules.MailSearch;
 
 import com.fourspaces.couchdb.Database;
@@ -29,12 +24,6 @@ public class CouchDBSearch implements MailSearch{
 	public LinkedList<Mail> caseSensitiveSearch(String name) {
 
 		Database db = dbSession.getDatabase(dbname);
-		// ViewResults result = db.getAllDocuments();
-		//
-//		Document doc = new Document();
-//		doc.setId("123");
-//		doc.put("foo", "bar");
-//		db.saveDocument(doc);
 
 		//add the view to the database
 		CaseSensitiveView csv = new CaseSensitiveView(name, dbname);
@@ -43,27 +32,14 @@ public class CouchDBSearch implements MailSearch{
 		System.out.println(csv.getMapURI());
 		System.out.println(csv.getMapFunction());
 		
-		HttpClient httpclient = new DefaultHttpClient();
-
-//		HttpGet get = new HttpGet(
-//				"http://localhost:5984/small-db/_design/couchview/_view/javalanguage");
-		HttpGet get = new HttpGet(csv.getMapURI());
-
-		try {
-			HttpResponse response = httpclient.execute(get);
-			HttpEntity entity = response.getEntity();
-			java.io.InputStream instream = entity.getContent();
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					instream));
-			String strdata = null;
-
-			while ((strdata = reader.readLine()) != null) {
-				System.out.println(strdata);
-			}
-		} catch (Exception e) {
-
-		}
+		//get the view 
+		HttpGetView hgv = new HttpGetView(csv.getMapURI());
+		String response= hgv.sendRequest();
+		System.out.println("Response: \n"+response);
+		
+		//parse the view result to get a java object out of the json
+		CouchDBResponse cdbr = CouchDBResponse.parseJson(response);
+		System.out.println(cdbr.toString());
 
 		// TODO Auto-generated method stub
 		return mailList;

@@ -22,7 +22,7 @@ public class CaseSensitiveView implements CouchDBView {
 	public CaseSensitiveView(String nameToSearch, String databaseName) {
 		this.nameToSearch = nameToSearch;
 		this.databaseName = databaseName;
-		this.id = "_design/casesensitive";
+		this.id = "_design/casesensitive"+"-"+nameToSearch;
 		createMapUri();
 		createMapFunction();
 	}
@@ -34,11 +34,12 @@ public class CaseSensitiveView implements CouchDBView {
 		mapURI = server + databaseName + "/"+id+"/_view/casesensitive";
 	}
 
-	
+	/**
+	 * It's the javascript function that couchdb will use to create the view
+	 */
 	private void createMapFunction() {
-//		mapFunction = "{\"casesensitive\": {\"map\": \"function(doc) { if (doc.body.indexOf(\""
-//				+ nameToSearch + "\"))  emit(null, doc) } \"}}";
-		mapFunction= "{\"casesensitive\": {\"map\": \"function(doc) { if (doc._id == '123')  emit(null, doc) } \"}}";
+		mapFunction = "{\"casesensitive\": {\"map\": \"function(doc) { if (doc.body.indexOf('"
+				+ nameToSearch + "')!=-1)  emit(null, doc) } \"}}";
 	}
 
 	@Override
@@ -52,11 +53,23 @@ public class CaseSensitiveView implements CouchDBView {
 	}
 
 	@Override
-	public void addView() {
-		Document doc = new Document();
-		doc.setId(id);
-		doc.put("views", mapFunction); 
-		database.saveDocument(doc);
+	public void addView() {	
+		/*
+		 * To test a view's existence: just try to access it in the database
+		 * if it doesn't exist it generates an Exception, so you can create the
+		 * view to store in database in catch block.
+		 * If it exist there is nothing to do and method can happily die!
+		 */
+		try {
+			//check if the view already exists
+			Document d = database.getDocument(id);
+		} catch (net.sf.json.JSONException e) {
+			//create it, if not
+			Document doc = new Document();
+			doc.setId(id);
+			doc.put("views", mapFunction); 
+			database.saveDocument(doc);
+		}		
 	}
 
 	@Override
