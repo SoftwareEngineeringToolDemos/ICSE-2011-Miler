@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.remail.util.CacheCouchDB;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -111,19 +112,21 @@ public class IndexSearch implements Runnable
 		String name = res.getName();
 		System.out.println(name);
 		IPath fullPath = res.getProjectRelativePath();
+		System.out.println("Starting search!");
 		Search search = new Search();
 		LinkedList<Mail> mailList = search.Execute(name, fullPath.toString(),
 				true);
 		System.out.println("---" + mailList.size() + "---");
-		try
-		{
-			this.saveResults(name, fullPath.toString(), mailList);
-		} catch (SQLException e)
-		{
-			System.out.println("oops");
-			Thread.sleep(10);
-			this.saveResults(name, fullPath.toString(), mailList);
-		}
+		CacheCouchDB.addClass(name);
+//		try
+//		{
+//			this.saveResults(name, fullPath.toString(), mailList);
+//		} catch (SQLException e)
+//		{
+//			System.out.println("oops");
+//			Thread.sleep(10);
+//			this.saveResults(name, fullPath.toString(), mailList);
+//		}
 		Display.getDefault().asyncExec(new Runnable()
 		{
 			public void run()

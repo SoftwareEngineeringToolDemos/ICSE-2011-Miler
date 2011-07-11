@@ -11,7 +11,10 @@ import com.fourspaces.couchdb.Session;
 
 public class CouchDBSearch implements MailSearch{
 	
-	private String dbname= "small-db";
+	//big test
+	private String dbname= "big-test";
+	//Uncomment for use the small test
+//	private String dbname="small-db";
 	private Session dbSession = new Session("localhost", 5984);
 	private LinkedList<Mail> mailList = null;
 	
@@ -43,7 +46,7 @@ public class CouchDBSearch implements MailSearch{
 
 		//convert the result to Mails
 		mailList=MailConverter.convertCouchDBResponseToArrayListMail(cdbr, name);
-		System.out.println(mailList);
+//		System.out.println(mailList);
 		return mailList;
 	}
 
@@ -59,13 +62,12 @@ public class CouchDBSearch implements MailSearch{
 		//get the view 
 		HttpGetView hgv = new HttpGetView(civ.getMapURI());
 		String response= hgv.sendRequest();
-		
 		//parse the view result to get a java object out of the json
 		CouchDBResponse cdbr = CouchDBResponse.parseJson(response);
 		
 		//convert the result to Mails
 		mailList=MailConverter.convertCouchDBResponseToArrayListMail(cdbr, name);
-		System.out.println(mailList);
+//		System.out.println(mailList);
 		return mailList;
 	}
 

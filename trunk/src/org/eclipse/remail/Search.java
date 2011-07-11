@@ -1,5 +1,6 @@
 package org.eclipse.remail;
 
+import java.util.Calendar;
 import java.util.LinkedList;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -82,6 +83,10 @@ public class Search
 				}
 			String method = store.getString(PreferenceConstants.P_METHOD);
 			
+			Calendar now = Calendar.getInstance();
+			Long startExecution=now.getTimeInMillis();
+			
+			
 			if (method.contains("searchSensitive"))
 				mailList = search.caseSensitiveSearch(name);
 			else if (method.contains("searchInsensitive"))
@@ -94,6 +99,11 @@ public class Search
 				mailList = search.dictionarySearch(path, name);
 			else if (method.contains("searchCamel"))
 				mailList = search.camelCaseSearch(path, name);
+			
+			now=Calendar.getInstance();
+			Long endExecution = now.getTimeInMillis();
+			System.out.println("start time: "+startExecution+"\n"+"end time: "+endExecution);
+			
 		} catch (Exception e)
 		{
 			e.printStackTrace();

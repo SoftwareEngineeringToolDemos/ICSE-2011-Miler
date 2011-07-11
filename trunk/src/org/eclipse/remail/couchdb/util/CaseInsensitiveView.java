@@ -2,6 +2,8 @@ package org.eclipse.remail.couchdb.util;
 
 import java.util.Locale;
 
+import org.eclipse.remail.couchdb.helper.CouchDBMethodName;
+
 import com.fourspaces.couchdb.Database;
 import com.fourspaces.couchdb.Document;
 
@@ -25,7 +27,7 @@ public class CaseInsensitiveView implements CouchDBView {
 	public CaseInsensitiveView(String nameToSearch, String databaseName) {
 		this.nameToSearch = nameToSearch;
 		this.databaseName = databaseName;
-		this.id = "_design/caseinsensitive"+"-"+nameToSearch;
+		this.id = "_design/"+CouchDBMethodName.CASE_INSENSITIVE.getName()+"-"+nameToSearch;
 		createMapUri();
 		createMapFunction();
 	}

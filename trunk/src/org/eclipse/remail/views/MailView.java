@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -25,6 +26,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.Search;
+import org.eclipse.remail.util.CacheCouchDB;
 import org.eclipse.remail.util.MailStateChecker;
 import org.eclipse.remail.util.SQLiteMailListConstructor;
 import org.eclipse.swt.SWT;
@@ -338,23 +340,43 @@ public class MailView extends ViewPart
 
 	private void loadFromCache(ICompilationUnit compilationUnit)
 	{
-		SQLiteMailListConstructor mailListConstructor = new SQLiteMailListConstructor(
-				this.activeResource);
-		LinkedList<Mail> mailList = new LinkedList<Mail>();
-		try
+		IResource res = compilationUnit.getResource();
+		String name = res.getName();
+		name = name.split("\\.")[0];
+		if(CacheCouchDB.containsClass(name))
 		{
-			if ((mailList = mailListConstructor.getResultMailList()) == null)
+			Search search = new Search();
+			IPath fullPath = res.getProjectRelativePath();
+			LinkedList<Mail> mailList = search.Execute(name, fullPath.toString(),
+					true);
+			if (mailList  == null)
 				Search.updateMailView(new LinkedList<Mail>());
 			else
 				Search.updateMailView(mailList);
 			System.out.println("|" + mailList.size() + "|");
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
+		}		
+		
+//		System.out.println(name+" "+mailList);
+		/*
+		 * Uncomment to to use the cache
+		 */
+//		SQLiteMailListConstructor mailListConstructor = new SQLiteMailListConstructor(
+//				this.activeResource);
+//		LinkedList<Mail> mailList = new LinkedList<Mail>();
+//		try
+//		{
+//			if ((mailList = mailListConstructor.getResultMailList()) == null)
+//				Search.updateMailView(new LinkedList<Mail>());
+//			else
+//				Search.updateMailView(mailList);
+//			System.out.println("|" + mailList.size() + "|");
+//		} catch (SQLException e)
+//		{
+//			e.printStackTrace();
+//		} catch (ClassNotFoundException e)
+//		{
+//			e.printStackTrace();
+//		}
 	}
 
 	public static TreeViewer getViewer()
