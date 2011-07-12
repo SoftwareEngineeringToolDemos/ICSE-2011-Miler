@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.Search;
+import org.eclipse.remail.daemon.ChangeViewDaemon;
 import org.eclipse.remail.util.CacheCouchDB;
 import org.eclipse.remail.util.LocalMailListSearch;
 import org.eclipse.remail.util.MailStateChecker;
@@ -75,6 +76,9 @@ public class MailView extends ViewPart {
 	 * The constructor.
 	 */
 	public MailView() {
+		Thread gene = new Thread(new ChangeViewDaemon());
+		gene.setDaemon(true);
+		gene.start();
 	}
 
 	public class MailTreeContentProvider extends ArrayContentProvider implements
@@ -361,6 +365,7 @@ public class MailView extends ViewPart {
 		if (CacheCouchDB.containsClass(name)) {
 			Search search = new Search();
 			IPath fullPath = res.getProjectRelativePath();
+//			System.out.println(fullPath.toString());
 			LinkedList<Mail> mailList = search.Execute(name, fullPath.toString(), true);
 			if (mailList == null)
 				Search.updateMailView(new LinkedList<Mail>());
