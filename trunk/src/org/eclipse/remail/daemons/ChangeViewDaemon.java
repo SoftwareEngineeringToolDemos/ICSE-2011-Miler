@@ -1,10 +1,7 @@
 package org.eclipse.remail.daemons;
 
-import java.util.LinkedList;
-
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.remail.Mail;
-import org.eclipse.remail.Search;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
@@ -83,13 +80,15 @@ public class ChangeViewDaemon implements Runnable {
 		System.out.println(path);
 
 		//query the database and update the view
-		Search search = new Search();
-		LinkedList<Mail> mailList = search.Execute(classname, path, true);
-		if (mailList == null)
-			Search.updateMailView(new LinkedList<Mail>());
-		else
-			Search.updateMailView(mailList);
-		System.out.println("|" + mailList.size() + "|");
+		
+//		Thread query = new Thread(new QueryDatabase(classname, path));
+//		System.out.println(query);
+//		query.setDaemon(true);
+//		query.setPriority(Thread.MIN_PRIORITY); //Priorities range: 1-10 default 5
+//		query.start();
+		QueryDatabase job = new QueryDatabase(classname, path);
+		job.setPriority(Job.LONG);
+		job.schedule();
 
 	}
 

@@ -1,5 +1,6 @@
 package org.eclipse.remail;
 
+import org.eclipse.remail.daemons.ChangeViewDaemon;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -26,6 +27,14 @@ public class Activator extends AbstractUIPlugin
 	 */
 	public Activator()
 	{
+		/*
+		 * Creates the thread responsible for updating the views
+		 * depending on the active class editor
+		 */
+		Thread gene = new Thread(new ChangeViewDaemon());
+		gene.setDaemon(true);
+		gene.setPriority(3); //Priorities range: 1-10 default 5
+		gene.start();
 	}
 
 	/*

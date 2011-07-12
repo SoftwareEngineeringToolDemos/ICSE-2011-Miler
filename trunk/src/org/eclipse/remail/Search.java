@@ -11,6 +11,7 @@ import org.eclipse.remail.modules.MboxSearch;
 import org.eclipse.remail.modules.PostgreSearch;
 import org.eclipse.remail.preferences.PreferenceConstants;
 import org.eclipse.remail.views.MailView;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PartInitException;
@@ -211,8 +212,12 @@ public class Search
 	 * 
 	 * @param mailList
 	 */
-	public static void updateMailView(LinkedList<Mail> mailList)
-	{
-		MailView.getViewer().setInput(mailList);
+	public static void updateMailView(final LinkedList<Mail> mailList)
+	{	
+		Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+            	MailView.getViewer().setInput(mailList);
+            }
+         });
 	}
 }

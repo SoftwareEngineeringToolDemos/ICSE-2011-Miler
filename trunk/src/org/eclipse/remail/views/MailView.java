@@ -3,6 +3,8 @@ package org.eclipse.remail.views;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -68,13 +70,7 @@ public class MailView extends ViewPart {
 	 * The constructor.
 	 */
 	public MailView() {
-		/*
-		 * Creates the thread responsible for updating the views
-		 * depending on the active class editor
-		 */
-		Thread gene = new Thread(new ChangeViewDaemon());
-		gene.setDaemon(true);
-		gene.start();
+		
 	}
 
 	public class MailTreeContentProvider extends ArrayContentProvider implements
@@ -182,29 +178,29 @@ public class MailView extends ViewPart {
 		}
 	}
 
-	public class CheckStateProvider implements ICheckStateProvider {
-
-		@Override
-		public boolean isChecked(Object element) {
-			MailStateChecker mailStateChecker = new MailStateChecker((Mail) element, activeResource);
-			return mailStateChecker.isVisible();
-		}
-
-		@Override
-		public boolean isGrayed(Object element) {
-			return false;
-		}
-	}
-
-	public class CheckStateListener implements ICheckStateListener {
-		@Override
-		public void checkStateChanged(CheckStateChangedEvent event) {
-			boolean checked = event.getChecked();
-			Mail mail = (Mail) event.getElement();
-			MailStateChecker mailStateChecker = new MailStateChecker(mail, activeResource);
-			mailStateChecker.changeState(checked);
-		}
-	}
+//	public class CheckStateProvider implements ICheckStateProvider {
+//
+//		@Override
+//		public boolean isChecked(Object element) {
+//			MailStateChecker mailStateChecker = new MailStateChecker((Mail) element, activeResource);
+//			return mailStateChecker.isVisible();
+//		}
+//
+//		@Override
+//		public boolean isGrayed(Object element) {
+//			return false;
+//		}
+//	}
+//
+//	public class CheckStateListener implements ICheckStateListener {
+//		@Override
+//		public void checkStateChanged(CheckStateChangedEvent event) {
+//			boolean checked = event.getChecked();
+//			Mail mail = (Mail) event.getElement();
+//			MailStateChecker mailStateChecker = new MailStateChecker(mail, activeResource);
+//			mailStateChecker.changeState(checked);
+//		}
+//	}
 
 	/**
 	 * This is a callback that will allows to create the view controls
@@ -226,8 +222,8 @@ public class MailView extends ViewPart {
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(listener);
 		viewer.setContentProvider(new MailTreeContentProvider());
 		viewer.setLabelProvider(new MailTreeLabelProvider());
-		viewer.setCheckStateProvider(new CheckStateProvider());
-		viewer.addCheckStateListener(new CheckStateListener());
+//		viewer.setCheckStateProvider(new CheckStateProvider());
+//		viewer.addCheckStateListener(new CheckStateListener());
 
 		makeActions();
 		hookActions();
