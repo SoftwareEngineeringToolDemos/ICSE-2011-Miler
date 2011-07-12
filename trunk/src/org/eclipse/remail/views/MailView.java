@@ -11,7 +11,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
@@ -26,25 +25,18 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.Search;
-import org.eclipse.remail.daemon.ChangeViewDaemon;
+import org.eclipse.remail.daemons.ChangeViewDaemon;
 import org.eclipse.remail.util.CacheCouchDB;
 import org.eclipse.remail.util.LocalMailListSearch;
 import org.eclipse.remail.util.MailStateChecker;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
@@ -76,6 +68,10 @@ public class MailView extends ViewPart {
 	 * The constructor.
 	 */
 	public MailView() {
+		/*
+		 * Creates the thread responsible for updating the views
+		 * depending on the active class editor
+		 */
 		Thread gene = new Thread(new ChangeViewDaemon());
 		gene.setDaemon(true);
 		gene.start();

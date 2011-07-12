@@ -2,10 +2,7 @@ package org.eclipse.remail.views;
 
 import java.sql.SQLException;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.TextViewer;
 import org.eclipse.remail.Activator;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.modules.PostgreCore;

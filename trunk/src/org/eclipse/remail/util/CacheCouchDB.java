@@ -1,19 +1,14 @@
 package org.eclipse.remail.util;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
-import org.apache.http.client.methods.HttpGet;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.remail.Activator;
-import org.eclipse.remail.Mail;
 import org.eclipse.remail.couchdb.helper.CouchDBMethodName;
 import org.eclipse.remail.couchdb.helper.HttpGetView;
 import org.eclipse.remail.couchdb.util.CouchDBView;
 import org.eclipse.remail.preferences.PreferenceConstants;
-
-import com.fourspaces.couchdb.Session;
 
 /**
  * This is a "static" class that stores which classes have been already searched

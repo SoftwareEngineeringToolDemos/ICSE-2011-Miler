@@ -54,6 +54,7 @@ public class CaseSensitiveView implements CouchDBView {
 		return id;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void addView() {	
 		/*

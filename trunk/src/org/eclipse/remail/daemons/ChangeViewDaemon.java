@@ -1,25 +1,15 @@
-package org.eclipse.remail.daemon;
+package org.eclipse.remail.daemons;
 
 import java.util.LinkedList;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.Search;
-import org.eclipse.remail.util.CacheCouchDB;
-import org.eclipse.ui.IPageListener;
-import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.activities.ActivityManagerEvent;
-import org.eclipse.ui.activities.IActivityManager;
-import org.eclipse.ui.activities.IActivityManagerListener;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
@@ -36,8 +26,7 @@ public class ChangeViewDaemon implements Runnable {
 
 	@Override
 	public void run() {
-		// ITextEditor editor = (ITextEditor) PlatformUI.getWorkbench()
-		// .getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+	
 		System.out.println("daemon start");
 		boolean tryGetWorkbench = true;
 
@@ -81,15 +70,19 @@ public class ChangeViewDaemon implements Runnable {
 	 * Update the mail list view if notified for a window change
 	 */
 	private void updateCurrentView() {
+		//get the class name
 		ITextEditor editor = (ITextEditor) window.getActivePage().getActiveEditor();
 		String classname = editor.getTitle();
 		classname = classname.split("\\.")[0];
 		
 		System.out.println("-- " + classname + " "
 				+ editor.getEditorInput().getPersistable().toString());
+		
+		//get the class path
 		String path = getPath(editor.getEditorInput().getPersistable().toString());
 		System.out.println(path);
 
+		//query the database and update the view
 		Search search = new Search();
 		LinkedList<Mail> mailList = search.Execute(classname, path, true);
 		if (mailList == null)
@@ -102,9 +95,9 @@ public class ChangeViewDaemon implements Runnable {
 
 	/**
 	 * Get the file path given a string in the format:
-	 * org.eclipse.ui.part.FileName
-	 * (/project/src/ProjectName/bla-bla/FileName.java) it will return:
-	 * src/ProjectName/bla-bla/FileName.java
+	 * "org.eclipse.ui.part.FileName
+	 * (/project/src/ProjectName/bla-bla/FileName.java)" and it will return:
+	 * "src/ProjectName/bla-bla/FileName.java"
 	 * 
 	 * @param string
 	 *            the string
