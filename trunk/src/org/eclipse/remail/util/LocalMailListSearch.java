@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.remail.Mail;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 
@@ -16,10 +17,10 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
  */
 public class LocalMailListSearch {
 
-	private ContainerCheckedTreeViewer viewer;
+	private TreeViewer viewer;
 	private String keyword;
 	
-	public LocalMailListSearch(ContainerCheckedTreeViewer viewer, String keyword){
+	public LocalMailListSearch(TreeViewer viewer, String keyword){
 		this.viewer=viewer;
 		this.keyword=keyword;
 	}

@@ -3,8 +3,6 @@ package org.eclipse.remail.views;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -12,10 +10,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -27,10 +22,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.Search;
-import org.eclipse.remail.daemons.ChangeViewDaemon;
 import org.eclipse.remail.util.CacheCouchDB;
 import org.eclipse.remail.util.LocalMailListSearch;
-import org.eclipse.remail.util.MailStateChecker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -47,7 +40,6 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.part.ViewPart;
 
 /**
@@ -57,7 +49,7 @@ public class MailView extends ViewPart {
 
 	public static final String ID = "org.eclipse.emailrecommender.MailView";
 	public MailContentView mailContentView = null; // instance of the content
-	private static ContainerCheckedTreeViewer viewer;
+	private static TreeViewer viewer;
 	private Action selectionChangedAction;
 	private Action doubleClickAction;
 	private IResource activeResource;
@@ -214,10 +206,13 @@ public class MailView extends ViewPart {
 	 * This is a callback that will allows to create the view controls
 	 */
 	public void createPartControl(Composite parent) {
-		viewer = new ContainerCheckedTreeViewer(parent, SWT.DEFAULT);
-
+		//viewer = new ContainerCheckedTreeViewer(parent, SWT.DEFAULT);
+		viewer= new TreeViewer(parent, SWT.MULTI);
+		
+		
 		Tree tree = viewer.getTree();
 		tree.setHeaderVisible(true);
+
 		String[] columnNames = new String[] { "Date", "Author", "Subject" };
 		int[] columnWidths = new int[] { 140, 150, 500 };
 		int[] columnAlignments = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT };
