@@ -35,10 +35,10 @@ public class CacheCouchDB {
 	public static boolean containsClass(final String classname) {
 		boolean is=classSearched.contains(classname);
 		if(is)
-			return classSearched.contains(classname);
+			return true;//classSearched.contains(classname);
 		else{
 			is=checkCouchDBcache(classname);
-			if(is)
+			if(is)//is present in couchdb cache
 				addClass(classname);
 		}
 		return is;

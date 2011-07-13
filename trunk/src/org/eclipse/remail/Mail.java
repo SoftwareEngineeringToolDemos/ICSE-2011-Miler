@@ -112,6 +112,10 @@ public class Mail implements Comparable {
 	@Override
 	public int compareTo(Object o) {
 		Mail mail = (Mail) o;
+		if (this.getTimestamp()==null)
+			return 1;
+		if (mail.getTimestamp()==null)
+			return -1;
 		if (this.getTimestamp().before(mail.getTimestamp()))
 			return -1;
 		else if (this.getTimestamp().after(mail.getTimestamp()))
@@ -121,7 +125,7 @@ public class Mail implements Comparable {
 
 	/**
 	 * @deprecated Inefficient, has complexity O(n). Replaced by
-	 *             {@link #mergeSortMailList(LinkedList, LinkedList)} Merges two
+	 *             {@link #mergeSortMailLists(LinkedList, LinkedList)} Merges two
 	 *             lists of Mail into one, intersection compared by permalink
 	 *             values
 	 * @param mailList
@@ -157,7 +161,7 @@ public class Mail implements Comparable {
 	 * @return the merged list
 	 */
 	@SuppressWarnings("unchecked")
-	public static LinkedList<Mail> mergeSortMailList(LinkedList<Mail> mailList1,
+	public static LinkedList<Mail> mergeSortMailLists(LinkedList<Mail> mailList1,
 			LinkedList<Mail> mailList2) {
 		LinkedList<Mail> mergedList = new LinkedList<Mail>();
 
@@ -168,10 +172,12 @@ public class Mail implements Comparable {
 		// merge them
 		boolean list1end = false;
 		boolean list2end = false;
-		while (!list1end && !list2end) {
+//		int cont=0;
+		while (!list1end || !list2end) {
 			Mail mailFromList1 = null;
 			Mail mailFromList2 = null;
-
+//			System.out.println(cont);
+//			cont++;
 			try {
 				// get and remove the first element in the list
 				mailFromList1 = mailList1.removeFirst();
@@ -190,11 +196,16 @@ public class Mail implements Comparable {
 			}
 
 			// compare the two mail to insert in order
-			if (mailFromList1 == null && mailFromList2 != null)
+			if (mailFromList1 == null && mailFromList2 != null){
 				mergedList.add(mailFromList2);
-			else if (mailFromList2 == null && mailFromList1 != null)
+//				System.out.println("list2-> "+mailFromList2.subject );
+			}
+			else if (mailFromList2 == null && mailFromList1 != null){
 				mergedList.add(mailFromList1);
+//				System.out.println("list1->"+mailFromList1.subject );
+			}
 			else if (mailFromList1 != null && mailFromList2 != null) {
+//				System.out.println("list1->"+mailFromList1.subject+" "+"list2-> "+mailFromList2.subject);
 				int compare = mailFromList1.compareTo(mailFromList2);
 				switch (compare) {
 					case -1: {

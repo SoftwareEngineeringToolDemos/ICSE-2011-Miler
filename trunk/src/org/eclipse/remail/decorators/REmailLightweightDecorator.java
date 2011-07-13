@@ -56,6 +56,7 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 			//its the decorator for a package
 			IPackageFragment pf = (IPackageFragment) JavaCore.create(res);
 			ICompilationUnit[] compilationUnits = null;
+			LinkedList<Mail> packageMails= new LinkedList<Mail>();
 			try
 			{
 				compilationUnits = pf.getCompilationUnits();
@@ -68,15 +69,24 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 			for (ICompilationUnit cu : compilationUnits)
 			{
 				String name = cu.getResource().getName();
-				if (!CacheCouchDB.containsClass(name))
+				name = name.split("\\.")[0];
+				if (!CacheCouchDB.containsClass(name)){
 					all=false;
-				else
-					numMail+=this.getMailList(cu.getResource()).size();
+//					System.out.println(pf.getPath().toString()+" not found "+name);
+				}
+				else{
+					//get the mail for a class
+					LinkedList<Mail> classList = this.getMailList(cu.getResource());
+					//add to the package's list
+					packageMails=Mail.mergeSortMailLists(packageMails, classList);
+				}
 			}
+//			System.out.println(pf.getPath().toString()+" "+all+" numMail:"+numMail+" numClass:"+compilationUnits.length);
+			numMail=packageMails.size();
 			if(all)
 				decoration.addSuffix(" ("+numMail+")");
 			else
-				decoration.addSuffix(" (not searched) ");
+				decoration.addSuffix(" not complete ("+numMail+")");
 				
 		}
 		//Uncomment to to use the old-style decorator
@@ -98,7 +108,7 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 //			{
 //				e.printStackTrace();
 //			}
-//			for (ICompilationUnit cu : compilationUnits)
+//			for (ICompilationUnit m: compilationUnits)
 //			{
 //				mailList = Mail.mergeMailLists(mailList, this.getMailList(cu.getResource()));
 //			}

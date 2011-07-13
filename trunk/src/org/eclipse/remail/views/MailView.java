@@ -81,7 +81,7 @@ public class MailView extends ViewPart {
 			LinkedList<Mail> mailList = (LinkedList<Mail>) inputElement;
 			LinkedList<Mail> topLevelMails = new LinkedList<Mail>();
 			for (Mail mail : mailList) {
-				if (hasChildren(mail) || getParent(mail) == null)
+				if ((hasChildren(mail) || getParent(mail) == null) && mail!=null)
 					topLevelMails.add(mail);
 			}
 			Collections.sort(topLevelMails);
@@ -108,7 +108,7 @@ public class MailView extends ViewPart {
 			LinkedList<Mail> mailList = (LinkedList<Mail>) viewer.getInput();
 			LinkedList<Mail> threadMails = new LinkedList<Mail>();
 			for (Mail m : mailList) {
-				if ((m.getThreadlink().startsWith(mail.getThreadlink())))
+				if (mail!=null && m!=null &&  m.getThreadlink()!=null && mail.getThreadlink()!=null && (m.getThreadlink().startsWith(mail.getThreadlink())))
 					threadMails.add(m);
 			}
 			if (threadMails.size() < 2) {
@@ -131,7 +131,7 @@ public class MailView extends ViewPart {
 			LinkedList<Mail> mailList = (LinkedList<Mail>) viewer.getInput();
 			LinkedList<Mail> threadMails = new LinkedList<Mail>();
 			for (Mail m : mailList) {
-				if ((m.getThreadlink().startsWith(mail.getThreadlink())))
+				if (mail!=null && m!=null &&  m.getThreadlink()!=null && mail.getThreadlink()!=null && (m.getThreadlink().startsWith(mail.getThreadlink())))
 					threadMails.add(m);
 			}
 			if (threadMails.size() < 2) {
@@ -163,17 +163,25 @@ public class MailView extends ViewPart {
 		public String getColumnText(Object element, int columnIndex) {
 			SimpleDateFormat df = new SimpleDateFormat("dd.MM. yyyy HH:mm");
 			Mail mail = (Mail) element;
-			String author = mail.getAuthor().replaceAll("^(.+)\\s*\\(.*@.*\\).*$", "$1");
-			switch (columnIndex) {
-				case 0:
-					return df.format(mail.getTimestamp());
+			try{				
+				String author = mail.getAuthor().replaceAll("^(.+)\\s*\\(.*@.*\\).*$", "$1");
+				switch (columnIndex) {
+					case 0:
+						return df.format(mail.getTimestamp());
 
-				case 1:
-					return author;
+					case 1:
+						return author;
 
-				case 2:
-					return mail.getSubject();
+					case 2:
+						return mail.getSubject();
+				}
+			} catch(NullPointerException e){
+				//if there is a mail with something null, we throw it away ;)
+				System.out.println(mail.toString());
+				if(mail==null)
+					System.out.println("The mail is null!");
 			}
+			
 			return null;
 		}
 	}
@@ -351,21 +359,24 @@ public class MailView extends ViewPart {
 	}
 
 	private void loadFromCache(ICompilationUnit compilationUnit) {
-		IResource res = compilationUnit.getResource();
-		String name = res.getName();
-		name = name.split("\\.")[0];
-		if (CacheCouchDB.containsClass(name)) {
-			Search search = new Search();
-			IPath fullPath = res.getProjectRelativePath();
-//			System.out.println(fullPath.toString());
-			LinkedList<Mail> mailList = search.Execute(name, fullPath.toString(), true);
-			if (mailList == null)
-				Search.updateMailView(new LinkedList<Mail>());
-			else
-				Search.updateMailView(mailList);
-			System.out.println("|" + mailList.size() + "|");
+		if(compilationUnit!=null)
+		{
+			IResource res = compilationUnit.getResource();
+			String name = res.getName();
+			name = name.split("\\.")[0];
+			if (CacheCouchDB.containsClass(name)) {
+				Search search = new Search();
+				IPath fullPath = res.getProjectRelativePath();
+//				System.out.println(fullPath.toString());
+				LinkedList<Mail> mailList = search.Execute(name, fullPath.toString(), true);
+				if (mailList == null)
+					Search.updateMailView(new LinkedList<Mail>());
+				else
+					Search.updateMailView(mailList);
+				System.out.println("|" + mailList.size() + "|");
+			}
 		}
-
+		
 		// System.out.println(name+" "+mailList);
 		/*
 		 * Uncomment to to use the cache
