@@ -119,21 +119,15 @@
       </page>
       <page
             category="org.eclipse.remail.preferences.PreferencePane"
-            class="org.eclipse.remail.preferences.PreferencePaneMbox"
-            id="org.eclipse.remail.preferences.PreferencePaneMbox"
-            name="Thunderbird (Mbox)">
-      </page>
-      <page
-            category="org.eclipse.remail.preferences.PreferencePane"
-            class="org.eclipse.remail.preferences.PreferencePanePostgre"
-            id="org.eclipse.remail.preferences.PreferencePanePostgre"
-            name="PostgreSQL">
-      </page>
-      <page
-            category="org.eclipse.remail.preferences.PreferencePane"
             class="org.eclipse.remail.preferences.PreferencePaneFilters"
             id="org.eclipse.remail.preferences.PreferencePaneFilters"
             name="Message Filters">
+      </page>
+      <page
+            category="org.eclipse.remail.preferences.PreferencePane"
+            class="org.eclipse.remail.preferences.PreferencePaneCouchdb"
+            id="org.eclipse.remail.preferences.PreferencePaneCouchdb"
+            name="CouchDB">
       </page>
    </extension>
    <extension

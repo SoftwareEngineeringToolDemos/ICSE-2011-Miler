@@ -169,9 +169,9 @@ public class MailView extends ViewPart {
 				}
 			} catch(NullPointerException e){
 				//if there is a mail with something null, we throw it away ;)
-				System.out.println(mail.toString());
+				System.err.println("Null mail:"+mail.toString());
 				if(mail==null)
-					System.out.println("The mail is null!");
+					System.err.println("The mail is null!");
 			}
 			
 			return null;

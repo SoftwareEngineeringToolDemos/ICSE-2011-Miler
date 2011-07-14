@@ -42,8 +42,8 @@ public class PreferencePane extends FieldEditorPreferencePage implements
 				PreferenceConstants.P_SOURCE,
 				"Mailing list source: ",
 				1,
-				new String[][] { { "&Thunderbird (Mbox)", "mbox" },
-						{ "Po&stgreSQL", "postgre" }, 
+				new String[][] { //{ "&Thunderbird (Mbox)", "mbox" },
+						//{ "Po&stgreSQL", "postgre" }, 
 						{ "CouchDB", "couchdb"} },
 				getFieldEditorParent()));
 		addField(new ComboFieldEditor(

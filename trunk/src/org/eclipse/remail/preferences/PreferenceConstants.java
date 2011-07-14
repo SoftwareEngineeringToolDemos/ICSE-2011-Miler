@@ -37,4 +37,11 @@ public class PreferenceConstants {
 	
 	public static final String P_FILTER_AUTHOR_EXCLUDE = "filterAuthorEx";
 	
+	
+	/*
+	 * CouchDB settings
+	 */
+	public static final String P_COUCHDB_HOST="localhost";
+	public static final String P_COUCHDB_PORT="5984";
+	
 }

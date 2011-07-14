@@ -241,4 +241,21 @@ public class Mail implements Comparable {
 
 		return mergedList;
 	}
+	
+	public String toString(){
+		String s=super.toString()+"\n";
+		if(this.author!=null)
+			s+=" -- "+this.author+"\n";
+		else
+			s+=" -- author null";
+		if(this.subject!=null)
+			s+=" -- "+this.subject+"\n";
+		else
+			s+=" -- subject null";
+		if(this.timestamp!=null)
+			s+=" -- "+this.timestamp.toString();
+		else
+			s+=" -- date null";
+		return s;
+	}
 }
