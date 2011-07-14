@@ -185,4 +185,14 @@
             label="Hooover">
       </hover>
    </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            adaptable="false"
+            class="org.eclipse.remail.properties.RemailProperties"
+            icon="icons/remail.png"
+            id="org.eclipse.remail.properties.RemailProperties"
+            name="REmail Properties">
+      </page>
+   </extension>
 </plugin>
