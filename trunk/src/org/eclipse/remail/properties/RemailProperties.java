@@ -1,22 +1,20 @@
 package org.eclipse.remail.properties;
 
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.ui.IWorkbenchPropertyPage;
-import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.List;
+import org.eclipse.ui.IWorkbenchPropertyPage;
+import org.eclipse.ui.dialogs.PropertyPage;
 
 /**
  * Class used to set the REmail properties of a project,
@@ -29,7 +27,7 @@ public class RemailProperties extends PropertyPage implements
                  IWorkbenchPropertyPage {
 
 	protected List listMailinglist;
-	protected ArrayList<MailingList> arrayMailingList = new ArrayList<MailingList>();
+	protected LinkedHashSet<MailingList> arrayMailingList = new LinkedHashSet<MailingList>();
 	Button addButton;
 	Button editButton;
 	Button removeButton;
@@ -78,14 +76,24 @@ public class RemailProperties extends PropertyPage implements
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
+				String[] sel = listMailinglist.getSelection();
+				if(sel.length==0){
+					editButton.setEnabled(false);
+					removeButton.setEnabled(false);
+				}
+				if(sel.length==1){
+					editButton.setEnabled(true);
+					removeButton.setEnabled(true);
+				}
+				if(sel.length>1){
+					editButton.setEnabled(false);
+					removeButton.setEnabled(true);
+				}
 			}
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
+				//We don't need a default selection!
 			}
 		});
 		
@@ -99,6 +107,29 @@ public class RemailProperties extends PropertyPage implements
 			}
 		});
 		
+		/*
+		 * Listener for the edit button
+		 */
+		editButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				String[] sel = listMailinglist.getSelection();
+				RemailPropertiesMailinglist rpm= new RemailPropertiesMailinglist(new MailingList(), listMailinglist, arrayMailingList, sel[0]);
+				rpm.createEditDialog();
+			}
+		});
+		
+		/*
+		 * Listener for the remove button
+		 */
+		removeButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				String[] sel = listMailinglist.getSelection();
+				for(String s : sel){
+					arrayMailingList.remove(s);
+					listMailinglist.remove(s);
+				}
+			}
+		});
 		return panel;
 	}
 
