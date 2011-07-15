@@ -1,5 +1,8 @@
 package org.eclipse.remail.properties;
 
+import java.util.ArrayList;
+
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -25,7 +28,8 @@ import org.eclipse.swt.layout.GridLayout;
 public class RemailProperties extends PropertyPage implements
                  IWorkbenchPropertyPage {
 
-	List listMailinglist;
+	protected List listMailinglist;
+	protected ArrayList<MailingList> arrayMailingList = new ArrayList<MailingList>();
 	Button addButton;
 	Button editButton;
 	Button removeButton;
@@ -90,7 +94,8 @@ public class RemailProperties extends PropertyPage implements
 		 */
 		addButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				RemailPropertiesMailinglist.createAddDialog();
+				RemailPropertiesMailinglist rpm= new RemailPropertiesMailinglist(new MailingList(), listMailinglist, arrayMailingList);
+				rpm.createAddDialog();
 			}
 		});
 		
