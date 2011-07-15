@@ -2,6 +2,9 @@ package org.eclipse.remail.properties;
 
 import java.util.LinkedHashSet;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -32,8 +35,22 @@ public class RemailProperties extends PropertyPage implements
 	Button editButton;
 	Button removeButton;
 	
+//	public static final String configuration = ".REmailMailingList";
+	public static QualifiedName REMAIL_MAILING_LIST = new QualifiedName("REMAIL_MAILING_LIST", "REMAIL_MAILING_LIST");
+	
+	private void setUp(){
+		try {
+			String property=((IResource)getElement()).getPersistentProperty(REMAIL_MAILING_LIST);
+			if(property!=null)
+				arrayMailingList=MailingList.stringToList(property);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	protected Control createContents(Composite parent) {
+		setUp();
 		Group panel = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		GridLayout layout= new GridLayout();
 		panel.setLayout(layout);
@@ -48,6 +65,10 @@ public class RemailProperties extends PropertyPage implements
 		GridLayout innerLayout = new GridLayout(2, false);
 		innerPanel.setLayout(innerLayout);
 		listMailinglist = new List (innerPanel, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+		for(MailingList m : arrayMailingList){
+			listMailinglist.add(m.toString());
+		}
+		
 		GridData gd2 = new GridData();
 		gd2.horizontalAlignment = GridData.FILL;
 		gd2.grabExcessHorizontalSpace = true;
@@ -132,5 +153,15 @@ public class RemailProperties extends PropertyPage implements
 		});
 		return panel;
 	}
-
+	
+	@Override
+	public boolean performOk() {
+		try {
+			((IResource)getElement()).setPersistentProperty(REMAIL_MAILING_LIST, MailingList.listToString(arrayMailingList));
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+		return super.performOk();
+	}
+	
 }
