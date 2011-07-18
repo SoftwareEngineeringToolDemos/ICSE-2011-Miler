@@ -12,12 +12,6 @@ public class Activator extends AbstractUIPlugin
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.emailrecommender";
-	public static final String connString = "jdbc:postgresql://localhost:5432/mydb";
-	public static final String login = "vitus";
-	public static final String password = "ubo4tore";
-	public static final String mailSource = "mbox";
-	public static final String mboxPath = "/Users/vita/Library/Thunderbird/Profiles/40tfoa42.default/"
-			+ "Mail/Local Folders/org_freenetproject_devl";
 
 	// The shared instance
 	private static Activator plugin;

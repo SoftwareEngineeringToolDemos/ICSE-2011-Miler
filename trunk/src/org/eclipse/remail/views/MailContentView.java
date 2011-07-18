@@ -1,12 +1,6 @@
 package org.eclipse.remail.views;
 
-import java.sql.SQLException;
-
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.remail.Activator;
 import org.eclipse.remail.Mail;
-import org.eclipse.remail.modules.PostgreCore;
-import org.eclipse.remail.preferences.PreferenceConstants;
 import org.eclipse.remail.util.ContentDecorator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -38,19 +32,6 @@ public class MailContentView extends ViewPart {
 
 	public void setMail(Mail mail) {
 		String text = "";
-		if (Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SOURCE) == "postgre") {
-			PostgreCore search = new PostgreCore(Activator.connString,
-					Activator.login, Activator.password);
-			try {
-				text = search.getMailTextFromDB(mail.getId());
-			} catch (SQLException e) {
-				MessageDialog.openError(null, "Error", "SQL error: "
-						+ e.getMessage());
-				e.printStackTrace();
-				return;
-			}
-			mail.setText(text);
-		} 
 		
 		//comment the following lines to use the Mozilla browser
 //		text = mail.getText();

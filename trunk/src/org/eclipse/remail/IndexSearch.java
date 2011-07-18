@@ -1,14 +1,9 @@
 package org.eclipse.remail;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+//import java.sql.Connection;
+//import java.sql.Statement;
 import java.util.LinkedList;
 
 import org.eclipse.core.resources.IProject;
@@ -35,9 +30,9 @@ public class IndexSearch implements Runnable
 	IProject project;
 	FileOutputStream out; // declare a file output object
 	PrintStream p; // declare a print stream object
-	Connection conn;
+//	Connection conn;
 	String projectName;
-	Statement stat;
+//	Statement stat;
 	IProgressMonitor progressMonitor;
 
 	public IndexSearch(LinkedList<ICompilationUnit> compList,
@@ -47,18 +42,6 @@ public class IndexSearch implements Runnable
 		this.compList = compList;
 		this.projectName = project.getName();
 		this.progressMonitor = pm;
-	}
-
-	private void prepareSQLite() throws Exception
-	{
-		Class.forName("org.sqlite.JDBC");
-		this.conn = DriverManager.getConnection("jdbc:sqlite:"
-				+ project.getLocation().toString() + File.separator
-				+ "remail.db");
-		stat = conn.createStatement();
-		stat.executeUpdate("create table if not exists emails (permalink, subject, date, author, threadlink, text, visible);");
-		stat.executeUpdate("create table if not exists classes (id INTEGER PRIMARY KEY AUTOINCREMENT, name, path);");
-		stat.executeUpdate("create table if not exists hits (id INTEGER, permalink);");
 	}
 
 	private void searchAll() throws Exception
@@ -86,7 +69,7 @@ public class IndexSearch implements Runnable
 					progressMonitor.done();
 				}
 			});
-			conn.close();
+//			conn.close();
 
 			Activator
 					.getDefault()
@@ -106,7 +89,7 @@ public class IndexSearch implements Runnable
 	}
 
 	private void searchCompilationUnit(ICompilationUnit cu)
-			throws SQLException, InterruptedException
+			throws InterruptedException
 	{
 		IResource res = cu.getResource();
 		String name = res.getName();
@@ -118,15 +101,7 @@ public class IndexSearch implements Runnable
 				true);
 		System.out.println("---" + mailList.size() + "---");
 		CacheCouchDB.addClass(name);
-//		try
-//		{
-//			this.saveResults(name, fullPath.toString(), mailList);
-//		} catch (SQLException e)
-//		{
-//			System.out.println("oops");
-//			Thread.sleep(10);
-//			this.saveResults(name, fullPath.toString(), mailList);
-//		}
+		
 		Display.getDefault().asyncExec(new Runnable()
 		{
 			public void run()
@@ -136,64 +111,11 @@ public class IndexSearch implements Runnable
 		});
 	}
 
-	private void saveResults(String name, String path, LinkedList<Mail> MailList)
-			throws SQLException
-	{
-		name = name.split("\\.")[0];
-		ResultSet rs = stat
-				.executeQuery("select count(*) from classes where name = '"
-						+ name + "' and path = '" + path + "';");
-		rs.next();
-		if (rs.getInt(1) == 0)
-		{
-			stat.executeUpdate("insert into classes (name, path) values('"
-					+ name + "','" + path + "')");
-		}
-		rs.close();
-		rs = stat.executeQuery("select id from classes where name = '" + name
-				+ "' and path = '" + path + "';");
-		rs.next();
-		int id = rs.getInt(1);
-		rs.close();
-		PreparedStatement mailPrep = conn
-				.prepareStatement("insert into emails values (?,?,?,?,?,?,?);");
-		PreparedStatement hitsPrep = conn
-				.prepareStatement("insert into hits values (?,?);");
-		for (Mail mail : MailList)
-		{
-			ResultSet rs2 = stat
-					.executeQuery("select count(*) from emails where permalink = '"
-							+ mail.getPermalink() + "';");
-			rs2.next();
-			if (rs2.getInt(1) == 0)
-			{
-				mailPrep.setString(1, mail.getPermalink());
-				mailPrep.setString(2, mail.getSubject());
-				mailPrep.setString(3, String.valueOf(mail.getTimestamp()
-						.getTime()));
-				mailPrep.setString(4, mail.getAuthor());
-				mailPrep.setString(5, mail.getThreadlink());
-				mailPrep.setString(6, mail.getText());
-				mailPrep.setBoolean(7, true);
-				mailPrep.addBatch();
-			}
-			hitsPrep.setInt(1, id);
-			hitsPrep.setString(2, mail.getPermalink());
-			hitsPrep.addBatch();
-		}
-		stat.executeUpdate("delete from hits where id = " + id + ";");
-		conn.setAutoCommit(false);
-		mailPrep.executeBatch();
-		hitsPrep.executeBatch();
-		conn.setAutoCommit(true);
-	}
-
 	@Override
 	public void run()
 	{
 		try
 		{
-			this.prepareSQLite();
 			this.searchAll();
 		} catch (Exception e)
 		{
