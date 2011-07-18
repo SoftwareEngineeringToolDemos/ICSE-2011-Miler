@@ -3,10 +3,8 @@ package org.eclipse.remail.util;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.remail.Mail;
-import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 
 /**
  * Class used to implement a local search based on a keyword

@@ -1,15 +1,7 @@
 package org.eclipse.remail.decorators;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Calendar;
 import java.util.LinkedList;
-
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaCore;
@@ -24,7 +16,7 @@ import org.eclipse.remail.couchdb.util.CouchDBSearch;
 import org.eclipse.remail.modules.MailSearch;
 import org.eclipse.remail.preferences.PreferenceConstants;
 import org.eclipse.remail.util.CacheCouchDB;
-import org.eclipse.remail.util.SQLiteMailListConstructor;
+
 
 /**
  * Class implements creation of package explorer decoration, taking care of the class results numbering
