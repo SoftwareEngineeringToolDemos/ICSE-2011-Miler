@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
  * @author Lorenzo Baracchi <lorenzo.baracchi@usi.ch>
  *
  */
-public class MailingList implements Comparable<MailingList>{
+public class MailingList implements Comparable{
 	private String location;
 	private String username;
 	private String password;
@@ -56,10 +56,18 @@ public class MailingList implements Comparable<MailingList>{
 	}
 
 	@Override
-	public int compareTo(MailingList o) {
-		return this.location.compareTo(o.location);
+	public int compareTo(Object o) {
+		if(!(o instanceof MailingList))
+			return -1;
+		else
+			return compareTo((MailingList)o);
 	}
 	
+	public int compareTo(MailingList o) {
+		return this.location.trim().compareTo(o.location.trim());
+	}
+	
+	@Override
 	public boolean equals (Object o){
 		if(!(o instanceof MailingList))
 			return false;
@@ -68,7 +76,7 @@ public class MailingList implements Comparable<MailingList>{
 	}
 	
 	public boolean equals(MailingList ml){
-		return this.location.equals(ml.location);
+		return this.location.trim().equals(ml.location.trim());
 	}
 	
 	/**

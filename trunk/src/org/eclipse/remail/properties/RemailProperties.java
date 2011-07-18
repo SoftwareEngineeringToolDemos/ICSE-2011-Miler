@@ -1,10 +1,12 @@
 package org.eclipse.remail.properties;
 
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.remail.couchdb.util.CouchDBCreator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -146,7 +148,13 @@ public class RemailProperties extends PropertyPage implements
 			public void widgetSelected(SelectionEvent e) {
 				String[] sel = listMailinglist.getSelection();
 				for(String s : sel){
-					arrayMailingList.remove(s);
+					Iterator<MailingList> it = arrayMailingList.iterator();
+					while(it.hasNext()){
+						MailingList m = it.next();
+						if(m.equals(new MailingList(s, "", "")))
+							it.remove();
+					}
+//					arrayMailingList.remove(new MailingList(s, "", ""));
 					listMailinglist.remove(s);
 				}
 			}
@@ -157,7 +165,17 @@ public class RemailProperties extends PropertyPage implements
 	@Override
 	public boolean performOk() {
 		try {
+			//set the properties
 			((IResource)getElement()).setPersistentProperty(REMAIL_MAILING_LIST, MailingList.listToString(arrayMailingList));
+			//create databases in couchdb
+			for(MailingList ml : arrayMailingList){
+				String mailList=ml.getLocation();
+				mailList=mailList.replace(".", "_");
+				System.out.println("Creating database "+mailList);
+				CouchDBCreator create = new CouchDBCreator(mailList);
+				boolean r=create.createDatabase();
+				System.out.println(r);
+			}
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

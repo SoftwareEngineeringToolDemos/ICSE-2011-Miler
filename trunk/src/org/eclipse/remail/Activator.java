@@ -1,5 +1,6 @@
 package org.eclipse.remail;
 
+import org.eclipse.remail.couchdb.util.CouchDBCreator;
 import org.eclipse.remail.daemons.ChangeViewDaemon;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

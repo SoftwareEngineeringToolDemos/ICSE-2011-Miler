@@ -275,6 +275,7 @@ public class RemailPropertiesMailinglist {
 	 * Update the list
 	 */
 	protected void updateList() {
+		arrayMailingList.remove(mailinglist);
 		arrayMailingList.add(mailinglist);
 		String[] elems = listMailinglist.getItems();
 		boolean has = false;
