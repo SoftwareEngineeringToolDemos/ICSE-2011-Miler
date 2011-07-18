@@ -10,14 +10,14 @@ package org.eclipse.remail.couchdb.helper;
 public class CouchDBMail {
 	private String id;
 	private String _rev;
-//	private String body;
+	private String body;
 	private String start;
 	private String header;	
 	
 	public CouchDBMail (String id, String _rev, String body, String header, String start){
 		this.id=id;
 		this._rev=_rev;
-//		this.body=body;
+		this.body=body;
 		this.header=header;
 		this.start=start;
 	}
@@ -25,8 +25,7 @@ public class CouchDBMail {
 	@Override
 	public String toString()
 	{
-//		return String.format("(id=%s, _rev=%s, body=%s, start=%s, header=%s)", id, _rev, body, start, header);
-		return String.format("(id=%s, _rev=%s, start=%s, header=%s)", id, _rev, start, header);
+		return String.format("(id=%s, _rev=%s, body=%s, start=%s, header=%s)", id, _rev, body, start, header);
 	}
 	
 	public String getId() {
@@ -41,12 +40,12 @@ public class CouchDBMail {
 	public void set_rev(String _rev) {
 		this._rev = _rev;
 	}
-//	public String getBody() {
-//		return body;
-//	}
-//	public void setBody(String body) {
-//		this.body = body;
-//	}
+	public String getBody() {
+		return body;
+	}
+	public void setBody(String body) {
+		this.body = body;
+	}
 	public String getHeader() {
 		return header;
 	}
