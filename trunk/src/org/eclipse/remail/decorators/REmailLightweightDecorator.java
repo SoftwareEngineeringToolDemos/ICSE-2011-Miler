@@ -38,8 +38,9 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 		if (JavaCore.create(res) instanceof ICompilationUnit){
 			//its the decorator for one class
 			String name = res.getName();
+			String path = res.getLocation().toString();
 			name = name.split("\\.")[0];
-			if (CacheCouchDB.containsClass(name))
+			if (CacheCouchDB.containsClass(name, path))
 				decoration.addSuffix(" (" + this.getMailList(res).size() + ")");
 			else
 				decoration.addSuffix(" (not searched) ");
@@ -61,8 +62,9 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 			for (ICompilationUnit cu : compilationUnits)
 			{
 				String name = cu.getResource().getName();
+				String path = cu.getResource().getLocation().toString();
 				name = name.split("\\.")[0];
-				if (!CacheCouchDB.containsClass(name)){
+				if (!CacheCouchDB.containsClass(name, path)){
 					all=false;
 //					System.out.println(pf.getPath().toString()+" not found "+name);
 				}

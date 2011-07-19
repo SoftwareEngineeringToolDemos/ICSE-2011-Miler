@@ -30,7 +30,7 @@ public class QueryDatabase extends Job {
 	
 	protected IStatus run(IProgressMonitor monitor) {
 		Search.updateMailView(new LinkedList<Mail>());
-		if (!CacheCouchDB.containsClass(classname)) {
+		if (!CacheCouchDB.containsClass(classname, path)) {
 			/*if its not present in the cache
 			 *sleep for a while, to avoid freezing the interface 
 			 */

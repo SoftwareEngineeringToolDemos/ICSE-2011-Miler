@@ -358,8 +358,9 @@ public class MailView extends ViewPart {
 		{
 			IResource res = compilationUnit.getResource();
 			String name = res.getName();
+			String path = res.getLocation().toString();
 			name = name.split("\\.")[0];
-			if (CacheCouchDB.containsClass(name)) {
+			if (CacheCouchDB.containsClass(name, path)) {
 				Search search = new Search();
 				IPath fullPath = res.getProjectRelativePath();
 //				System.out.println(fullPath.toString());

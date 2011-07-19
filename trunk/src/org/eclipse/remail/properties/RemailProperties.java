@@ -40,7 +40,6 @@ public class RemailProperties extends PropertyPage implements
 	Button addButton;
 	Button editButton;
 	Button removeButton;
-	protected String projectPath;
 	
 //	public static final String configuration = ".REmailMailingList";
 	public static final QualifiedName REMAIL_MAILING_LIST = new 
@@ -55,7 +54,6 @@ public class RemailProperties extends PropertyPage implements
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
-		projectPath=((IResource)getElement()).getRawLocation().toString();
 	}
 	
 	@Override
@@ -194,21 +192,4 @@ public class RemailProperties extends PropertyPage implements
 		}
 		return super.performOk();
 	}
-	
-//	/**
-//	 * Save the mailing list into a file
-//	 * @param toWrite
-//	 */
-//	private void saveFile (String toWrite) {
-//		File file = new File(projectPath+"/"+".REmail");
-//		FileWriter fw;
-//		try {
-//			fw = new FileWriter(file);
-//			fw.write(toWrite);
-//	        fw.close();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}       
-//	}
 }

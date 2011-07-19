@@ -168,21 +168,21 @@ public class CouchDBSearch implements MailSearch {
 	 * @param path the class path
 	 * @return the list of mailing list of that project
 	 */
-	private LinkedHashSet<MailingList> checkClassBelongsProject(String path) {
+	public LinkedHashSet<MailingList> checkClassBelongsProject(String path) {
 		// TODO Auto-generated method stub
 		LinkedHashSet<MailingList> list = new LinkedHashSet<MailingList>();
 		
 		for(String prj : mapProjectsMailingList.keySet()){
 			if(path.startsWith("/")){
 				//its a full path
-				System.out.println("looking for:"+ path);
+//				System.out.println("looking for:"+ path);
 				if(path.contains(prj)){
 					list.addAll(mapProjectsMailingList.get(prj));
 				}
 			}else{
 				//its a relative path
 				String search=prj+"/"+path;
-				System.out.println("looking for:"+ search);
+//				System.out.println("looking for:"+ search);
 				File file = new File(search);
 				if(file.exists()){
 					list.addAll(mapProjectsMailingList.get(prj));
