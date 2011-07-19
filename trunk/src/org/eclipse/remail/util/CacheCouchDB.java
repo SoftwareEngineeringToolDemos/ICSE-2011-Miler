@@ -40,6 +40,8 @@ public class CacheCouchDB {
 			is=checkCouchDBcache(classname);
 			if(is)//is present in couchdb cache
 				addClass(classname);
+			else
+				System.out.println("no search-> "+classname);
 		}
 		return is;
 	}

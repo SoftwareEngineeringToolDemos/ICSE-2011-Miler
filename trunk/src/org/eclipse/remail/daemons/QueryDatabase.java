@@ -46,7 +46,7 @@ public class QueryDatabase extends Job {
 			Search.updateMailView(new LinkedList<Mail>());
 		else
 			Search.updateMailView(mailList);
-		System.out.println("|" + mailList.size() + "|");
+//		System.out.println("|" + mailList.size() + "|");
 		return Status.OK_STATUS;
 	}
 

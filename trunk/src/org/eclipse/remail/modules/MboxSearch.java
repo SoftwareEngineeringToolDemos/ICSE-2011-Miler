@@ -34,7 +34,7 @@ public class MboxSearch implements MailSearch
 		if (!name.matches(".*[A-Z].*[A-Z].*")) {
 			return this.strictRegexpSearch(path, name);
 		} else {
-			return this.caseSensitiveSearch(name);
+			return this.caseSensitiveSearch(path, name);
 		}
 
 	}
@@ -114,7 +114,7 @@ public class MboxSearch implements MailSearch
 	 * from REmail
 	 */
 	@Override
-	public LinkedList<Mail> caseInsensitiveSearch(String name)
+	public LinkedList<Mail> caseInsensitiveSearch(String path, String name)
 	{
 		return null;
 	}
@@ -123,7 +123,7 @@ public class MboxSearch implements MailSearch
 	 * Implements the Case Sensitive method.
 	 */
 	@Override
-	public LinkedList<Mail> caseSensitiveSearch(String name)
+	public LinkedList<Mail> caseSensitiveSearch(String path, String name)
 	{
 		return source.getMailsByClassname(name);
 	}

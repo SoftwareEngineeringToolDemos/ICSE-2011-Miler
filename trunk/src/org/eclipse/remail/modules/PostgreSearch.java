@@ -23,7 +23,7 @@ public class PostgreSearch implements MailSearch {
 	}
 
 	@Override
-	public LinkedList<Mail> caseInsensitiveSearch(String name) {
+	public LinkedList<Mail> caseInsensitiveSearch(String path, String name) {
 		LinkedList<Mail> mailList = null;
 		try {
 			mailList = search.caseInsensitiveSearch(name);
@@ -45,7 +45,7 @@ public class PostgreSearch implements MailSearch {
 	 * @throws IOException
 	 */
 	@Override
-	public LinkedList<Mail> caseSensitiveSearch(String name) {
+	public LinkedList<Mail> caseSensitiveSearch(String path, String name) {
 		LinkedList<Mail> mailList = null;
 		try {
 			mailList = search.caseSensitiveSearch(name);
@@ -153,7 +153,7 @@ public class PostgreSearch implements MailSearch {
 				MessageDialog
 						.openInformation(null, "Information",
 								"Classname not found in Dictionary, using case sensitive search");
-				return this.caseSensitiveSearch(name);
+				return this.caseSensitiveSearch(path, name);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -177,7 +177,7 @@ public class PostgreSearch implements MailSearch {
 		if (!name.matches(".*[A-Z].*[A-Z].*")) {
 			return this.strictRegexpSearch(path, name);
 		} else {
-			return this.caseSensitiveSearch(name);
+			return this.caseSensitiveSearch(path, name);
 		}
 	}
 

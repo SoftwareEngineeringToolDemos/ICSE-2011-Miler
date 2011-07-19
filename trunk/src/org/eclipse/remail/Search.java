@@ -89,9 +89,9 @@ public class Search
 			
 			
 			if (method.contains("searchSensitive"))
-				mailList = search.caseSensitiveSearch(name);
+				mailList = search.caseSensitiveSearch(path, name);
 			else if (method.contains("searchInsensitive"))
-				mailList = search.caseInsensitiveSearch(name);
+				mailList = search.caseInsensitiveSearch(path, name);
 			else if (method.contains("searchStrict"))
 				mailList = search.strictRegexpSearch(path, name);
 			else if (method.contains("searchLoose"))

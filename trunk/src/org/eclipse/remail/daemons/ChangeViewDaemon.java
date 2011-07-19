@@ -1,6 +1,8 @@
 package org.eclipse.remail.daemons;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;
@@ -74,18 +76,13 @@ public class ChangeViewDaemon implements Runnable {
 		
 		System.out.println("-- " + classname + " "
 				+ editor.getEditorInput().getPersistable().toString());
-		
+				
 		//get the class path
 		String path = getPath(editor.getEditorInput().getPersistable().toString());
 		System.out.println(path);
 
 		//query the database and update the view
 		
-//		Thread query = new Thread(new QueryDatabase(classname, path));
-//		System.out.println(query);
-//		query.setDaemon(true);
-//		query.setPriority(Thread.MIN_PRIORITY); //Priorities range: 1-10 default 5
-//		query.start();
 		QueryDatabase job = new QueryDatabase(classname, path);
 		job.setPriority(Job.LONG);
 		job.schedule();

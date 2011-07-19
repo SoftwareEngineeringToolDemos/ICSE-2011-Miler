@@ -95,7 +95,7 @@ public class MailConverter {
 			}
 		}
 		Mail mail = new Mail(0, subject, timeStamp, author, permalink, threadlink,
-				"", nameSearched);
+				cdbMail.getBody(), nameSearched);
 
 		return mail;
 	}

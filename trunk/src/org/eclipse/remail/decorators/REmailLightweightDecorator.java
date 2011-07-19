@@ -117,6 +117,7 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 	private LinkedList<Mail> getMailList(IResource res)
 	{
 		String name = res.getName();
+		String path = res.getLocation().toString();
 		name = name.split("\\.")[0];
 //		IPath path = res.getProjectRelativePath(); //should take the path
 		LinkedList<Mail> mailList = new LinkedList<Mail>();
@@ -129,9 +130,9 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 		//check the method to use for the search
 		String method = store.getString(PreferenceConstants.P_METHOD);		
 		if (method.contains("searchSensitive"))
-			mailList = search.caseSensitiveSearch(name);
+			mailList = search.caseSensitiveSearch(path, name);
 		else if (method.contains("searchInsensitive"))
-			mailList = search.caseInsensitiveSearch(name);
+			mailList = search.caseInsensitiveSearch(path, name);
 //		else if (method.contains("searchStrict"))
 //			mailList = search.strictRegexpSearch(path, name);
 //		else if (method.contains("searchLoose"))

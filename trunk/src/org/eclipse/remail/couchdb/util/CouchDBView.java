@@ -1,5 +1,7 @@
 package org.eclipse.remail.couchdb.util;
 
+import org.eclipse.remail.preferences.PreferenceConstants;
+
 import com.fourspaces.couchdb.Database;
 
 /**
@@ -10,7 +12,7 @@ import com.fourspaces.couchdb.Database;
  */
 public interface CouchDBView {
 	
-	public static String server="http://localhost:5984/";
+	public static String server="http://"+PreferenceConstants.P_COUCHDB_HOST+":"+PreferenceConstants.P_COUCHDB_PORT+"/";//"http://localhost:5984/";
 
 	/**
 	 * Set the database where the view will be created

@@ -1,10 +1,14 @@
 package org.eclipse.remail.properties;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.remail.couchdb.util.CouchDBCreator;
 import org.eclipse.swt.SWT;
@@ -36,9 +40,12 @@ public class RemailProperties extends PropertyPage implements
 	Button addButton;
 	Button editButton;
 	Button removeButton;
+	protected String projectPath;
 	
 //	public static final String configuration = ".REmailMailingList";
-	public static QualifiedName REMAIL_MAILING_LIST = new QualifiedName("REMAIL_MAILING_LIST", "REMAIL_MAILING_LIST");
+	public static final QualifiedName REMAIL_MAILING_LIST = new 
+			QualifiedName("org.eclipse.remail", 
+			"MAIL_LIST");
 	
 	private void setUp(){
 		try {
@@ -48,6 +55,7 @@ public class RemailProperties extends PropertyPage implements
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
+		projectPath=((IResource)getElement()).getRawLocation().toString();
 	}
 	
 	@Override
@@ -166,7 +174,12 @@ public class RemailProperties extends PropertyPage implements
 	public boolean performOk() {
 		try {
 			//set the properties
-			((IResource)getElement()).setPersistentProperty(REMAIL_MAILING_LIST, MailingList.listToString(arrayMailingList));
+//			((IResource)getElement()).setPersistentProperty(REMAIL_MAILING_LIST, MailingList.listToString(arrayMailingList));
+			((IResource) getElement()).setPersistentProperty(
+					REMAIL_MAILING_LIST,
+					MailingList.listToString(arrayMailingList));
+			System.out.println(MailingList.listToString(arrayMailingList));
+//			saveFile(MailingList.listToString(arrayMailingList));
 			//create databases in couchdb
 			for(MailingList ml : arrayMailingList){
 				String mailList=ml.getLocation();
@@ -182,4 +195,20 @@ public class RemailProperties extends PropertyPage implements
 		return super.performOk();
 	}
 	
+//	/**
+//	 * Save the mailing list into a file
+//	 * @param toWrite
+//	 */
+//	private void saveFile (String toWrite) {
+//		File file = new File(projectPath+"/"+".REmail");
+//		FileWriter fw;
+//		try {
+//			fw = new FileWriter(file);
+//			fw.write(toWrite);
+//	        fw.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}       
+//	}
 }
