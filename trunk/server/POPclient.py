@@ -4,12 +4,16 @@ import poplib
 import EmailParser
 import getMailList
 
-username = "remail@sback.it"
-password = "randomvariables"
+#username = "remail@sback.it"
+#password = "randomvariables"
 #mailList = "devl@freenetproject.org"
-server = "pop.gmail.com" #"mail.sback.it"
-port=995
+#server = "pop.gmail.com" #"mail.sback.it"
+#port=995
 
+server= getMailList.getServer();
+port= getMailList.getPort();
+username= getMailList.getUsername();
+password= getMailList.getPassword();
 
 mail = poplib.POP3_SSL(server, port)
 print mail.getwelcome()
