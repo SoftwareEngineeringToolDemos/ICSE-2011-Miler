@@ -12,7 +12,7 @@ def getListOfMailinglist():
     for line in file:
         #skip comments and blank line
         if not(line.startswith("#") or line.startswith("-") or line=="\n"):
-            maillist.append(line)
+            maillist.append(line.strip())
     return maillist
 
 #get the server address

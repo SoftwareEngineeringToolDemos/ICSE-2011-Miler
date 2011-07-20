@@ -18,20 +18,25 @@ numMessages = len(mail.list()[1])
 mails = [] #empty array of e-mails
 
 listMailList=getMailList.getListOfMailinglist();
-
-for i in range(numMessages):
+#print listMailList
+print numMessages
+#print mail.list()[1]
+for i in range(1, numMessages+1):
     #print "New Mail:"
     s=""
     append=False
-    for j in mail.retr(i+1)[1]:
+    db=""
+    for j in mail.retr(i)[1]:
         #print "  "+j
         s=s+j+"\n"
         #check if the message belong to the mailing list
         for mailList in listMailList:
             if (j.startswith("From:") and (not(j.find(mailList)==-1))) or (j.startswith("To:") and (not(j.find(mailList)==-1))):
+                db=mailList
                 append=True
     if(append):    
-        mails.append(MapMessageMailList(mailList, s))
+        mails.append(EmailParser.MapMessageMailList(db, s))
+    #print s
 mail.quit()
 
 print "Finished fetching e-mails"
@@ -51,6 +56,7 @@ for em in emailsObjects:
     print " - Body:"
     print " "+em.body
     cont=cont+1
-
+if(len(emailsObjects)==0):
+    print "No relevant mails found"
 print "Store in database"
 CouchDBConnection.saveListOfMailCouchdb(emailsObjects)
