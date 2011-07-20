@@ -65,7 +65,7 @@ def getPassword():
             passwd=line.replace("-PASSWORD: ","");
             passwd=passwd.strip()
             break
-    #passwd=bz2.decompress(passwd)
+   # passwd=bz2.decompress(passwd)
     return passwd
 
 #print "SERVER:"
@@ -78,3 +78,4 @@ def getPassword():
 #print getPassword()
 #print "MAILING LISTS:"
 #print getListOfMailinglist()
+

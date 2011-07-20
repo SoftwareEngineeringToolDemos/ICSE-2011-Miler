@@ -82,6 +82,7 @@ public class CacheCouchDB {
 		boolean inCache=true;
 		for(MailingList ml : list){
 			String dbname = ml.getLocation().replace(".", "_");
+			dbname=dbname.replace("@", "-");
 			String uri=CouchDBView.server+dbname+"/_design/"+methodUsed+"-"+classname;
 			HttpGetView hgv = new HttpGetView(uri);
 			String response = hgv.sendRequest();

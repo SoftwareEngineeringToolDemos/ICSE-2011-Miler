@@ -6,11 +6,12 @@ import sys
 # A class defining a mail message 
 class MailMessage:
     #construct an empty message to be filled
-    def __init__(self):
-        self.finishHeaders=False
-        self.key=""
-        self.header=[]
-        self.body=""
+    def __init__(self, mailingList):
+        self.mailingList=mailingList #the mailing list to which the e-mail belongs to 
+        self.finishHeaders=False #tells if the headers are finished
+        self.key="" #is the Message-ID wich is used as identifier
+        self.header=[] #an array containing all the headers
+        self.body="" #the body of the message
 
     #create a nicely formatted Mail message out of an unformatted message
     def createMessage(self, rawMessage):
@@ -34,13 +35,21 @@ class MailMessage:
             self.body=self.body+"\n"+line
 #END CLASS
 
+#a class mapping a raw mail message to a mailing list
+class MapMessageMailList:
+    def __init__(self, mailingList, message):
+        self.mailingList=mailingList
+        self.message=message
+#END CLASS
+        
+
 # function to convert a text in a Mail class
 def convertTextToMail(text):
-    mail = MailMessage()
-    mail.createMessage(text)
+    mail = MailMessage(text.mailingList)
+    mail.createMessage(text.message)
     return mail
 
-# function to convert an array of texts into an array of mail messages
+# function to convert an array of MapMessageMailList into an array of mail messages
 def convertTextArrayToMailArray(array):
     mailList=[]
     for text in array:

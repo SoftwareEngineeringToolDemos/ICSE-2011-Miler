@@ -3,12 +3,7 @@ import sys
 import poplib
 import EmailParser
 import getMailList
-
-#username = "remail@sback.it"
-#password = "randomvariables"
-#mailList = "devl@freenetproject.org"
-#server = "pop.gmail.com" #"mail.sback.it"
-#port=995
+import CouchDBConnection
 
 server= getMailList.getServer();
 port= getMailList.getPort();
@@ -32,11 +27,11 @@ for i in range(numMessages):
         #print "  "+j
         s=s+j+"\n"
         #check if the message belong to the mailing list
-        for maiList in listMailList:
+        for mailList in listMailList:
             if (j.startswith("From:") and (not(j.find(mailList)==-1))) or (j.startswith("To:") and (not(j.find(mailList)==-1))):
                 append=True
     if(append):    
-        mails.append(s)
+        mails.append(MapMessageMailList(mailList, s))
 mail.quit()
 
 print "Finished fetching e-mails"
@@ -48,11 +43,14 @@ print "Create E-Mail object"
 emailsObjects = EmailParser.convertTextArrayToMailArray(mails)
 cont=1
 for em in emailsObjects:
-    print " - Key:"
-    print " "+em.key
     print "EMail "+str(cont)+":"
+    print " - Mailing List:"+em.mailingList
+    print " - Key:"+em.key
     print " - Headers:"
     print " "+str(em.header)
     print " - Body:"
     print " "+em.body
     cont=cont+1
+
+print "Store in database"
+CouchDBConnection.saveListOfMailCouchdb(emailsObjects)

@@ -11,7 +11,7 @@ public class CouchDBMail {
 	private String id;
 	private String _rev;
 	private String body;
-	private String start;
+	private String key;
 	private String header;	
 	
 	public CouchDBMail (String id, String _rev, String body, String header, String start){
@@ -19,13 +19,13 @@ public class CouchDBMail {
 		this._rev=_rev;
 		this.body=body;
 		this.header=header;
-		this.start=start;
+		this.key=start;
 	}
 	
 	@Override
 	public String toString()
 	{
-		return String.format("(id=%s, _rev=%s, body=%s, start=%s, header=%s)", id, _rev, body, start, header);
+		return String.format("(id=%s, _rev=%s, body=%s, start=%s, header=%s)", id, _rev, body, key, header);
 	}
 	
 	public String getId() {
@@ -52,11 +52,11 @@ public class CouchDBMail {
 	public void setHeader(String header) {
 		this.header = header;
 	}
-	public String getStart() {
-		return start;
+	public String getKey() {
+		return key;
 	}
-	public void setStart(String start) {
-		this.start = start;
+	public void setKey(String start) {
+		this.key = start;
 	}
 
 }

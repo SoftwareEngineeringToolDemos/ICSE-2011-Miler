@@ -182,6 +182,7 @@ public class RemailProperties extends PropertyPage implements
 			for(MailingList ml : arrayMailingList){
 				String mailList=ml.getLocation();
 				mailList=mailList.replace(".", "_");
+				mailList=mailList.replace("@", "-");
 				System.out.println("Creating database "+mailList);
 				CouchDBCreator create = new CouchDBCreator(mailList);
 				boolean r=create.createDatabase();
