@@ -29,7 +29,7 @@ class MailMessage:
             #add the line to the headers
             self.header.append(line)
             #check if it is the Message-ID:
-            if line.startswith("Message-ID:"):
+            if line.startswith("Message-ID:") or line.startswith("Message-Id:"):
                 self.key=line
         else:
             self.body=self.body+"\n"+line

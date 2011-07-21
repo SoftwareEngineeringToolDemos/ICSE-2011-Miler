@@ -115,6 +115,7 @@ public class RemailPropertiesMailinglist {
 		maillistLocationLabel.setText("Mailing list location: ");
 		maillistLocationInput = new Combo(panel, SWT.READ_ONLY);
 		String[] arrDB=(new CouchDBDatabases()).getArrayOfDatabases();
+		arrDB=CouchDBDatabases.fromRealNameToNiceName(arrDB);
 		maillistLocationInput.setItems(arrDB);
 		maillistLocationInput.select(0);
 		Label usernameLabel = new Label(panel, SWT.NONE);
@@ -352,6 +353,7 @@ public class RemailPropertiesMailinglist {
 		maillistLocationLabel.setText("Mailing list location: ");
 		maillistLocationInput = new Combo(panel, SWT.READ_ONLY);
 		String[] arrDB=(new CouchDBDatabases()).getArrayOfDatabases();
+		arrDB=CouchDBDatabases.fromRealNameToNiceName(arrDB);
 		int index=0;
 		for(int i=0;i<arrDB.length; i++)
 			if(arrDB[i].equals(selected.getLocation()))

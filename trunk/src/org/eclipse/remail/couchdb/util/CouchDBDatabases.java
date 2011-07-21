@@ -54,4 +54,21 @@ public class CouchDBDatabases {
 		
 		return arr;
 	}
+	
+	/**
+	 * Convert the names of the database into the name of the mailing list
+	 * @param arr the array to converts
+	 * @return the array converted
+	 */
+	public static String[] fromRealNameToNiceName(String[] arr){
+		String[] newArr=new String[arr.length];
+		for(int i=0; i<arr.length; i++){
+			String s=arr[i];
+			s=s.replace("_", ".");
+			s=s.replace("-", "@");
+			s=s.replace(CouchDBCreator.PREFIX, "");
+			newArr[i]=s;
+		}
+		return newArr;
+	}
 }
