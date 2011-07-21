@@ -87,6 +87,7 @@ public class CouchDBSearch implements MailSearch {
 		for (MailingList ml : arrayMailingList) {
 			String dbname = ml.getLocation().replace(".", "_");
 			dbname=dbname.replace("@", "-");
+			dbname=CouchDBCreator.PREFIX+dbname;
 			Database db = dbSession.getDatabase(dbname);
 			System.out.println("using: "+dbname);
 			// add the view to the database
@@ -120,6 +121,8 @@ public class CouchDBSearch implements MailSearch {
 		LinkedHashSet<MailingList> arrayMailingList=checkClassBelongsProject(path);
 		for (MailingList ml : arrayMailingList) {
 			String dbname = ml.getLocation().replace(".", "_");
+			dbname=dbname.replace("@", "-");
+			dbname=CouchDBCreator.PREFIX+dbname;
 			Database db = dbSession.getDatabase(dbname);
 
 			// add the view to the database

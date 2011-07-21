@@ -5,12 +5,13 @@ import couchdb
 import EmailParser
 
 CouchDBServer="http://localhost:5984"
+namePrefix="at(remail)"
 
 #get a valid databse name: replace @ and . with, repectively - and _
 def getValidDBName(name):
     valid=name.replace(".","_")
     valid=valid.replace("@","-")
-    return valid
+    return namePrefix+valid
 
 
 # create a database, if already exists do nothing

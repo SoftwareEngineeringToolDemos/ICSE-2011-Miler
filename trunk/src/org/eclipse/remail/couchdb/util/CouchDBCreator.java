@@ -17,12 +17,17 @@ public class CouchDBCreator {
 	private final String databaseName;
 	private String host;
 	private int port;
+	
+	public static final String PREFIX="at(remail)";
 
 	public CouchDBCreator(String databaseName) {
 		host = PreferenceConstants.P_COUCHDB_HOST;
 		port = Integer.parseInt(PreferenceConstants.P_COUCHDB_PORT);
 		dbSession = new Session(host, port);
-		this.databaseName = databaseName;
+		if(!databaseName.startsWith(PREFIX))
+			this.databaseName = databaseName;
+		else
+			this.databaseName= PREFIX+databaseName;
 	}
 
 	/**
