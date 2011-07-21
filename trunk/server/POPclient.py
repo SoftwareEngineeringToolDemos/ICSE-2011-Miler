@@ -19,7 +19,7 @@ mails = [] #empty array of e-mails
 
 listMailList=getMailList.getListOfMailinglist();
 #print listMailList
-print numMessages
+print "emails found:"+str(numMessages)
 #print mail.list()[1]
 for i in range(1, numMessages+1):
     #print "New Mail:"
@@ -31,7 +31,7 @@ for i in range(1, numMessages+1):
         s=s+j+"\n"
         #check if the message belong to the mailing list
         for mailList in listMailList:
-            if (j.startswith("From:") and (not(j.find(mailList)==-1))) or (j.startswith("To:") and (not(j.find(mailList)==-1))):
+            if (j.startswith("From:") and (not(j.find(mailList)==-1))) or (j.startswith("To:") and (not(j.find(mailList)==-1))) or (j.startswith("Delivered-To:") and (not(j.find(mailList)==-1))):
                 db=mailList
                 append=True
     if(append):    
@@ -40,22 +40,23 @@ for i in range(1, numMessages+1):
 mail.quit()
 
 print "Finished fetching e-mails"
-#print mails
+#print all mails
 #for m in mails:
 #    print m+"\n"
 
 print "Create E-Mail object"
 emailsObjects = EmailParser.convertTextArrayToMailArray(mails)
-cont=1
-for em in emailsObjects:
-    print "EMail "+str(cont)+":"
-    print " - Mailing List:"+em.mailingList
-    print " - Key:"+em.key
-    print " - Headers:"
-    print " "+str(em.header)
-    print " - Body:"
-    print " "+em.body
-    cont=cont+1
+#Print all relevant mails
+#cont=1
+#for em in emailsObjects:
+#    print "EMail "+str(cont)+":"
+#    print " - Mailing List:"+em.mailingList
+#    print " - Key:"+em.key
+#    print " - Headers:"
+#    print " "+str(em.header)
+#    print " - Body:"
+#    print " "+em.body
+#    cont=cont+1
 if(len(emailsObjects)==0):
     print "No relevant mails found"
 print "Store in database"
