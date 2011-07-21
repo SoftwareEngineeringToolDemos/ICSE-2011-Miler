@@ -24,7 +24,7 @@ public class CouchDBCreator {
 		host = PreferenceConstants.P_COUCHDB_HOST;
 		port = Integer.parseInt(PreferenceConstants.P_COUCHDB_PORT);
 		dbSession = new Session(host, port);
-		if(!databaseName.startsWith(PREFIX))
+		if(databaseName.startsWith(PREFIX))
 			this.databaseName = databaseName;
 		else
 			this.databaseName= PREFIX+databaseName;

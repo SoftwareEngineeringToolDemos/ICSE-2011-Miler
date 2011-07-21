@@ -1,14 +1,10 @@
 package org.eclipse.remail.properties;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.remail.couchdb.util.CouchDBCreator;
 import org.eclipse.swt.SWT;
@@ -41,7 +37,6 @@ public class RemailProperties extends PropertyPage implements
 	Button editButton;
 	Button removeButton;
 	
-//	public static final String configuration = ".REmailMailingList";
 	public static final QualifiedName REMAIL_MAILING_LIST = new 
 			QualifiedName("org.eclipse.remail", 
 			"MAIL_LIST");
@@ -160,7 +155,6 @@ public class RemailProperties extends PropertyPage implements
 						if(m.equals(new MailingList(s, "", "")))
 							it.remove();
 					}
-//					arrayMailingList.remove(new MailingList(s, "", ""));
 					listMailinglist.remove(s);
 				}
 			}
@@ -172,12 +166,11 @@ public class RemailProperties extends PropertyPage implements
 	public boolean performOk() {
 		try {
 			//set the properties
-//			((IResource)getElement()).setPersistentProperty(REMAIL_MAILING_LIST, MailingList.listToString(arrayMailingList));
 			((IResource) getElement()).setPersistentProperty(
 					REMAIL_MAILING_LIST,
 					MailingList.listToString(arrayMailingList));
 			System.out.println(MailingList.listToString(arrayMailingList));
-//			saveFile(MailingList.listToString(arrayMailingList));
+			
 			//create databases in couchdb
 			for(MailingList ml : arrayMailingList){
 				String mailList=ml.getLocation();

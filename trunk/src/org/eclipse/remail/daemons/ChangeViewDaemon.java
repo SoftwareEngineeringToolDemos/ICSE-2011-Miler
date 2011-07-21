@@ -1,8 +1,6 @@
 package org.eclipse.remail.daemons;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;

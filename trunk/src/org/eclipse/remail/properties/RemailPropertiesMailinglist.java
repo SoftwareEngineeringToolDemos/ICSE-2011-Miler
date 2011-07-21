@@ -1,19 +1,17 @@
 package org.eclipse.remail.properties;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.LinkedHashSet;
 
 import javax.swing.JOptionPane;
 
+import org.eclipse.remail.couchdb.util.CouchDBDatabases;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
@@ -32,14 +30,13 @@ import org.eclipse.swt.widgets.Text;
  */
 public class RemailPropertiesMailinglist {
 
-	public Text maillistLocationInput;
+	public Combo maillistLocationInput;
 	public Text usernameInput;
 	public Text passwordInput;
 	public Text againPasswordInput;
 	Button okButton;
 	private MailingList mailinglist;
 	final Shell dialog;
-	private boolean locationOk;
 	private boolean usernameOk;
 	private boolean passwordOk;
 	private boolean againPasswordOk;
@@ -63,7 +60,6 @@ public class RemailPropertiesMailinglist {
 			LinkedHashSet<MailingList> arrayMailingList) {
 		mailinglist = m;
 		dialog = new Shell(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		locationOk = false;
 		usernameOk = false;
 		passwordOk = false;
 		againPasswordOk = false;
@@ -91,7 +87,6 @@ public class RemailPropertiesMailinglist {
 			LinkedHashSet<MailingList> arrayMailingList, String selection) {
 		mailinglist = m;
 		dialog = new Shell(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		locationOk = true;
 		usernameOk = true;
 		passwordOk = true;
 		againPasswordOk = true;
@@ -118,7 +113,10 @@ public class RemailPropertiesMailinglist {
 		// input
 		Label maillistLocationLabel = new Label(panel, SWT.NONE);
 		maillistLocationLabel.setText("Mailing list location: ");
-		maillistLocationInput = new Text(panel, SWT.SINGLE);
+		maillistLocationInput = new Combo(panel, SWT.READ_ONLY);
+		String[] arrDB=(new CouchDBDatabases()).getArrayOfDatabases();
+		maillistLocationInput.setItems(arrDB);
+		maillistLocationInput.select(0);
 		Label usernameLabel = new Label(panel, SWT.NONE);
 		usernameLabel.setText("Username: ");
 		usernameInput = new Text(panel, SWT.SINGLE);
@@ -177,11 +175,11 @@ public class RemailPropertiesMailinglist {
 		 */
 		okButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				if (maillistLocationInput.getText().length() > 0
-						&& usernameInput.getText().length() > 0
-						&& passwordInput.getText().length() > 0 && isUrl() && checkPasswordMatch()) {
+				if (usernameInput.getText().length() > 0
+						&& passwordInput.getText().length() > 0 && checkPasswordMatch()) {
 					// valid input
-					mailinglist.setLocation(maillistLocationInput.getText());
+					String ml= maillistLocationInput.getItem(maillistLocationInput.getSelectionIndex());
+					mailinglist.setLocation(ml);				
 					mailinglist.setUsername(usernameInput.getText());
 					mailinglist.setPassword(passwordInput.getText());
 					dialog.dispose();
@@ -197,23 +195,6 @@ public class RemailPropertiesMailinglist {
 		/*
 		 * Listeners for text in order to enable the ok button
 		 */
-		maillistLocationInput.addListener(SWT.Verify, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				int l = maillistLocationInput.getText().length();
-				if (event.text != "\b") {
-					String s = maillistLocationInput.getText() + event.text;
-					l = s.length();
-				} else
-					l = l - 1;
-				if (l > 0)
-					locationOk = true;
-				else
-					locationOk = false;
-				enableOkButton();
-			}
-		});
 		usernameInput.addListener(SWT.Verify, new Listener() {
 
 			@Override
@@ -299,7 +280,7 @@ public class RemailPropertiesMailinglist {
 		boolean check=maillistLocationInput.getText().length()>0;
 		check=check&&usernameInput.getText().length()>0;
 		check=check&&passwordInput.getText().length()>0;
-		return locationOk && usernameOk && passwordOk && againPasswordOk && check;
+		return usernameOk && passwordOk && againPasswordOk && check;
 	}
 
 	/**
@@ -312,30 +293,6 @@ public class RemailPropertiesMailinglist {
 		} else {
 			okButton.setEnabled(false);
 			dialog.redraw();
-		}
-	}
-
-	/**
-	 * Check if the location inserted by the user is an url
-	 * 
-	 * @return true if it is an URL, false otherwise
-	 */
-	private boolean isUrl() {
-		try {
-			String s = maillistLocationInput.getText();
-			if (!s.startsWith("http://"))
-				;
-			s = "http://" + maillistLocationInput.getText();
-			URL url = new URL(s);
-			URLConnection conn = url.openConnection();
-			conn.connect();
-			return true;
-		} catch (MalformedURLException e) {
-			System.out.println("Not a valid url");
-			return false;
-		} catch (IOException e) {
-			System.out.println("Can not connect");
-			return false;
 		}
 	}
 
@@ -393,8 +350,15 @@ public class RemailPropertiesMailinglist {
 		// input
 		Label maillistLocationLabel = new Label(panel, SWT.NONE);
 		maillistLocationLabel.setText("Mailing list location: ");
-		maillistLocationInput = new Text(panel, SWT.SINGLE);
-		maillistLocationInput.setText(selected.getLocation());
+		maillistLocationInput = new Combo(panel, SWT.READ_ONLY);
+		String[] arrDB=(new CouchDBDatabases()).getArrayOfDatabases();
+		int index=0;
+		for(int i=0;i<arrDB.length; i++)
+			if(arrDB[i].equals(selected.getLocation()))
+				index=i;
+		maillistLocationInput.setItems(arrDB);
+		maillistLocationInput.select(index);
+		maillistLocationInput.setEnabled(false);
 		Label usernameLabel = new Label(panel, SWT.NONE);
 		usernameLabel.setText("Username: ");
 		usernameInput = new Text(panel, SWT.SINGLE);
@@ -456,9 +420,8 @@ public class RemailPropertiesMailinglist {
 		 */
 		okButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				if (maillistLocationInput.getText().length() > 0
-						&& usernameInput.getText().length() > 0
-						&& passwordInput.getText().length() > 0 && isUrl() && checkPasswordMatch()) {
+				if (usernameInput.getText().length() > 0
+						&& passwordInput.getText().length() > 0 && checkPasswordMatch()) {
 					// valid input
 					
 					//remove old
@@ -481,23 +444,6 @@ public class RemailPropertiesMailinglist {
 		/*
 		 * Listeners for text in order to enable the ok button
 		 */
-		maillistLocationInput.addListener(SWT.Verify, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				int l = maillistLocationInput.getText().length();
-				if (event.text != "\b") {
-					String s = maillistLocationInput.getText() + event.text;
-					l = s.length();
-				} else
-					l = l - 1;
-				if (l > 0)
-					locationOk = true;
-				else
-					locationOk = false;
-				enableOkButton();
-			}
-		});
 		usernameInput.addListener(SWT.Verify, new Listener() {
 
 			@Override

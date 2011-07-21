@@ -37,4 +37,21 @@ public class CouchDBDatabases {
 		
 		return list;
 	}
+	
+	/**
+	 * Same as getListOfDatabases() but as an array
+	 * @return an array of the databases names
+	 */
+	public String[] getArrayOfDatabases(){
+		List<String> list = getListOfDatabases();
+		String[] arr = new String[list.size()];
+		
+		int i=0;
+		for(String s : list){
+			arr[i]=s;
+			i++;
+		}
+		
+		return arr;
+	}
 }

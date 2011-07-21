@@ -6,14 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.remail.Activator;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.couchdb.helper.CouchDBResponse;
 import org.eclipse.remail.couchdb.helper.HttpGetView;
@@ -21,19 +15,6 @@ import org.eclipse.remail.modules.MailSearch;
 import org.eclipse.remail.preferences.PreferenceConstants;
 import org.eclipse.remail.properties.MailingList;
 import org.eclipse.remail.properties.RemailProperties;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.ISelectionService;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPropertyPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.PropertyPage;
-import org.eclipse.ui.views.properties.IPropertySheetPage;
-import org.eclipse.ui.views.properties.IPropertySource;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 
 import com.fourspaces.couchdb.Database;
 import com.fourspaces.couchdb.Session;
@@ -46,13 +27,8 @@ import com.fourspaces.couchdb.Session;
  */
 public class CouchDBSearch implements MailSearch {
 
-	// big test
-	// private String dbname = "big-test";
-	// Uncomment for use the small test
-	// private String dbname="small-db";
 	private Session dbSession;// = new Session("localhost", 5984);
 	private LinkedList<Mail> mailList = null;
-//	private LinkedHashSet<MailingList> arrayMailingList;
 	private HashMap<String, LinkedHashSet<MailingList>> mapProjectsMailingList;
 
 	public CouchDBSearch() {
@@ -87,15 +63,14 @@ public class CouchDBSearch implements MailSearch {
 		for (MailingList ml : arrayMailingList) {
 			String dbname = ml.getLocation().replace(".", "_");
 			dbname=dbname.replace("@", "-");
-			dbname=CouchDBCreator.PREFIX+dbname;
+			if(!dbname.startsWith(CouchDBCreator.PREFIX))
+				dbname=CouchDBCreator.PREFIX+dbname;
 			Database db = dbSession.getDatabase(dbname);
 			System.out.println("using: "+dbname);
 			// add the view to the database
 			CaseSensitiveView csv = new CaseSensitiveView(name, dbname);
 			csv.setDatabase(db);
 			csv.addView();
-			// System.out.println(csv.getMapURI());
-			// System.out.println(csv.getMapFunction());
 
 			// get the view
 			HttpGetView hgv = new HttpGetView(csv.getMapURI());
@@ -122,7 +97,8 @@ public class CouchDBSearch implements MailSearch {
 		for (MailingList ml : arrayMailingList) {
 			String dbname = ml.getLocation().replace(".", "_");
 			dbname=dbname.replace("@", "-");
-			dbname=CouchDBCreator.PREFIX+dbname;
+			if(!dbname.startsWith(CouchDBCreator.PREFIX))
+				dbname=CouchDBCreator.PREFIX+dbname;
 			Database db = dbSession.getDatabase(dbname);
 
 			// add the view to the database
@@ -173,7 +149,6 @@ public class CouchDBSearch implements MailSearch {
 	 * @return the list of mailing list of that project
 	 */
 	public LinkedHashSet<MailingList> checkClassBelongsProject(String path) {
-		// TODO Auto-generated method stub
 		LinkedHashSet<MailingList> list = new LinkedHashSet<MailingList>();
 		
 		for(String prj : mapProjectsMailingList.keySet()){
