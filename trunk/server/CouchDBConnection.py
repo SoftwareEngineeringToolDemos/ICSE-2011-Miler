@@ -4,10 +4,11 @@ import json
 import couchdb
 import EmailParser
 
+# Constants
 CouchDBServer="http://localhost:5984"
 namePrefix="at(remail)"
 
-#get a valid databse name: replace @ and . with, repectively - and _
+# get a valid databse name: replace @ and . with, repectively - and _
 def getValidDBName(name):
     valid=name.replace(".","_")
     valid=valid.replace("@","-")
@@ -25,13 +26,13 @@ def createDatabase(databaseName):
         #already exists
         print "Database '"+databaseName+"' already exists"
 
-#create a document from a MailMessage
+# create a document from a MailMessage
 def createDocumentFromMail(mail):
     doc = {'key': mail.key, 'header': str(mail.header), 'body': mail.body }
     return doc
 
-#check if an email already exist in couchdb
-#return True if exists, False otherwise
+# check if an email already exist in couchdb
+# return True if exists, False otherwise
 def checkMailExists(database, mail):
     map_fun = '''function(doc) { if(doc.key=="'''+str(mail.key)+'''") emit(doc); }'''
     #print map_fun
@@ -41,7 +42,7 @@ def checkMailExists(database, mail):
     else:
         return True
 
-#save a mail message into couchdb
+# save a mail message into couchdb
 def saveMailCouchdb(mail):
     server=couchdb.Server(CouchDBServer)    
     createDatabase(mail.mailingList)
@@ -53,8 +54,8 @@ def saveMailCouchdb(mail):
     else:
         print "Mail "+mail.key+" already present in "+mail.mailingList
     
-#stores an array or emails in couch db
-#every emil is stored in the database dependins on its name
+# stores an array or emails in couch db
+# every emil is stored in the database dependins on its name
 def saveListOfMailCouchdb(listMail):
     for mail in listMail:
         saveMailCouchdb(mail)
