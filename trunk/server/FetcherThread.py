@@ -8,7 +8,7 @@ import CouchDBConnection as cdb
 
 # Constants
 numberOfThreads=20
-numberOfThreadsCouchDB=5
+numberOfThreadsCouchDB=20
 
 # a container class for the list of result
 # which ensures concurrency access
@@ -85,6 +85,7 @@ class MailFetcher(threading.Thread):
             # insert the mail in couchdb
             cdb.saveMailCouchdb(mail)
         self.queue.task_done()
+        print " Thread "+str(self.name)+" finished."
 # END CLASS
 
 
@@ -118,13 +119,14 @@ def getTheListOfMessage(numThreads, numPages, lastId):
                 cont=cont+1
         # wait for all thread to finish
         q.join()
-        print " fetched "+str(cont-1)+ " pages."
+        #print " fetched "+str(cont-1)+ " pages."
         # if found the last inserted into couchdb ...
         if results.foundLast:
             # ... stop.
             print "Found last"
             break
     
+    print results.IDs
     print "Number of mails to fetch "+str(len(results.IDs))
     return results
 
@@ -157,9 +159,5 @@ def fetchMail(maillist):
         q.put(t)
     q.join()
 
-#tests
-#lastID="jsud6yvtbpxdjfrh"
-#pages=FMM.getNumPages('org.w3.public-lod')
-#ThreadPool(5,pages,lastID)
 fetchMail('org.w3.public-lod')
 

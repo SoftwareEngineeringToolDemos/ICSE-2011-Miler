@@ -46,7 +46,7 @@ def getIDandThread(maillist, page):
 # the table containing headers and the body
 def getXMLMessage(messID):
     param="id="+messID
-    print urlMessage+"%s" % param
+    #print urlMessage+"%s" % param
     get = urllib.urlopen(urlMessage+"%s" % param) #open connection
     text=get.read()
     text=text.replace("<br/>", "\n");
@@ -63,9 +63,24 @@ def addQuoting(elem):
             return ">"
     return ""
 
+# Creates a text iterator. Does the same thing of Element.itertext()
+# this function is intended to be used only in python version < 2.7
+# where the function Element.itertext() is not present 
+def textiterator(elem):
+    if elem.text:
+        yield elem.text
+    for e in elem:
+        for s in textiterator(e):
+            yield s
+        if e.tail:
+            yield e.tail
+
 # get the text content of the element 
 def getTextFromInnerElements(element):
-    iter=element.itertext()
+    if sys.version_info >= (2, 7):
+        iter=element.itertext()
+    else:
+        iter=textiterator(element)
     s=""
     for i in iter:
         s=s+i
