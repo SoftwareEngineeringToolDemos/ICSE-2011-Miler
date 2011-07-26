@@ -21,10 +21,9 @@ def createUsefulDoc(databaseName):
     server=couchdb.Server(CouchDBServer)
     db=server[databaseName]
     # create last inserted
-
+    doc={'_id': 'lastEmail', 'key':''}
+    db.save(doc)
     # create keyview
-    #doc={'_id': 'desing_1/keyview', 'views': {'keyview':{'map':"function(doc) { emit(null, doc.key)}"}}}
-    #db.save(doc)
     view=couchdb.design.ViewDefinition('keyview', 'keyview', '''function(doc){emit(doc._id, doc.key)}''')
     view.sync(db)
     print " desing created"
@@ -98,6 +97,24 @@ def saveMailCouchdb(mail):
     #else:
         #print "Mail "+mail.key+" already present in "+mail.mailingList
     
+# update the given document in the database identified by maillist
+# to be used to update the lastEmail document
+def updateDocCouchDB(doc, maillist):
+    server=couchdb.Server(CouchDBServer) 
+    database=server[getValidDBName(maillist)] 
+    database.update([doc])
+
+# return the key value of the LastEmail document in the
+# database identified by maillist
+def getLastEmailKey(maillist):
+    server=couchdb.Server(CouchDBServer) 
+    database=server[getValidDBName(maillist)]
+    doc=database.get('lastEmail')
+    try:
+        return doc["key"]
+    except AttributeError: #the doc is None
+        return ''
+
 # stores an array or emails in couch db
 # every emil is stored in the database dependins on its name
 def saveListOfMailCouchdb(listMail):

@@ -104,6 +104,11 @@ def getTheListOfMessage(numThreads, numPages, lastId):
     cont=2 # stores the page number to be read
     # create threads
     while cont<=numPages:
+        # if found the last inserted into couchdb ...
+        if results.foundLast:
+            # ... stop.
+            print "Found last"
+            break
         if (cont-1+numThreads)<=numPages:
             for i in range(numThreads):
                 t=Fetcher(cont,q,results)
@@ -120,11 +125,7 @@ def getTheListOfMessage(numThreads, numPages, lastId):
         # wait for all thread to finish
         q.join()
         #print " fetched "+str(cont-1)+ " pages."
-        # if found the last inserted into couchdb ...
-        if results.foundLast:
-            # ... stop.
-            print "Found last"
-            break
+        
     
     print results.IDs
     print "Number of mails to fetch "+str(len(results.IDs))
@@ -134,7 +135,7 @@ def getTheListOfMessage(numThreads, numPages, lastId):
 # fetch all the mails in the mailing list
 def fetchMail(maillist):
     # get the last id stored in the database 
-    lastId=""
+    lastId=cdb.getLastEmailKey(maillist)
     # get the list of mails to fetch
     pages=FMM.getNumPages(maillist)
     print "Getting the list of mail to fetch:"
@@ -150,9 +151,13 @@ def fetchMail(maillist):
     q.put(t) # put in the queue
     q.join() # wait to finish    
     # update last element in couchdb
-    #TODO
+    doc={'_id': 'lastEmail', 'key':ID[0]}
+    cdb.updateDocCouchDB(doc, maillist)
+
     # create the pool for the other emails
     print "Fetching the mails"
+    if n==0:
+        n=1
     for i in range(0, len(ID), n):
         t=MailFetcher(maillist, ID[i+1:i+n], threadID[i+1:i+n], "Block-"+str(i+1), q)
         t.start()
