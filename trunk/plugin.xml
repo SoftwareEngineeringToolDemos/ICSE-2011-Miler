@@ -109,6 +109,14 @@
             name="E-mail Content"
             restorable="true">
       </view>
+      <view
+            category="org.eclipse.emailrecommender.category1"
+            class="org.eclipse.remail.views.MailWriter"
+            icon="icons/remail.png"
+            id="org.eclipse.emailrecommender.MailWriter"
+            name="E-mail Writer"
+            restorable="false">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
