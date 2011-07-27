@@ -33,11 +33,14 @@ class ListResult:
     def append(self, ids, threadids):
         self.lock.acquire()
         self.IDs.extend(ids)
+        #print ids
+        #print str(self.IDs)
         self.threadIDs.extend(threadids)
         self.checkFoundLast(ids)
         self.lock.release()
 
     # return the two lists
+    # not thread safe
     def getLists(self):
         return self.IDs, self.threadIDs
 #END CLASS
@@ -126,8 +129,7 @@ def getTheListOfMessage(numThreads, numPages, lastId):
         q.join()
         #print " fetched "+str(cont-1)+ " pages."
         
-    
-    print results.IDs
+    #print "at the end"+str(results.IDs)
     print "Number of mails to fetch "+str(len(results.IDs))
     return results
 
@@ -140,7 +142,9 @@ def fetchMail(maillist):
     pages=FMM.getNumPages(maillist)
     print "Getting the list of mail to fetch:"
     result=getTheListOfMessage(numberOfThreads, pages, lastId)
+    result.lock.acquire()
     ID, threadID = result.getLists()
+    result.lock.release()
     
     # fetch and insert emails in the database 
     n=len(ID)/numberOfThreadsCouchDB
@@ -159,10 +163,12 @@ def fetchMail(maillist):
     if n==0:
         n=1
     for i in range(0, len(ID), n):
-        t=MailFetcher(maillist, ID[i+1:i+n], threadID[i+1:i+n], "Block-"+str(i+1), q)
+        t=MailFetcher(maillist, ID[i+1:i+n+1], threadID[i+1:i+n+1], "Block-"+str(i+1)+"-"+str(i+n), q)
         t.start()
         q.put(t)
     q.join()
 
-fetchMail('org.w3.public-lod')
-
+#fetchMail('com.ubuntu.lists.gobuntu-devel')
+#fetchMail('org.w3.public-lod')
+#fetchMail('org.freenetproject.devl')
+fetchMail('org.gnome.conduit-list')

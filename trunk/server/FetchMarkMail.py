@@ -40,6 +40,8 @@ def getIDandThread(maillist, page):
     for r in results:
         IDs.append(r['id'])
         threadIDs.append(r['thread_id'])
+    #print "id:"+str(IDs)
+    #print "thread:"+str(threadIDs)
     return IDs, threadIDs
 
 # return the message with the specified id as two XML element
@@ -142,8 +144,8 @@ def getMailMessage(messID, threadID, maillist):
     # create mail message
     email = MailMessage(maillist)
     email.key = messID
-    for key,value in headDict.iteritems():
-        email.header.append(key+value)
+    for k,value in headDict.iteritems():
+        email.header.append(k+value)
     email.finishedHeaders=True
     email.body=bodyMess
     return email

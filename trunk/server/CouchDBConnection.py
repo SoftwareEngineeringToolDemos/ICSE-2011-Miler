@@ -94,8 +94,8 @@ def saveMailCouchdb(mail):
             print "  Database.save not found"
             database.create(doc)
         #print "Mail "+mail.key+" stored in "+mail.mailingList
-    #else:
-        #print "Mail "+mail.key+" already present in "+mail.mailingList
+    else:
+        print "Mail "+mail.key+" already present in "+mail.mailingList
     
 # update the given document in the database identified by maillist
 # to be used to update the lastEmail document
@@ -107,12 +107,14 @@ def updateDocCouchDB(doc, maillist):
 # return the key value of the LastEmail document in the
 # database identified by maillist
 def getLastEmailKey(maillist):
-    server=couchdb.Server(CouchDBServer) 
-    database=server[getValidDBName(maillist)]
-    doc=database.get('lastEmail')
     try:
+        server=couchdb.Server(CouchDBServer) 
+        database=server[getValidDBName(maillist)]
+        doc=database.get('lastEmail')
         return doc["key"]
     except AttributeError: #the doc is None
+        return ''
+    except couchdb.http.ResourceNotFound:
         return ''
 
 # stores an array or emails in couch db
