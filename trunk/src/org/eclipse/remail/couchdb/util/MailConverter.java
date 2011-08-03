@@ -90,7 +90,13 @@ public class MailConverter {
 				try {
 					timeStamp = df.parse(s.substring(6));
 				} catch (ParseException e) {
-					timeStamp = null;
+					df = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss aa");
+					try {
+						timeStamp = df.parse(s.substring(5));
+					} catch (ParseException e1) {
+						System.err.println(s.substring(5));
+						timeStamp = null;
+					}					
 				}
 			}
 		}

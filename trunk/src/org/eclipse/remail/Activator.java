@@ -12,6 +12,9 @@ public class Activator extends AbstractUIPlugin
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.emailrecommender";
+	
+	public static final String COUCHDB_HOST = "localhost";
+	public static final String COUCHDB_PORT = "5984";
 
 	// The shared instance
 	private static Activator plugin;
@@ -67,4 +70,11 @@ public class Activator extends AbstractUIPlugin
 		return plugin;
 	}
 
+	public static String getHost() {
+		return plugin.getPreferenceStore().getString(COUCHDB_HOST);
+	}
+	
+	public static String getPort() {
+		return plugin.getPreferenceStore().getString(COUCHDB_PORT);
+	}
 }

@@ -3,6 +3,7 @@ package org.eclipse.remail.couchdb.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.remail.Activator;
 import org.eclipse.remail.preferences.PreferenceConstants;
 
 import com.fourspaces.couchdb.Session;
@@ -17,8 +18,8 @@ public class CouchDBDatabases {
 	private final Session dbSession;
 	
 	public CouchDBDatabases (){
-		String host = PreferenceConstants.P_COUCHDB_HOST;
-		int port = Integer.parseInt(PreferenceConstants.P_COUCHDB_PORT);
+		String host = Activator.getHost();
+		int port = Integer.parseInt(Activator.getPort());
 		dbSession = new Session(host, port);
 	}
 	

@@ -175,7 +175,7 @@ def getMailMessage(messID, maillist):
     email = MailMessage(maillist)
     email.key = messID
     for k,value in headDict.iteritems():
-        email.header.append(k+value)
+        email.header.append(k.encode('ascii', 'xmlcharrefreplace')+value.encode('ascii', 'xmlcharrefreplace'))
     email.finishedHeaders=True
     email.body=bodyMess
     return email

@@ -35,7 +35,14 @@ public class PreferencePaneCouchdb extends FieldEditorPreferencePage implements
 	@Override
 	protected void performDefaults(){
 		super.performDefaults();
-		couchdbHost.setStringValue("localhost");
-		couchdbPort.setStringValue("5984");
+		couchdbHost.setStringValue(Activator.getHost());
+		couchdbPort.setStringValue(Activator.getPort());
+	}
+	
+	@Override
+	public boolean performOk(){
+		getPreferenceStore().setValue(Activator.COUCHDB_HOST, couchdbHost.getStringValue());
+		getPreferenceStore().setValue(Activator.COUCHDB_PORT, couchdbPort.getStringValue());
+		return super.performOk();
 	}
 }

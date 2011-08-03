@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.remail.Activator;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.couchdb.helper.CouchDBResponse;
 import org.eclipse.remail.couchdb.helper.HttpGetView;
@@ -34,8 +35,8 @@ public class CouchDBSearch implements MailSearch {
 	public CouchDBSearch() {
 		mailList = new LinkedList<Mail>();
 		mapProjectsMailingList=new HashMap<String, LinkedHashSet<MailingList>>();
-		dbSession = new Session(PreferenceConstants.P_COUCHDB_HOST,
-				Integer.parseInt(PreferenceConstants.P_COUCHDB_PORT));
+		dbSession = new Session(Activator.getHost(),
+				Integer.parseInt(Activator.getPort()));
 	
 		//get all the projects in the workspace
 		IProject[] projects=ResourcesPlugin.getWorkspace().getRoot().getProjects();
@@ -65,8 +66,8 @@ public class CouchDBSearch implements MailSearch {
 			dbname=dbname.replace("@", "-");
 			if(!dbname.startsWith(CouchDBCreator.PREFIX))
 				dbname=CouchDBCreator.PREFIX+dbname;
+			System.out.println("using: "+Activator.getHost()+" "+Activator.getPort()+" "+dbname);
 			Database db = dbSession.getDatabase(dbname);
-			System.out.println("using: "+dbname);
 			// add the view to the database
 			CaseSensitiveView csv = new CaseSensitiveView(name, dbname);
 			csv.setDatabase(db);
@@ -74,8 +75,9 @@ public class CouchDBSearch implements MailSearch {
 
 			// get the view
 			HttpGetView hgv = new HttpGetView(csv.getMapURI());
+			//System.out.println("Request: \n"+csv.getMapURI());
 			String response = hgv.sendRequest();
-			// System.out.println("Response: \n"+response);
+			//System.out.println("Response: \n"+response);
 
 			// parse the view result to get a java object out of the json
 			CouchDBResponse cdbr = CouchDBResponse.parseJson(response);

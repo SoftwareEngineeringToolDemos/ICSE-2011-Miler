@@ -1,5 +1,6 @@
 package org.eclipse.remail.couchdb.util;
 
+import org.eclipse.remail.Activator;
 import org.eclipse.remail.couchdb.helper.HttpGetView;
 import org.eclipse.remail.preferences.PreferenceConstants;
 
@@ -21,8 +22,8 @@ public class CouchDBCreator {
 	public static final String PREFIX="at(remail)";
 
 	public CouchDBCreator(String databaseName) {
-		host = PreferenceConstants.P_COUCHDB_HOST;
-		port = Integer.parseInt(PreferenceConstants.P_COUCHDB_PORT);
+		host = Activator.getHost();
+		port = Integer.parseInt(Activator.getPort());
 		dbSession = new Session(host, port);
 		if(databaseName.startsWith(PREFIX))
 			this.databaseName = databaseName;
