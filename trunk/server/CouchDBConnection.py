@@ -7,7 +7,7 @@ import couchdb.design
 import EmailParser
 
 # Constants
-CouchDBServer="http://localhost:5988"
+CouchDBServer="http://localhost:5984"
 namePrefix="at(remail)"
 
 # get a valid databse name: replace @ and . with, repectively - and _
@@ -17,8 +17,8 @@ def getValidDBName(name):
     return namePrefix+valid
 
 # create LastInserted document and key view:
-def createUsefulDoc(databaseName):
-    server=couchdb.Server(CouchDBServer)
+def createUsefulDoc(databaseName, serverNamePort=CouchDBServer):
+    server=couchdb.Server(serverNamePort)
     db=server[databaseName]
     # create last inserted
     doc={'_id': 'lastEmail', 'key':''}
@@ -29,13 +29,13 @@ def createUsefulDoc(databaseName):
     print " desing created"
 
 # create a database, if already exists do nothing
-def createDatabase(databaseName):
+def createDatabase(databaseName, serverNamePort=CouchDBServer):
     if sys.version_info >= (2, 7):
         try:
             databaseName=getValidDBName(databaseName)
-            server=couchdb.Server(CouchDBServer)
+            server=couchdb.Server(serverNamePort)
             server.create(databaseName)
-            createUsefulDoc(databaseName)
+            createUsefulDoc(databaseName, serverNamePort)
             print "Database '"+databaseName+"' created"
         except couchdb.http.PreconditionFailed:
             pass
@@ -44,9 +44,9 @@ def createDatabase(databaseName):
     else:
         try:
             databaseName=getValidDBName(databaseName)
-            server=couchdb.Server(CouchDBServer)
+            server=couchdb.Server(serverNamePort)
             server.create(databaseName)
-            createUsefulDoc(databaseName)
+            createUsefulDoc(databaseName, serverNamePort)
             print "Database '"+databaseName+"' created"
         except couchdb.PreconditionFailed:
             pass
@@ -77,15 +77,15 @@ def checkMailExists(database, mail):
     return False
 
 # save a mail message into couchdb
-def saveMailCouchdb(mail):
-    server=couchdb.Server(CouchDBServer)    
-    createDatabase(mail.mailingList)
+def saveMailCouchdb(mail, serverNamePort=CouchDBServer):
+    server=couchdb.Server(serverNamePort)    
+    createDatabase(mail.mailingList, serverNamePort)
     try:
         database=server[getValidDBName(mail.mailingList)] 
     except: #server error retry
         print "server error"
         time.sleep(1)
-        saveMailCouchdb(mail)
+        saveMailCouchdb(mail, serverNamePort)
     if not(checkMailExists(database, mail)):
         doc=createDocumentFromMail(mail)
         try:
@@ -99,15 +99,15 @@ def saveMailCouchdb(mail):
 
 # save a mail message into couchdb without check for duplicates
 # use only if you know exactly what you are doing
-def unsafeSaveMailCouchdb(mail):
-    server=couchdb.Server(CouchDBServer)    
-    createDatabase(mail.mailingList)
+def unsafeSaveMailCouchdb(mail, serverNamePort=CouchDBServer):
+    server=couchdb.Server(serverNamePort)    
+    createDatabase(mail.mailingList, serverNamePort)
     try:
         database=server[getValidDBName(mail.mailingList)] 
     except: #server error retry
         print "server error"
         time.sleep(1)
-        saveMailCouchdb(mail)
+        unsafesaveMailCouchdb(mail, serverNamePort)
     doc=createDocumentFromMail(mail)
     try:
         database.save(doc)
@@ -117,8 +117,8 @@ def unsafeSaveMailCouchdb(mail):
     
 # update the given document in the database identified by maillist
 # to be used to update the lastEmail document
-def updateDocCouchDB(doc, maillist):
-    server=couchdb.Server(CouchDBServer) 
+def updateDocCouchDB(doc, maillist, serverNamePort=CouchDBServer):
+    server=couchdb.Server(serverNamePort) 
     database=server[getValidDBName(maillist)] 
     doc2=database.get(doc["_id"])
     database.delete(doc2)
@@ -127,9 +127,9 @@ def updateDocCouchDB(doc, maillist):
 
 # return the key value of the LastEmail document in the
 # database identified by maillist
-def getLastEmailKey(maillist):
+def getLastEmailKey(maillist, serverNamePort=CouchDBServer):
     try:
-        server=couchdb.Server(CouchDBServer) 
+        server=couchdb.Server(serverNamePort) 
         database=server[getValidDBName(maillist)]
         doc=database.get('lastEmail')
         return doc["key"]
@@ -140,9 +140,9 @@ def getLastEmailKey(maillist):
 
 # stores an array or emails in couch db
 # every emil is stored in the database dependins on its name
-def saveListOfMailCouchdb(listMail):
+def saveListOfMailCouchdb(listMail, serverNamePort=CouchDBServer):
     for mail in listMail:
-        saveMailCouchdb(mail)
+        saveMailCouchdb(mail, serverNamePort)
 
 #tests
 #mail = EmailParser.MailMessage("devl@freenetproject.org")

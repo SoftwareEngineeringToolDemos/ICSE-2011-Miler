@@ -54,7 +54,11 @@ def addMessageToDatabase(msg):
 	emailMessage.store(db)
 
 # server where couchdb is
-server = couchdb.Server('http://localhost:5984/')
+try:
+	servName=sys.arv[3]
+except IndexError:
+	servName='http://localhost:5984/'
+server = couchdb.Server(servName)
 # create the database on the server
 # name passed as second parameter
 print sys.argv[2]

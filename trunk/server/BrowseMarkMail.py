@@ -175,14 +175,14 @@ def getMessageListForDate(maillist, date):
     return messageList
 
 # get all the message id for the give list
-def getAllMessageIDForMailingList(maillist, threadsNumb=25):
+def getAllMessageIDForMailingList(maillist, serverNamePort="http://localhost:5984", threadsNumb=25):
     global foundLast
     # get all the date pages
     dateList=getDateList(maillist)
     messList=[]
     q=Queue.Queue()
     #get the last message in couchdb
-    lastId=cdb.getLastEmailKey(maillist)
+    lastId=cdb.getLastEmailKey(maillist, serverNamePort)
     # get all the messages relatives to the first date
     t=GetIDs(maillist, dateList[0], q, messList, lastId)
     t.start()

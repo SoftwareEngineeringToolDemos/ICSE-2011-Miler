@@ -30,7 +30,11 @@ for account in config['accounts']:
     password = account['password']
     server = account['server']
     port = int(account['port'])
+    remailServ= account['remail-server']
+    remailPort=account['remail-port']
     maillists = account['mailing_lists']
+    
+    REmailS=remailServ+":"+remailPort
 
     #print username
     #print password
@@ -73,5 +77,5 @@ for account in config['accounts']:
         print " No relevant mails found"
     else:
         print "Store in database"
-        CouchDBConnection.saveListOfMailCouchdb(emailsObjects)
+        CouchDBConnection.saveListOfMailCouchdb(emailsObjects, REmailS)
 
