@@ -10,6 +10,7 @@ from EmailParser import MailMessage
 # Some constants
 url = "http://markmail.org/results.xqy?q="
 urlMessage = "http://markmail.org/message.xqy?"
+urlThread = "http://markmail.org/thread.xqy?id="
 
 # get the number of pages given the mailinglist to search
 def getNumPages(maillist):
@@ -138,6 +139,23 @@ def extractBody(body):
         m=m+extractInnerBody(sub)
     return m
 
+# get the threadId form the message id
+def getThreadIDFromMessageID(messID, maxTimeout=20):
+    try:
+        #print urlThread+"%s&mode=json" % messID
+        get = urllib.urlopen(urlThread+"%s&mode=json" % messID, None, 10) #open connection
+        jsonStringResponse = get.read() #get request
+        jsonResponse = json.loads(jsonStringResponse, "utf-8", strict=False) #string->json
+        # strict=False is needed: http://bugs.python.org/issue4785
+        #print jsonResponse
+        return "X-Thread:",str(jsonResponse['thread']['messages']['message'][0]['id'])
+    except IOError:
+        if maxTimeout==0:
+            print "timed out for getting thredID of:"+str(messID)
+            return None, None
+        else:
+            return getThreadIDFromMessageID(messID, maxTimeout-1)
+    
 # return the mail message with the specified (markmail) id and thread_id
 # for the given mailing-list
 def getMailMessage(messID, maillist):
@@ -147,6 +165,9 @@ def getMailMessage(messID, maillist):
         return None
     # extract headers
     headDict=extractHeaders(headers)
+    key,value=getThreadIDFromMessageID(messID)
+    if not(key==None) and not(value)==None:
+        headDict[key]=value
     # extract body
     bodyMess=extractBody(body)
     bodyMess.encode("utf-8")
