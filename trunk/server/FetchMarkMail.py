@@ -1,7 +1,7 @@
 # Python script used to fetch emails form MarkMail
 
 import sys
-import urllib
+import urllib2 as urllib
 import json
 from xml.etree import ElementTree
 
@@ -46,17 +46,24 @@ def getIDandThread(maillist, page):
 
 # return the message with the specified id as two XML element
 # the table containing headers and the body
-def getXMLMessage(messID):
+def getXMLMessage(messID, maxTimeout=20):
     param="id="+messID
     #print urlMessage+"%s" % param
-    get = urllib.urlopen(urlMessage+"%s" % param) #open connection
-    text=get.read()
-    text=text.replace("<br/>", "\n");
-    elem = ElementTree.XML(text)
-    tree=ElementTree.ElementTree(elem)
-    headers=tree.find("content/div/table")
-    body=tree.find("content/div/div")
-    return headers, body
+    try:
+        get = urllib.urlopen(urlMessage+"%s" % param, None, 10) #open connection
+        text=get.read()
+        text=text.replace("<br/>", "\n");
+        elem = ElementTree.XML(text)
+        tree=ElementTree.ElementTree(elem)
+        headers=tree.find("content/div/table")
+        body=tree.find("content/div/div")
+        return headers, body
+    except IOError:
+        if maxTimeout==0:
+            print "timed out for "+str(messID)
+            return None, None
+        else:
+            return getXMLMessage(messID, maxTimeout-1)
 
 # add the > sign to quoted elements
 def addQuoting(elem):
@@ -133,9 +140,11 @@ def extractBody(body):
 
 # return the mail message with the specified (markmail) id and thread_id
 # for the given mailing-list
-def getMailMessage(messID, threadID, maillist):
+def getMailMessage(messID, maillist):
     # get message
     headers, body = getXMLMessage(messID)
+    if headers==None or body==None:
+        return None
     # extract headers
     headDict=extractHeaders(headers)
     # extract body

@@ -96,13 +96,34 @@ def saveMailCouchdb(mail):
         #print "Mail "+mail.key+" stored in "+mail.mailingList
     else:
         print "Mail "+mail.key+" already present in "+mail.mailingList
+
+# save a mail message into couchdb without check for duplicates
+# use only if you know exactly what you are doing
+def unsafeSaveMailCouchdb(mail):
+    server=couchdb.Server(CouchDBServer)    
+    createDatabase(mail.mailingList)
+    try:
+        database=server[getValidDBName(mail.mailingList)] 
+    except: #server error retry
+        print "server error"
+        time.sleep(1)
+        saveMailCouchdb(mail)
+    doc=createDocumentFromMail(mail)
+    try:
+        database.save(doc)
+    except AttributeError:
+        print "  Database.save not found"
+        database.create(doc)
     
 # update the given document in the database identified by maillist
 # to be used to update the lastEmail document
 def updateDocCouchDB(doc, maillist):
     server=couchdb.Server(CouchDBServer) 
     database=server[getValidDBName(maillist)] 
-    database.update([doc])
+    doc2=database.get(doc["_id"])
+    database.delete(doc2)
+    database.save(doc)
+    #print " updated"
 
 # return the key value of the LastEmail document in the
 # database identified by maillist
