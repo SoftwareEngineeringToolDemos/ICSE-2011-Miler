@@ -137,6 +137,12 @@
             id="org.eclipse.remail.preferences.PreferencePaneCouchdb"
             name="CouchDB">
       </page>
+      <page
+            category="org.eclipse.remail.preferences.PreferencePane"
+            class="org.eclipse.remail.preferences.PreferencePaneEmailUser"
+            id="org.eclipse.remail.preferences.PreferencePaneEmailUser"
+            name="SMTP User Account">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
