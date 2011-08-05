@@ -110,11 +110,15 @@ public class EmailSender {
 		//creates the properties
 		Properties props = new Properties();
 		props.put("mail.smtp.host", account.getServer());
+		props.put("mail.from", account.getMailAddress());
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.debug", "true");
 		props.put("mail.smtp.port", account.getPort());
 		props.put("mail.smtp.socketFactory.port", account.getPort());
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		if(account.getSSL().equals(SMTPAccount.SSL))
+			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		else
+			props.put("mail.smtp.socketFactory.class","javax.net.SocketFactory");
 		props.put("mail.smtp.socketFactory.fallback", "false");
 		props.put("mail.smtp.starttls.enable", "true");
 
@@ -149,6 +153,7 @@ public class EmailSender {
 		Transport.send(msg);
 		}catch (AddressException e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

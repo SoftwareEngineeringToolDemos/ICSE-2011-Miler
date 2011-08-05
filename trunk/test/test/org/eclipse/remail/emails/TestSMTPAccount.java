@@ -14,16 +14,16 @@ public class TestSMTPAccount {
 
 	@Test
 	public void testToString() {
-		SMTPAccount acc = new SMTPAccount("ciao@ciao.com", "hello", "hi", "mail.ciao.it", "465");
-		String expected = "ciao@ciao.com : hello : hi : mail.ciao.it : 465";
+		SMTPAccount acc = new SMTPAccount("ciao@ciao.com", "hello", "hi", "mail.ciao.it", "465", true);
+		String expected = "ciao@ciao.com : hello : hi : mail.ciao.it : 465 : ssl";
 		String s = acc.toString();
 		assertEquals(expected, s);
 	}
 
 	@Test
 	public void testFromString() {
-		String s = "ciao@ciao.com : hello : hi : mail.ciao.it : 465";
-		SMTPAccount expected = new SMTPAccount("ciao@ciao.com", "hello", "hi", "mail.ciao.it", "465");
+		String s = "ciao@ciao.com : hello : hi : mail.ciao.it : 465 : ssl";
+		SMTPAccount expected = new SMTPAccount("ciao@ciao.com", "hello", "hi", "mail.ciao.it", "465", true);
 		SMTPAccount acc = SMTPAccount.fromString(s);
 		assertEquals(expected, acc);
 	}

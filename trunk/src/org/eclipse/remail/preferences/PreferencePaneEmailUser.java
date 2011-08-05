@@ -1,5 +1,7 @@
 package org.eclipse.remail.preferences;
 
+import net.sf.json.util.NewBeanInstanceStrategy;
+
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.remail.Activator;
 import org.eclipse.remail.emails.ListSMTPAccount;
@@ -30,6 +32,7 @@ public class PreferencePaneEmailUser extends FieldEditorPreferencePage implement
 	Text password;
 	Text server;
 	Text port;
+	Button[] ssl;
 	Combo accounts;
 
 	ListSMTPAccount storedAccounts;
@@ -128,6 +131,17 @@ public class PreferencePaneEmailUser extends FieldEditorPreferencePage implement
 		l5.setText("SMTP port: ");
 		port = new Text(detail, SWT.SINGLE);
 		port.setLayoutData(gd1);
+		Label l6 = new Label(detail, SWT.NONE);
+		l6.setText("Use SSL: ");
+		Composite radio = new Composite(detail, SWT.NONE);
+		radio.setLayout(layout);
+		ssl=new Button[2];
+		ssl[0]=new Button(radio, SWT.RADIO);
+		ssl[0].setSelection(true);
+	    ssl[0].setText("Yes");
+	    ssl[1]=new Button(radio, SWT.RADIO);
+	    ssl[1].setText("No");
+		
 		Button delete = new Button(detail, SWT.PUSH);
 		delete.setText(" Delete Account ");
 		delete.addSelectionListener(new SelectionAdapter() {
@@ -137,7 +151,7 @@ public class PreferencePaneEmailUser extends FieldEditorPreferencePage implement
 		});
 
 		Rectangle clientArea2 = detail.getClientArea();
-		detail.setBounds(clientArea2.x, clientArea2.y, 600, 200);
+		detail.setBounds(clientArea2.x, clientArea2.y, 600, 250);
 
 	}
 
@@ -162,6 +176,8 @@ public class PreferencePaneEmailUser extends FieldEditorPreferencePage implement
 	public boolean performOk() {
 		// updates the accounts with the inserted values
 		String name = mailAddress.getText();
+		boolean isSSL=ssl[0].getSelection();
+		
 		boolean found = false;
 		for (int i = 0; i < storedAccounts.length(); i++) {
 			SMTPAccount acc = storedAccounts.get(i);
@@ -169,10 +185,10 @@ public class PreferencePaneEmailUser extends FieldEditorPreferencePage implement
 				found = true;
 				SMTPAccount newAcc = acc.copy();
 				newAcc.update(username.getText(), password.getText(), server.getText(),
-						port.getText());
+						port.getText(), isSSL);
 				if (newAcc.checkValidity()) {
 					acc.update(username.getText(), password.getText(), server.getText(),
-							port.getText());
+							port.getText(), isSSL);
 				} else {
 					// error message
 					System.err.println("not valid");
@@ -183,7 +199,7 @@ public class PreferencePaneEmailUser extends FieldEditorPreferencePage implement
 		// not exists, then create a new account
 		if (!found && accounts.getText().equals(NEW_ELEMENT)) {
 			SMTPAccount newAcc = new SMTPAccount(mailAddress.getText(), username.getText(),
-					password.getText(), server.getText(), port.getText());
+					password.getText(), server.getText(), port.getText(), isSSL);
 			if (newAcc.checkValidity()) {
 				storedAccounts.append(newAcc);
 			} else {
@@ -198,6 +214,7 @@ public class PreferencePaneEmailUser extends FieldEditorPreferencePage implement
 
 	@Override
 	public void performDefaults() {
+		super.performDefaults();
 		getPreferenceStore().setValue(Activator.ACCOUNTS_SMTP, Activator.DEFAULT_ACCOUNTS_SMTP);
 	}
 
