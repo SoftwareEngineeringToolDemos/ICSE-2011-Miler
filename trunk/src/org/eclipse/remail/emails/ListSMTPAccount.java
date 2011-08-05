@@ -1,6 +1,7 @@
 package org.eclipse.remail.emails;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Class representing a list of SMTPAccount
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  * @author Lorenzo Baracchi <lorenzo.baracchi@usi.ch>
  * 
  */
-public class ListSMTPAccount {
+public class ListSMTPAccount implements Iterable<SMTPAccount>{
 
 	private static final String DELIMITER = " ; ";
 
@@ -25,15 +26,29 @@ public class ListSMTPAccount {
 		for (SMTPAccount acc : accounts)
 			list.add(acc);
 	}
+	
+	/**
+	 * Construct an empty list
+	 */
+	public ListSMTPAccount() {
+		list = new ArrayList<SMTPAccount>();
+	}
+	
+	public void append(SMTPAccount account) {
+		list.add(account);
+	}
 
 	/**
 	 * Convert the list of SMTPAccount to a string in the form:
 	 * "mailAddress1 : username1 : password1 : server1 : port1 ; mailAddress2 : username2 : password2 : server2 : port2"
 	 */
 	public String toString() {
-		String s = list.get(0).toString();
-		for (int i = 1; i < list.size(); i++)
-			s += DELIMITER + list.get(i);
+		String s="";
+		if(list.size()>0){
+			s = list.get(0).toString();
+			for (int i = 1; i < list.size(); i++)
+				s += DELIMITER + list.get(i);
+		}
 		return s;
 	}
 
@@ -70,5 +85,42 @@ public class ListSMTPAccount {
 			return this.equals((ListSMTPAccount) o);
 		else
 			return false;
+	}
+	
+	/**
+	 * Return the list of string which the user is supposed to see
+	 * @return a string array with all the account's names
+	 */
+	public String[] toDisplay(){
+		String[] disp=new String[list.size()];
+		for(int i=0; i<list.size(); i++)
+			disp[i]=list.get(i).toDisplay();
+		return disp;
+	}
+	
+	public int length(){
+		return list.size();
+	}
+	
+	/**
+	 * Get the element at the given position
+	 * @param index the position
+	 * @return the element
+	 */
+	public SMTPAccount get(int index){
+		return list.get(index);
+	}
+
+	@Override
+	public Iterator<SMTPAccount> iterator() {
+		return list.iterator();
+	}
+	
+	/**
+	 * Update the given element in the list
+	 * @param mailAddress the mailAddress to update
+	 */
+	public void update(String mailAddress){
+		
 	}
 }
