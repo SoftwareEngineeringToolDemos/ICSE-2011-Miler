@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.remail.Activator;
-import org.eclipse.remail.preferences.PreferenceConstants;
 
 import com.fourspaces.couchdb.Session;
 

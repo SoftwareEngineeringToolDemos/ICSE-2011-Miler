@@ -7,9 +7,12 @@ import org.eclipse.remail.emails.SMTPAccount;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -44,6 +47,7 @@ public class PreferencePaneEmailUser extends FieldEditorPreferencePage implement
 	 */
 	private void getStoredAccounts() {
 		String s = Activator.getAccounts();
+		System.out.println(s);
 		if (s.equals("") || s.equals(Activator.DEFAULT_ACCOUNTS_SMTP))
 			storedAccounts = new ListSMTPAccount();
 		else
@@ -88,13 +92,13 @@ public class PreferencePaneEmailUser extends FieldEditorPreferencePage implement
 		accounts.setLayoutData(gd1);
 		accounts.setItems(getArrayAccounts());
 		accounts.select(0);
-		accounts.addModifyListener(new ModifyListener() {			
+		accounts.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				updateSelection(accounts.getText());
 			}
 		});
-		
+
 		Rectangle clientArea = panel.getClientArea();
 		panel.setBounds(clientArea.x, clientArea.y, 600, 50);
 
@@ -124,10 +128,34 @@ public class PreferencePaneEmailUser extends FieldEditorPreferencePage implement
 		l5.setText("SMTP port: ");
 		port = new Text(detail, SWT.SINGLE);
 		port.setLayoutData(gd1);
+		Button delete = new Button(detail, SWT.PUSH);
+		delete.setText(" Delete Account ");
+		delete.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				deleteAccount();
+			}
+		});
 
 		Rectangle clientArea2 = detail.getClientArea();
 		detail.setBounds(clientArea2.x, clientArea2.y, 600, 200);
 
+	}
+
+	/**
+	 * Delete the account identified by the combobox
+	 */
+	protected void deleteAccount() {
+		if (!accounts.getText().equals(NEW_ELEMENT)) {
+			String name = accounts.getText();
+			for (int i = 0; i < storedAccounts.length(); i++) {
+				SMTPAccount acc = storedAccounts.get(i);
+				if (acc.getMailAddress().equals(name)) {
+					storedAccounts.delete(i);
+					break;
+				}
+			}
+			getPreferenceStore().setValue(Activator.ACCOUNTS_SMTP, storedAccounts.toString());
+		}
 	}
 
 	@Override
@@ -139,17 +167,38 @@ public class PreferencePaneEmailUser extends FieldEditorPreferencePage implement
 			SMTPAccount acc = storedAccounts.get(i);
 			if (acc.getMailAddress().equals(name)) {
 				found = true;
-				acc.update(username.getText(), password.getText(), server.getText(), port.getText());
+				SMTPAccount newAcc = acc.copy();
+				newAcc.update(username.getText(), password.getText(), server.getText(),
+						port.getText());
+				if (newAcc.checkValidity()) {
+					acc.update(username.getText(), password.getText(), server.getText(),
+							port.getText());
+				} else {
+					// error message
+					System.err.println("not valid");
+				}
 			}
 		}
+
 		// not exists, then create a new account
-		if (!found) {
-			storedAccounts.append(new SMTPAccount(mailAddress.getText(), username.getText(),
-					password.getText(), server.getText(), port.getText()));
+		if (!found && accounts.getText().equals(NEW_ELEMENT)) {
+			SMTPAccount newAcc = new SMTPAccount(mailAddress.getText(), username.getText(),
+					password.getText(), server.getText(), port.getText());
+			if (newAcc.checkValidity()) {
+				storedAccounts.append(newAcc);
+			} else {
+				// error message
+				System.err.println("not valid");
+			}
 		}
 		// update the preferences
 		getPreferenceStore().setValue(Activator.ACCOUNTS_SMTP, storedAccounts.toString());
 		return super.performOk();
+	}
+
+	@Override
+	public void performDefaults() {
+		getPreferenceStore().setValue(Activator.ACCOUNTS_SMTP, Activator.DEFAULT_ACCOUNTS_SMTP);
 	}
 
 	/**
@@ -159,15 +208,14 @@ public class PreferencePaneEmailUser extends FieldEditorPreferencePage implement
 	 *            the item selected
 	 */
 	private void updateSelection(String selected) {
-		if (selected.equals(NEW_ELEMENT)){
+		if (selected.equals(NEW_ELEMENT)) {
 			// clear the texts
 			mailAddress.setText("");
 			username.setText("");
 			password.setText("");
 			server.setText("");
 			port.setText("");
-		}
-		else {
+		} else {
 			for (SMTPAccount acc : storedAccounts) {
 				if (selected.equals(acc.getMailAddress())) {
 					// update the texts

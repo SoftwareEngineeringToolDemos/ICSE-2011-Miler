@@ -11,11 +11,11 @@ public class SMTPAccount {
 
 	private static final String DELIMITER = " : ";
 
-	String mailAddress;
-	String username;
-	String password;
-	String server;
-	String port;
+	private String mailAddress;
+	private String username;
+	private String password;
+	private String server;
+	private String port;
 
 	public SMTPAccount(String mailAddress, String username, String password, String server,
 			String port) {
@@ -90,6 +90,20 @@ public class SMTPAccount {
 	public String toDisplay() {
 		return mailAddress;
 	}
+	
+	/**
+	 * Check if all the parameters are valid,
+	 * i.e. non null and non empty
+	 */
+	public boolean checkValidity(){
+		boolean valid=true;
+		valid=valid && mailAddress!=null && !mailAddress.equals("");
+		valid=valid && username!=null && !username.equals("");
+		valid=valid && password!=null && !password.equals("");
+		valid=valid && server!=null && !server.equals("");
+		valid=valid && port!=null && !port.equals("");
+		return valid;
+	}
 
 	public String getMailAddress() {
 		return mailAddress;
@@ -109,5 +123,10 @@ public class SMTPAccount {
 
 	public String getPort() {
 		return port;
+	}
+
+	public SMTPAccount copy() {
+		SMTPAccount newAcc = new SMTPAccount(mailAddress, username, password, server, port);
+		return newAcc;
 	}
 }

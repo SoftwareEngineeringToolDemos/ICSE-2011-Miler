@@ -93,8 +93,13 @@ public class ListSMTPAccount implements Iterable<SMTPAccount>{
 	 */
 	public String[] toDisplay(){
 		String[] disp=new String[list.size()];
-		for(int i=0; i<list.size(); i++)
-			disp[i]=list.get(i).toDisplay();
+		for(int i=0; i<list.size(); i++){
+			try{
+				disp[i]=list.get(i).toDisplay();
+			}catch(NullPointerException e){
+				disp[i]="";
+			}
+		}
 		return disp;
 	}
 	
@@ -122,5 +127,9 @@ public class ListSMTPAccount implements Iterable<SMTPAccount>{
 	 */
 	public void update(String mailAddress){
 		
+	}
+
+	public void delete(int i) {
+		list.remove(i);
 	}
 }

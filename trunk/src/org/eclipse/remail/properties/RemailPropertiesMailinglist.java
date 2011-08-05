@@ -2,8 +2,6 @@ package org.eclipse.remail.properties;
 
 import java.util.LinkedHashSet;
 
-import javax.swing.JOptionPane;
-
 import org.eclipse.remail.couchdb.util.CouchDBDatabases;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -13,13 +11,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * Static class providing the GUI to insert a new mailing list relative to the
@@ -188,45 +183,45 @@ public class RemailPropertiesMailinglist {
 		}
 	}
 
-	/**
-	 * Check if the input values are ok!
-	 * 
-	 * @return true if they are not empty, false otherwise
-	 */
-	private boolean checkInput() {
-		boolean check=maillistLocationInput.getText().length()>0;
+//	/**
+//	 * Check if the input values are ok!
+//	 * 
+//	 * @return true if they are not empty, false otherwise
+//	 */
+//	private boolean checkInput() {
+//		boolean check=maillistLocationInput.getText().length()>0;
+//	
+//		return check;
+//	}
+
+//	/**
+//	 * Enable the ok button
+//	 */
+//	private void enableOkButton() {
+//		if (checkInput()) {
+//			okButton.setEnabled(true);
+//			dialog.redraw();
+//		} else {
+//			okButton.setEnabled(false);
+//			dialog.redraw();
+//		}
+//	}
+
 	
-		return check;
-	}
-
-	/**
-	 * Enable the ok button
-	 */
-	private void enableOkButton() {
-		if (checkInput()) {
-			okButton.setEnabled(true);
-			dialog.redraw();
-		} else {
-			okButton.setEnabled(false);
-			dialog.redraw();
-		}
-	}
-
-	
-	/**
-	 * Crate an alert dialog which is used to inform user that the input values
-	 * are not correct
-	 */
-	private void createAlertDialog() {
-		java.awt.Label message = new java.awt.Label("The values provided are not correct. \n"
-				+ "It can be that the mailing list location is not a valid url "
-				+ "or passwords doesn't match. \n\n" + "Please, go back and check!");
-		JOptionPane.showMessageDialog(null, message, "Wrong inputs!", JOptionPane.ERROR_MESSAGE);
-	}
-
-	public MailingList getMailingList() {
-		return mailinglist;
-	}
+//	/**
+//	 * Crate an alert dialog which is used to inform user that the input values
+//	 * are not correct
+//	 */
+//	private void createAlertDialog() {
+//		java.awt.Label message = new java.awt.Label("The values provided are not correct. \n"
+//				+ "It can be that the mailing list location is not a valid url "
+//				+ "or passwords doesn't match. \n\n" + "Please, go back and check!");
+//		JOptionPane.showMessageDialog(null, message, "Wrong inputs!", JOptionPane.ERROR_MESSAGE);
+//	}
+//
+//	public MailingList getMailingList() {
+//		return mailinglist;
+//	}
 
 //	/**
 //	 * Tells if the user has finished to insert data, ie has pressed the ok

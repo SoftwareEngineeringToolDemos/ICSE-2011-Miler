@@ -2,12 +2,10 @@ package org.eclipse.remail.views;
 
 import java.util.List;
 
-import org.apache.commons.collections.functors.IfClosure;
 import org.eclipse.remail.Activator;
 import org.eclipse.remail.emails.EmailChecker;
 import org.eclipse.remail.emails.EmailSender;
 import org.eclipse.remail.emails.ListSMTPAccount;
-import org.eclipse.remail.preferences.PreferencePaneEmailUser;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -22,7 +20,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -209,7 +206,7 @@ public class MailWriter extends ViewPart {
 				String text = contentField.getText();
 				String keys = keywordsField.getText();
 
-				String bodyContent = text + "\n\n\n(Added by REmail)\n" + keys;
+				String bodyContent = text + "<br><br><br>(Added by REmail)<br>" + keys;
 
 				if (EmailChecker.checkFromToParameters(from, to)) {
 					// send email

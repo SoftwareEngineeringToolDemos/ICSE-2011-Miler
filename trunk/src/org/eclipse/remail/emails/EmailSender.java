@@ -11,6 +11,8 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.eclipse.remail.Activator;
+
 /**
  * This class is used to send emails
  * 
@@ -25,6 +27,8 @@ public class EmailSender {
 	private String bcc;
 	private String subject;
 	private String mailContent;
+	
+	private SMTPAccount account;
 
 	/**
 	 * Basic constructor
@@ -42,10 +46,12 @@ public class EmailSender {
 		this.from = from;
 		this.to = to;
 		this.subject = subject;
-		this.mailContent = mailContent;
+		this.mailContent = mailContent.replace("\n", "<br>");;
 
 		this.cc = null;
 		this.bcc = null;
+		
+		setAccount();
 	}
 
 	/**
@@ -72,12 +78,29 @@ public class EmailSender {
 		this.cc = cc;
 		this.bcc = bcc;
 		this.subject = subject;
-		this.mailContent = mailContent;
+		this.mailContent = mailContent.replace("\n", "<br>");
 
 		if (cc.equals(""))
 			this.cc = null;
 		if (bcc.equals(""))
 			this.bcc = null;
+		
+		setAccount();
+	}
+	
+	/**
+	 * Retrieve the selected account form the properties
+	 */
+	private void setAccount(){
+		String s = Activator.getAccounts();
+		ListSMTPAccount storedAccounts;
+		if (s.equals("") || s.equals(Activator.DEFAULT_ACCOUNTS_SMTP))
+			storedAccounts = new ListSMTPAccount();
+		else
+			storedAccounts = ListSMTPAccount.fromString(s);
+		for(SMTPAccount a : storedAccounts)
+			if(a.getMailAddress().equals(from))
+				account=a;
 	}
 
 	/**
@@ -86,19 +109,26 @@ public class EmailSender {
 	public void send() {
 		//creates the properties
 		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.googlemail.com");
+		props.put("mail.smtp.host", account.getServer());
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.debug", "true");
-		props.put("mail.smtp.port", "465");
-		props.put("mail.smtp.socketFactory.port", "465");
+		props.put("mail.smtp.port", account.getPort());
+		props.put("mail.smtp.socketFactory.port", account.getPort());
 		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		props.put("mail.smtp.socketFactory.fallback", "false");
+		props.put("mail.smtp.starttls.enable", "true");
 
+		//Print out configurations
+		System.out.println("Server: -"+ account.getServer()+"-");
+		System.out.println("Port: -"+ account.getPort()+"-");
+		System.out.println("Username: -"+account.getUsername()+"-");
+		System.out.println("Password: -"+account.getPassword()+"-");
+		
 		//username and password
 		Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(from, "PASSWORD-HERE");
+			protected PasswordAuthentication getPasswordAuthentication() {	
+				return new PasswordAuthentication(account.getUsername(), account.getPassword());
 			}
 		});
 		mailSession.setDebug(true);
