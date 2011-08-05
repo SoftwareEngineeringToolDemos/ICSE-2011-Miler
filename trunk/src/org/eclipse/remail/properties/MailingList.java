@@ -9,15 +9,15 @@ import java.util.LinkedHashSet;
  */
 public class MailingList implements Comparable{
 	private String location;
-	private String username;
-	private String password;
+//	private String username;
+//	private String password;
 	
 	public static String DELIMITER=" - ";
 	
-	public MailingList(String location, String username, String password){
+	public MailingList(String location){//, String username, String password){
 		this.location=location;
-		this.username=username;
-		this.password=password;
+//		this.username=username;
+//		this.password=password;
 	}
 
 	/**
@@ -35,21 +35,21 @@ public class MailingList implements Comparable{
 		this.location = location;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
+//	public String getUsername() {
+//		return username;
+//	}
+//
+//	public void setUsername(String username) {
+//		this.username = username;
+//	}
+//
+//	public String getPassword() {
+//		return password;
+//	}
+//
+//	public void setPassword(String password) {
+//		this.password = password;
+//	}
 	
 	public String toString(){
 		return location;
@@ -87,7 +87,7 @@ public class MailingList implements Comparable{
 	public static String listToString(LinkedHashSet<MailingList> list){
 		String s="";
 		for(MailingList ml : list){
-			s+=ml.location+DELIMITER+ml.username+DELIMITER+ml.password+"\n";
+			s+=ml.location+DELIMITER;//+ml.username+DELIMITER+ml.password+"\n";
 		}		
 		return s;
 	}
@@ -105,7 +105,7 @@ public class MailingList implements Comparable{
 		for(String str: lines){
 			String[] sp = str.split(DELIMITER);
 			if(sp.length==3){
-				MailingList m = new MailingList(sp[0], sp[1], sp[2]);
+				MailingList m = new MailingList(sp[0]);//, sp[1], sp[2]);
 				list.add(m);
 			}else
 				System.err.println("mail list format error: "+str);

@@ -43,5 +43,9 @@ public class PreferenceConstants {
 	 */
 	public static final String P_COUCHDB_HOST="localhost";
 	public static final String P_COUCHDB_PORT="5984";
+
+	public static final String P_COUCHDB_USER = "username";
+
+	public static final String P_COUCHDB_PASSWORD = "password";
 	
 }

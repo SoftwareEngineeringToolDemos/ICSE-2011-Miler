@@ -7,7 +7,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.remail.couchdb.util.CouchDBCreator;
-import org.eclipse.remail.emails.EmailChecker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -153,7 +152,7 @@ public class RemailProperties extends PropertyPage implements
 					Iterator<MailingList> it = arrayMailingList.iterator();
 					while(it.hasNext()){
 						MailingList m = it.next();
-						if(m.equals(new MailingList(s, "", "")))
+						if(m.equals(new MailingList(s)))//, "", "")))
 							it.remove();
 					}
 					listMailinglist.remove(s);

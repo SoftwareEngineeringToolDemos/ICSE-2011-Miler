@@ -31,16 +31,12 @@ import org.eclipse.swt.widgets.Text;
 public class RemailPropertiesMailinglist {
 
 	public Combo maillistLocationInput;
-	public Text usernameInput;
-	public Text passwordInput;
-	public Text againPasswordInput;
+	
 	Button okButton;
 	private MailingList mailinglist;
 	final Shell dialog;
-	private boolean usernameOk;
-	private boolean passwordOk;
-	private boolean againPasswordOk;
-	private boolean finish;
+	
+//	private boolean finish;
 	private List listMailinglist;
 	private LinkedHashSet<MailingList> arrayMailingList;
 	private String selection;
@@ -60,10 +56,7 @@ public class RemailPropertiesMailinglist {
 			LinkedHashSet<MailingList> arrayMailingList) {
 		mailinglist = m;
 		dialog = new Shell(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		usernameOk = false;
-		passwordOk = false;
-		againPasswordOk = false;
-		finish = false;
+//		finish = false;
 		this.listMailinglist = listMailinglist;
 		this.arrayMailingList = arrayMailingList;
 		dialog.setText("Mailing List configuration");
@@ -87,10 +80,8 @@ public class RemailPropertiesMailinglist {
 			LinkedHashSet<MailingList> arrayMailingList, String selection) {
 		mailinglist = m;
 		dialog = new Shell(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		usernameOk = true;
-		passwordOk = true;
-		againPasswordOk = true;
-		finish = false;
+
+//		finish = false;
 		this.listMailinglist = listMailinglist;
 		this.arrayMailingList = arrayMailingList;
 		this.selection = selection;
@@ -118,17 +109,7 @@ public class RemailPropertiesMailinglist {
 		arrDB=CouchDBDatabases.fromRealNameToNiceName(arrDB);
 		maillistLocationInput.setItems(arrDB);
 		maillistLocationInput.select(0);
-		Label usernameLabel = new Label(panel, SWT.NONE);
-		usernameLabel.setText("Username: ");
-		usernameInput = new Text(panel, SWT.SINGLE);
-		Label passwordLabel = new Label(panel, SWT.NONE);
-		passwordLabel.setText("Password: ");
-		passwordInput = new Text(panel, SWT.SINGLE);
-		passwordInput.setEchoChar('*');
-		Label retypePassword = new Label(panel, SWT.NONE);
-		retypePassword.setText("Retype Password");
-		againPasswordInput = new Text(panel, SWT.SINGLE);
-		againPasswordInput.setEchoChar('*');
+	
 
 		// Set properties for the group
 		GridData gd1 = new GridData();
@@ -143,9 +124,6 @@ public class RemailPropertiesMailinglist {
 		gd2.horizontalAlignment = GridData.FILL;
 		gd2.grabExcessHorizontalSpace = true;
 		maillistLocationInput.setLayoutData(gd2);
-		usernameInput.setLayoutData(gd2);
-		passwordInput.setLayoutData(gd2);
-		againPasswordInput.setLayoutData(gd2);
 
 		// buttons and their properties
 		Composite inner = new Composite(dialog, SWT.NONE);
@@ -155,7 +133,7 @@ public class RemailPropertiesMailinglist {
 		cancelButton.setText(" Cancel ");
 		okButton = new Button(inner, SWT.PUSH);
 		okButton.setText("  OK  ");
-		okButton.setEnabled(false);
+//		okButton.setEnabled(false);
 
 		GridData gd3 = new GridData();
 		gd3.horizontalAlignment = SWT.END;
@@ -176,75 +154,13 @@ public class RemailPropertiesMailinglist {
 		 */
 		okButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				if (usernameInput.getText().length() > 0
-						&& passwordInput.getText().length() > 0 && checkPasswordMatch()) {
-					// valid input
+				
 					String ml= maillistLocationInput.getItem(maillistLocationInput.getSelectionIndex());
 					mailinglist.setLocation(ml);				
-					mailinglist.setUsername(usernameInput.getText());
-					mailinglist.setPassword(passwordInput.getText());
 					dialog.dispose();
-					finish = true;
+//					finish = true;
 					updateList();
-				} else {
-					// invalid input
-					createAlertDialog();
-				}
-			}
-		});
-
-		/*
-		 * Listeners for text in order to enable the ok button
-		 */
-		usernameInput.addListener(SWT.Verify, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				int l = usernameInput.getText().length();
-				if (event.text != "\b") {
-					String s = usernameInput.getText() + event.text;
-					l = s.length();
-				} else
-					l = l - 1;
-				if (l > 0)
-					usernameOk = true;
-				else
-					usernameOk = false;
-				enableOkButton();
-			}
-		});
-		passwordInput.addListener(SWT.Verify, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				int l = passwordInput.getText().length();
-				if (event.text != "\b") {
-					String s = passwordInput.getText() + event.text;
-					l = s.length();
-				} else
-					l = l - 1;
-				if (l > 0)
-					passwordOk = true;
-				else
-					passwordOk = false;
-				enableOkButton();
-			}
-		});
-		againPasswordInput.addListener(SWT.Verify, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				int l = againPasswordInput.getText().length();
-				if (event.text != "\b") {
-					String s = againPasswordInput.getText() + event.text;
-					l = s.length();
-				} else
-					l = l - 1;
-				if (l > 0)
-					againPasswordOk = true;
-				else
-					againPasswordOk = false;
-				enableOkButton();
+				
 			}
 		});
 
@@ -279,9 +195,8 @@ public class RemailPropertiesMailinglist {
 	 */
 	private boolean checkInput() {
 		boolean check=maillistLocationInput.getText().length()>0;
-		check=check&&usernameInput.getText().length()>0;
-		check=check&&passwordInput.getText().length()>0;
-		return usernameOk && passwordOk && againPasswordOk && check;
+	
+		return check;
 	}
 
 	/**
@@ -297,15 +212,7 @@ public class RemailPropertiesMailinglist {
 		}
 	}
 
-	/**
-	 * Check if the two passwords matches each other
-	 * 
-	 * @return true if they are equals false otherwise
-	 */
-	private boolean checkPasswordMatch() {
-		return passwordInput.getText().equals(againPasswordInput.getText());
-	}
-
+	
 	/**
 	 * Crate an alert dialog which is used to inform user that the input values
 	 * are not correct
@@ -321,15 +228,15 @@ public class RemailPropertiesMailinglist {
 		return mailinglist;
 	}
 
-	/**
-	 * Tells if the user has finished to insert data, ie has pressed the ok
-	 * button ;-)
-	 * 
-	 * @return true if it has finished, false otherwise
-	 */
-	public boolean isFinished() {
-		return finish;
-	}
+//	/**
+//	 * Tells if the user has finished to insert data, ie has pressed the ok
+//	 * button ;-)
+//	 * 
+//	 * @return true if it has finished, false otherwise
+//	 */
+//	public boolean isFinished() {
+//		return finish;
+//	}
 
 	/**
 	 * Creates the Edit dialog 
@@ -361,20 +268,6 @@ public class RemailPropertiesMailinglist {
 		maillistLocationInput.setItems(arrDB);
 		maillistLocationInput.select(index);
 		maillistLocationInput.setEnabled(false);
-		Label usernameLabel = new Label(panel, SWT.NONE);
-		usernameLabel.setText("Username: ");
-		usernameInput = new Text(panel, SWT.SINGLE);
-		usernameInput.setText(selected.getUsername());
-		Label passwordLabel = new Label(panel, SWT.NONE);
-		passwordLabel.setText("Password: ");
-		passwordInput = new Text(panel, SWT.SINGLE);
-		passwordInput.setEchoChar('*');
-		passwordInput.setText(selected.getPassword());
-		Label retypePassword = new Label(panel, SWT.NONE);
-		retypePassword.setText("Retype Password");
-		againPasswordInput = new Text(panel, SWT.SINGLE);
-		againPasswordInput.setEchoChar('*');
-		againPasswordInput.setText(selected.getPassword());
 
 		// Set properties for the group
 		GridData gd1 = new GridData();
@@ -389,9 +282,6 @@ public class RemailPropertiesMailinglist {
 		gd2.horizontalAlignment = GridData.FILL;
 		gd2.grabExcessHorizontalSpace = true;
 		maillistLocationInput.setLayoutData(gd2);
-		usernameInput.setLayoutData(gd2);
-		passwordInput.setLayoutData(gd2);
-		againPasswordInput.setLayoutData(gd2);
 
 		// buttons and their properties
 		Composite inner = new Composite(dialog, SWT.NONE);
@@ -401,7 +291,7 @@ public class RemailPropertiesMailinglist {
 		cancelButton.setText(" Cancel ");
 		okButton = new Button(inner, SWT.PUSH);
 		okButton.setText("  OK  ");
-		okButton.setEnabled(false);
+//		okButton.setEnabled(false);
 
 		GridData gd3 = new GridData();
 		gd3.horizontalAlignment = SWT.END;
@@ -422,81 +312,18 @@ public class RemailPropertiesMailinglist {
 		 */
 		okButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				if (usernameInput.getText().length() > 0
-						&& passwordInput.getText().length() > 0 && checkPasswordMatch()) {
-					// valid input
-					
+		
 					//remove old
 					listMailinglist.remove(selection);
 					arrayMailingList.remove(selected);
 					//add new
 					mailinglist.setLocation(maillistLocationInput.getText());
-					mailinglist.setUsername(usernameInput.getText());
-					mailinglist.setPassword(passwordInput.getText());
 					dialog.dispose();
-					finish = true;
+//					finish = true;
 					updateList();
-				} else {
-					// invalid input
-					createAlertDialog();
-				}
+			
 			}
-		});
-
-		/*
-		 * Listeners for text in order to enable the ok button
-		 */
-		usernameInput.addListener(SWT.Verify, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				int l = usernameInput.getText().length();
-				if (event.text != "\b") {
-					String s = usernameInput.getText() + event.text;
-					l = s.length();
-				} else
-					l = l - 1;
-				if (l > 0)
-					usernameOk = true;
-				else
-					usernameOk = false;
-				enableOkButton();
-			}
-		});
-		passwordInput.addListener(SWT.Verify, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				int l = passwordInput.getText().length();
-				if (event.text != "\b") {
-					String s = passwordInput.getText() + event.text;
-					l = s.length();
-				} else
-					l = l - 1;
-				if (l > 0)
-					passwordOk = true;
-				else
-					passwordOk = false;
-				enableOkButton();
-			}
-		});
-		againPasswordInput.addListener(SWT.Verify, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				int l = againPasswordInput.getText().length();
-				if (event.text != "\b") {
-					String s = againPasswordInput.getText() + event.text;
-					l = s.length();
-				} else
-					l = l - 1;
-				if (l > 0)
-					againPasswordOk = true;
-				else
-					againPasswordOk = false;
-				enableOkButton();
-			}
-		});
+		});	
 
 		dialog.pack();
 		dialog.open();

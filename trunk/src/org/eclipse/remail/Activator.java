@@ -16,10 +16,13 @@ public class Activator extends AbstractUIPlugin
 	// Variables for couchdb settings
 	public static final String COUCHDB_HOST = "localhost";
 	public static final String COUCHDB_PORT = "5984";
+	public static final String COUCHDB_USER = "username";
+	public static final String COUCHDB_PASSWORD = "password";
 	
 	//Variable for the SMTP account
 	public static final String ACCOUNTS_SMTP = "accounts";
 	public static final String DEFAULT_ACCOUNTS_SMTP = "accounts";
+
 
 	// The shared instance
 	private static Activator plugin;
@@ -81,6 +84,14 @@ public class Activator extends AbstractUIPlugin
 	
 	public static String getPort() {
 		return plugin.getPreferenceStore().getString(COUCHDB_PORT);
+	}
+	
+	public static String getUsername() {
+		return plugin.getPreferenceStore().getString(COUCHDB_USER);
+	}
+	
+	public static String getPassword() {
+		return plugin.getPreferenceStore().getString(COUCHDB_PASSWORD);
 	}
 	
 	public static String getAccounts() {

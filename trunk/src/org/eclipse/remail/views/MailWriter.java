@@ -3,8 +3,11 @@ package org.eclipse.remail.views;
 import java.util.List;
 
 import org.apache.commons.collections.functors.IfClosure;
+import org.eclipse.remail.Activator;
 import org.eclipse.remail.emails.EmailChecker;
 import org.eclipse.remail.emails.EmailSender;
+import org.eclipse.remail.emails.ListSMTPAccount;
+import org.eclipse.remail.preferences.PreferencePaneEmailUser;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -15,6 +18,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
@@ -32,12 +36,14 @@ import org.eclipse.ui.part.ViewPart;
  */
 public class MailWriter extends ViewPart {
 
+	ListSMTPAccount storedAccounts;
+	
 	// Buttons
 	private Button sendButton;
 	private Button attachButton;
 
 	// Text fields
-	private Text fromField;
+	private Combo fromField;
 	private Text toField;
 	private Text ccField;
 	private Text bccField;
@@ -56,6 +62,7 @@ public class MailWriter extends ViewPart {
 	public MailWriter() {
 		super();
 		keywords = "";
+		getStoredAccounts();
 	}
 
 	public MailWriter(List<String> keywordList) {
@@ -63,6 +70,28 @@ public class MailWriter extends ViewPart {
 		keywords = "";
 		for (String s : keywordList)
 			keywords += ", " + s;
+		getStoredAccounts();
+	}
+	
+	/**
+	 * Gets the stored accounts in preference and saves them in the list of
+	 * SMTPAccount "storedAccounts"
+	 */
+	private void getStoredAccounts() {
+		String s = Activator.getAccounts();
+		if (s.equals("") || s.equals(Activator.DEFAULT_ACCOUNTS_SMTP))
+			storedAccounts = new ListSMTPAccount();
+		else
+			storedAccounts = ListSMTPAccount.fromString(s);
+	}
+
+	/**
+	 * return the accounts names plus "New" at the beginning
+	 * 
+	 * @return an array of Strings
+	 */
+	private String[] getArrayAccounts() {
+		return storedAccounts.toDisplay();
 	}
 
 	@Override
@@ -100,7 +129,7 @@ public class MailWriter extends ViewPart {
 		GridLayout headersLayout = new GridLayout(2, false);
 		headers.setLayout(headersLayout);
 		GridData gridLeft = new GridData();
-		gridLeft.horizontalAlignment = GridData.BEGINNING;
+		gridLeft.horizontalAlignment = GridData.FILL;
 		gridLeft.grabExcessHorizontalSpace = false;
 		GridData gridRight = new GridData();
 		gridRight.horizontalAlignment = GridData.FILL;
@@ -115,8 +144,9 @@ public class MailWriter extends ViewPart {
 		Label from = new Label(headers, SWT.None);
 		from.setText("From: ");
 		from.setLayoutData(gridLeft);
-		fromField = new Text(headers, SWT.SINGLE);
+		fromField = new Combo(headers, SWT.SINGLE);
 		fromField.setLayoutData(gridRight);
+		fromField.setItems(getArrayAccounts());
 		// to
 		Label to = new Label(headers, SWT.None);
 		to.setText("To: ");

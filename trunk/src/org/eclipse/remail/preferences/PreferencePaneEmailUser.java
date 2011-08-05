@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class PreferencePaneEmailUser extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
 
-	private static final String NEW_ELEMENT = "-- New --";
+	public static final String NEW_ELEMENT = "-- New --";
 	Text mailAddress;
 	Text username;
 	Text password;
