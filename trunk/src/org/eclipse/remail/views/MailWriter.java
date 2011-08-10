@@ -13,6 +13,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -66,8 +67,17 @@ public class MailWriter extends ViewPart {
 		super();
 		keywords = "";
 		for (String s : keywordList)
-			keywords += ", " + s;
+			keywords += s + ", ";
 		getStoredAccounts();
+
+	}
+
+	public void setKeywords(List<String> keywordList) {
+		keywords = "";
+		for (String s : keywordList)
+			keywords += s + ", ";
+
+		keywordsField.setText("Keywords: " + keywords);
 	}
 
 	/**
@@ -184,7 +194,13 @@ public class MailWriter extends ViewPart {
 		keywordsField.setEditable(false);
 		keywordsField.setLayoutData(gridRight);
 		keywordsField.setBackground(new Color(parent.getDisplay(), new RGB(255, 255, 204)));
-
+//		keywordsField.setSize(GridData.FILL, 5* keywordsField.getLineHeight());
+		
+		GridData gdk = new GridData(SWT.DEFAULT, 2* keywordsField.getLineHeight());
+		gdk.horizontalAlignment = GridData.FILL;
+		gdk.grabExcessHorizontalSpace=true;
+		keywordsField.setLayoutData(gdk);
+		
 		GridData gd2 = new GridData();
 		gd2.horizontalAlignment = GridData.FILL;
 		gd2.grabExcessHorizontalSpace = true;

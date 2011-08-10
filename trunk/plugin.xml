@@ -6,51 +6,24 @@
       <menuContribution
             locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
          <command
-               commandId="org.eclipse.remail.SingleSearchClass"
+               commandId="org.eclipse.remail.sendEmail"
                icon="icons/remail.png"
-               label="REmail Search"
-               style="push">
-			<visibleWhen>
-               <with
-                     variable="activeMenuSelection">
-                  <iterate>
-                     <adapt
-                           type="org.eclipse.jdt.core.ICompilationUnit">
-                     </adapt>
-                  </iterate>
-               </with>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="org.eclipse.remail.SingleSearchProject"
-               icon="icons/remail.png"
-               label="REmail Search"
+               id="org.eclipse.remail.menus.SendEmailsMenu"
+               label="Send Email about this"
                style="push">
             <visibleWhen>
-               <with
-                     variable="activeMenuSelection">
-                  <iterate>
-                     <adapt
-                           type="org.eclipse.core.resources.IProject">
-                     </adapt>
-                  </iterate>
-               </with>
             </visibleWhen>
          </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.eclipse.jdt.ui.ProjectExplorer">
          <command
-               commandId="org.eclipse.remail.SingleSearchPackage"
+               commandId="org.eclipse.remail.sendEmail"
                icon="icons/remail.png"
-               label="REmail Search"
+               id="org.eclipse.remail.menus.SendEmailsMenu2"
+               label="Send Email about this"
                style="push">
             <visibleWhen>
-               <with
-                     variable="activeMenuSelection">
-                  <iterate>
-                     <adapt
-                           type="org.eclipse.jdt.core.IPackageFragment">
-                     </adapt>
-                  </iterate>
-               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -69,6 +42,10 @@
             id="org.eclipse.remail.SingleSearchPackage"
             name="Search">
       </command>
+      <command
+            id="org.eclipse.remail.sendEmail"
+            name="sendEmail">
+      </command>
    </extension>
    <extension
          id="lars"
@@ -85,6 +62,10 @@
       <handler
             class="org.eclipse.remail.SelectionProcessor"
             commandId="org.eclipse.remail.SingleSearchPackage">
+      </handler>
+      <handler
+            class="org.eclipse.remail.menus.SendEmailsMenu"
+            commandId="org.eclipse.remail.sendEmail">
       </handler>
    </extension>
    <extension

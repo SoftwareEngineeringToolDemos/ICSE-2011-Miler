@@ -25,6 +25,9 @@ public class CacheCouchDB {
 //	private static String dbname = "big-test";
 	// Uncomment for use the small test
 	// private String dbname="small-db";
+	
+	private static final String ERROR_MESSAGE1 = "{\"error\":\"not_found\",\"reason\":\"missing\"}";
+	private static final String ERROR_MESSAGE2= "{\"error\":\"not_found\",\"reason\":\"no_db_file\"}";
 
 	private static Set<String> classSearched = new HashSet<String>();
 
@@ -86,8 +89,9 @@ public class CacheCouchDB {
 			String uri=CouchDBView.server+dbname+"/_design/"+methodUsed+"-"+classname;
 			HttpGetView hgv = new HttpGetView(uri);
 			String response = hgv.sendRequest();
-//			System.out.println(response);
-			if(response.equals("{\"error\":\"not_found\",\"reason\":\"missing\"}"))
+//			System.out.println("request: "+ uri);
+//			System.out.println("response: "+ response);
+			if(response.equals(ERROR_MESSAGE1) || response.equals(ERROR_MESSAGE2))
 				inCache=false;
 				
 		}
