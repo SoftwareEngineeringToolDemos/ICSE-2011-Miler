@@ -34,7 +34,7 @@ import org.eclipse.ui.part.ViewPart;
 public class MailWriter extends ViewPart {
 
 	ListSMTPAccount storedAccounts;
-	
+
 	// Buttons
 	private Button sendButton;
 	private Button attachButton;
@@ -69,7 +69,7 @@ public class MailWriter extends ViewPart {
 			keywords += ", " + s;
 		getStoredAccounts();
 	}
-	
+
 	/**
 	 * Gets the stored accounts in preference and saves them in the list of
 	 * SMTPAccount "storedAccounts"
@@ -209,9 +209,16 @@ public class MailWriter extends ViewPart {
 				String bodyContent = text + "<br><br><br>(Added by REmail)<br>" + keys;
 
 				if (EmailChecker.checkFromToParameters(from, to)) {
-					// send email
-					EmailSender sender = new EmailSender(from, to, subject, bodyContent);
-					sender.send();
+					if (EmailChecker.checkCcAndBcc(cc, bcc)) {
+						// send email
+						EmailSender sender = new EmailSender(from, to, cc, bcc, subject,
+								bodyContent);
+						sender.send();
+					} else {
+						// send email
+						EmailSender sender = new EmailSender(from, to, subject, bodyContent);
+						sender.send();
+					}
 				} else {
 					// display error message
 				}
