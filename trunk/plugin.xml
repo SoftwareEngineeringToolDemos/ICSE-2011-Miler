@@ -16,12 +16,24 @@
          </command>
       </menuContribution>
       <menuContribution
-            locationURI="popup:org.eclipse.jdt.ui.ProjectExplorer">
+            locationURI="popup:org.eclipse.jdt.ui.navigator.ProjectExplorer">
          <command
                commandId="org.eclipse.remail.sendEmail"
                icon="icons/remail.png"
                id="org.eclipse.remail.menus.SendEmailsMenu2"
                label="Send Email about this"
+               style="push">
+            <visibleWhen>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:#CompilationUnitEditorContext?after=additions">
+         <command
+               commandId="org.eclipse.remail.sendCodeByEmail"
+               icon="icons/remail.png"
+               id="org.eclipse.remail.sendCodeByEmail"
+               label="Send code by Email"
                style="push">
             <visibleWhen>
             </visibleWhen>
@@ -46,6 +58,10 @@
             id="org.eclipse.remail.sendEmail"
             name="sendEmail">
       </command>
+      <command
+            id="org.eclipse.remail.sendCodeByEmail"
+            name="SendCodeByEMail">
+      </command>
    </extension>
    <extension
          id="lars"
@@ -66,6 +82,10 @@
       <handler
             class="org.eclipse.remail.menus.SendEmailsMenu"
             commandId="org.eclipse.remail.sendEmail">
+      </handler>
+      <handler
+            class="org.eclipse.remail.menus.SendCodeByEmailsMenu"
+            commandId="org.eclipse.remail.sendCodeByEmail">
       </handler>
    </extension>
    <extension
@@ -168,7 +188,7 @@
       toolbarPath="Normal/additions"
          class="org.eclipse.remail.editor.markerInitActionDelegate"> 
       </action> 
-   </editorContribution> 
+   </editorContribution>
 </extension>
    <extension
          point="org.eclipse.jdt.ui.javaEditorTextHovers">
