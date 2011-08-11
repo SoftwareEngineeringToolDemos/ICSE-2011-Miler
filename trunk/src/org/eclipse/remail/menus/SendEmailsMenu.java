@@ -25,8 +25,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public class SendEmailsMenu extends AbstractHandler {
 
-	private static final String ECLIPSE_PACKAGE_IDENTIFIER = "org.eclipse.jdt.internal.core.PackageFragment";
-	private static final String ECLIPSE_CLASS_IDENTIFIER = "org.eclipse.jdt.internal.core.CompilationUnit";
+	static final String ECLIPSE_PACKAGE_IDENTIFIER = "org.eclipse.jdt.internal.core.PackageFragment";
+	static final String ECLIPSE_CLASS_IDENTIFIER = "org.eclipse.jdt.internal.core.CompilationUnit";
 
 	ArrayList<IPackageFragment> packages;
 	ArrayList<ICompilationUnit> classes;

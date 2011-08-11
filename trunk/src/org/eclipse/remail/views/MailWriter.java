@@ -72,12 +72,24 @@ public class MailWriter extends ViewPart {
 
 	}
 
+	/**
+	 * Set the keyword list to the given list
+	 * @param keywordList the list
+	 */
 	public void setKeywords(List<String> keywordList) {
 		keywords = "";
 		for (String s : keywordList)
 			keywords += s + ", ";
 
-		keywordsField.setText("Keywords: " + keywords);
+		keywordsField.setText("Related classes: " + keywords);
+	}
+	
+	/**
+	 * Set the mail's content to the give text
+	 * @param text as a String
+	 */
+	public void setMailContent(String text) {
+		contentField.setText(text);
 	}
 
 	/**
@@ -190,11 +202,10 @@ public class MailWriter extends ViewPart {
 		// keyword field
 		keywordsField = new StyledText(text, SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.H_SCROLL
 				| SWT.V_SCROLL);
-		keywordsField.setText("Keywords: " + keywords);
+		keywordsField.setText("Related classes: " + keywords);
 		keywordsField.setEditable(false);
 		keywordsField.setLayoutData(gridRight);
 		keywordsField.setBackground(new Color(parent.getDisplay(), new RGB(255, 255, 204)));
-//		keywordsField.setSize(GridData.FILL, 5* keywordsField.getLineHeight());
 		
 		GridData gdk = new GridData(SWT.DEFAULT, 2* keywordsField.getLineHeight());
 		gdk.horizontalAlignment = GridData.FILL;
