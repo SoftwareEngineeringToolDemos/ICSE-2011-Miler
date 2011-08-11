@@ -1,15 +1,23 @@
 package org.eclipse.remail.emails;
 
+import java.util.List;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import org.eclipse.remail.Activator;
 
@@ -29,6 +37,7 @@ public class EmailSender {
 	private String mailContent;
 
 	private SMTPAccount account;
+	private String[] attachments;
 
 	/**
 	 * Basic constructor
@@ -46,11 +55,12 @@ public class EmailSender {
 		this.from = from;
 		this.to = to;
 		this.subject = subject;
-		this.mailContent = mailContent.replace("\n", "<br>");
-		;
-
+//		this.mailContent = mailContent.replace("\n", "<br>");
+		this.mailContent = mailContent;
+		
 		this.cc = null;
 		this.bcc = null;
+		this.attachments=null;
 
 		setAccount();
 	}
@@ -79,8 +89,10 @@ public class EmailSender {
 		this.cc = cc;
 		this.bcc = bcc;
 		this.subject = subject;
-		this.mailContent = mailContent.replace("\n", "<br>");
-
+//		this.mailContent = mailContent.replace("\n", "<br>");
+		this.mailContent = mailContent;
+		this.attachments=null;
+		
 		if (cc.equals(""))
 			this.cc = null;
 		if (bcc.equals(""))
@@ -102,6 +114,14 @@ public class EmailSender {
 		for (SMTPAccount a : storedAccounts)
 			if (a.getMailAddress().equals(from))
 				account = a;
+	}
+	
+	/**
+	 * Set the attachments to the given list of attachments
+	 * @param attachments the attachments
+	 */
+	public void setAttachments(String[] attachments){
+		this.attachments=attachments;
 	}
 
 	/**
@@ -164,10 +184,34 @@ public class EmailSender {
 					addressBcc[i] = new InternetAddress(Bccs[i].trim());
 				msg.setRecipients(Message.RecipientType.BCC, addressBcc);
 			}
-
-			// Setting the Subject and Content Type
+			// Setting the Subject
 			msg.setSubject(subject);
-			msg.setContent(mailContent, "text/html");
+			
+			if(attachments==null){
+				// Setting the Content Type and the content
+				msg.setContent(mailContent, "text/plain");
+			}else{
+				// Create the message part 
+		         BodyPart messageBodyPart = new MimeBodyPart();
+		         messageBodyPart.setContent(mailContent, "text/plain");
+		         
+		         // Create a multipart message
+		         Multipart multipart = new MimeMultipart();
+		         
+		         // Set text message part
+		         multipart.addBodyPart(messageBodyPart);
+
+		         // Part two is attachment 
+		         for(String file : attachments){
+		        	 messageBodyPart = new MimeBodyPart();
+		        	 DataSource source = new FileDataSource(file);
+		             messageBodyPart.setDataHandler(new DataHandler(source));
+		             messageBodyPart.setFileName(file);
+		             multipart.addBodyPart(messageBodyPart);
+		         }
+		         msg.setContent(multipart);
+			}
+			
 
 			// send message
 			Transport.send(msg);

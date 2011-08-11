@@ -2,10 +2,12 @@ package org.eclipse.remail.views;
 
 import java.util.List;
 
+import org.eclipse.jface.preference.PathEditor;
 import org.eclipse.remail.Activator;
 import org.eclipse.remail.emails.EmailChecker;
 import org.eclipse.remail.emails.EmailSender;
 import org.eclipse.remail.emails.ListSMTPAccount;
+import org.eclipse.remail.preferences.FilePathEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -20,8 +22,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
@@ -52,6 +56,7 @@ public class MailWriter extends ViewPart {
 	private String keywords;
 
 	private CoolBar buttonBar;
+	private org.eclipse.swt.widgets.List attachList;
 
 	/**
 	 * Empty constructor. Should never be used explicitly
@@ -73,25 +78,29 @@ public class MailWriter extends ViewPart {
 
 	/**
 	 * Set the keyword list to the given list
-	 * @param keywordList the list
+	 * 
+	 * @param keywordList
+	 *            the list
 	 */
 	public void setKeywords(List<String> keywordList) {
 		keywords = keywordsField.getText();
-		for (String s : keywordList){
-			if(!keywords.contains(s))
+		for (String s : keywordList) {
+			if (!keywords.contains(s))
 				keywords += s + ", ";
 		}
 
 		keywordsField.setText(keywords);
 	}
-	
+
 	/**
 	 * Set the mail's content to the give text
-	 * @param text as a String
+	 * 
+	 * @param text
+	 *            as a String
 	 */
 	public void setMailContent(String text) {
 		String s = contentField.getText();
-		contentField.setText(s+"\n"+text);
+		contentField.setText(s + "\n" + text);
 	}
 
 	/**
@@ -144,6 +153,14 @@ public class MailWriter extends ViewPart {
 		size = attachButton.getSize();
 		attachItem.setControl(attachButton);
 		attachItem.setSize(size.x * 2, size.y);
+		CoolItem attachItemList = new CoolItem(buttonBar, SWT.NONE);
+		attachList = new org.eclipse.swt.widgets.List(buttonBar, SWT.BORDER | SWT.MULTI
+				| SWT.V_SCROLL | SWT.H_SCROLL);
+		attachList.setLayoutData(gd1);
+		attachList.pack();
+		size = attachList.getSize();
+		attachItemList.setControl(attachList);
+		attachItemList.setSize(size.x * 12, size.y * 2);
 
 		// style for the headers
 		Group headers = new Group(allView, SWT.SHADOW_ETCHED_IN);
@@ -208,12 +225,12 @@ public class MailWriter extends ViewPart {
 		keywordsField.setEditable(false);
 		keywordsField.setLayoutData(gridRight);
 		keywordsField.setBackground(new Color(parent.getDisplay(), new RGB(255, 255, 204)));
-		
-		GridData gdk = new GridData(SWT.DEFAULT, 2* keywordsField.getLineHeight());
+
+		GridData gdk = new GridData(SWT.DEFAULT, 2 * keywordsField.getLineHeight());
 		gdk.horizontalAlignment = GridData.FILL;
-		gdk.grabExcessHorizontalSpace=true;
+		gdk.grabExcessHorizontalSpace = true;
 		keywordsField.setLayoutData(gdk);
-		
+
 		GridData gd2 = new GridData();
 		gd2.horizontalAlignment = GridData.FILL;
 		gd2.grabExcessHorizontalSpace = true;
@@ -235,22 +252,35 @@ public class MailWriter extends ViewPart {
 				String text = contentField.getText();
 				String keys = keywordsField.getText();
 
-				String bodyContent = text + "<br><br><br>(Added by REmail)<br>" + keys;
+				String bodyContent = text + "\n\n\n(Added by REmail)\n" + keys;
 
 				if (EmailChecker.checkFromToParameters(from, to)) {
+					EmailSender sender;
 					if (EmailChecker.checkCcAndBcc(cc, bcc)) {
 						// send email
-						EmailSender sender = new EmailSender(from, to, cc, bcc, subject,
-								bodyContent);
-						sender.send();
+						sender = new EmailSender(from, to, cc, bcc, subject, bodyContent);
+
 					} else {
 						// send email
-						EmailSender sender = new EmailSender(from, to, subject, bodyContent);
-						sender.send();
+						sender = new EmailSender(from, to, subject, bodyContent);
 					}
+					if (attachList.getItemCount() != 0) {
+						sender.setAttachments(attachList.getItems());
+					}
+					sender.send();
 				} else {
 					// display error message
 				}
+			}
+		});
+
+		attachButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog fd = new FileDialog(new Shell(), SWT.OPEN);
+				fd.setText("Add Attachment");
+				String selected = fd.open();
+				System.out.println(selected);
+				attachList.add(selected);
 			}
 		});
 	}

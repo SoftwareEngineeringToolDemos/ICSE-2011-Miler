@@ -92,7 +92,7 @@ public class SendCodeByEmailsMenu extends AbstractHandler {
 					ISelection iSelection = selectionProvider.getSelection();
 					if (!iSelection.isEmpty()) {
 						String selectedText = ((ITextSelection) iSelection).getText();
-						System.out.println(selectedText);
+						//System.out.println(selectedText);
 						return selectedText;
 					}
 				}
