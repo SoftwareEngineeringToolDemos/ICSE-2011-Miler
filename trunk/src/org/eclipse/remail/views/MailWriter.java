@@ -13,7 +13,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -77,11 +76,13 @@ public class MailWriter extends ViewPart {
 	 * @param keywordList the list
 	 */
 	public void setKeywords(List<String> keywordList) {
-		keywords = "";
-		for (String s : keywordList)
-			keywords += s + ", ";
+		keywords = keywordsField.getText();
+		for (String s : keywordList){
+			if(!keywords.contains(s))
+				keywords += s + ", ";
+		}
 
-		keywordsField.setText("Related classes: " + keywords);
+		keywordsField.setText(keywords);
 	}
 	
 	/**
@@ -89,7 +90,8 @@ public class MailWriter extends ViewPart {
 	 * @param text as a String
 	 */
 	public void setMailContent(String text) {
-		contentField.setText(text);
+		String s = contentField.getText();
+		contentField.setText(s+"\n"+text);
 	}
 
 	/**

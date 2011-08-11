@@ -5,14 +5,11 @@ import java.util.ArrayList;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.remail.views.MailWriter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -32,6 +29,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  * @author Lorenzo Baracchi <lorenzo.baracchi@usi.ch>
  * 
  */
+@SuppressWarnings("restriction")
 public class SendCodeByEmailsMenu extends AbstractHandler {
 
 	@Override

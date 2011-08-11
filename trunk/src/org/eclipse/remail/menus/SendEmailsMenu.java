@@ -37,8 +37,6 @@ public class SendEmailsMenu extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
-		System.out.println("Send email pressed");
-
 		packages = new ArrayList<IPackageFragment>();
 		classes = new ArrayList<ICompilationUnit>();
 
