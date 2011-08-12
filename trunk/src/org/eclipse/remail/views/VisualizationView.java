@@ -30,7 +30,7 @@ public class VisualizationView extends ViewPart {
 		new CustomFunction(browser, "myJavaFunction");
 		
 		System.out.println(file.toURI().toString());
-		browser.setUrl("file:///home/lorenzobaracchi/Documents/University/UROP-2011/javascripts/test.html");
+		browser.setUrl("file:///home/lorenzobaracchi/Documents/University/UROP-2011/javascripts/testd3.html");
 	}
 
 	@Override

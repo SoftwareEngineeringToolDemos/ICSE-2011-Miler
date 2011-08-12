@@ -1,0 +1,27 @@
+<html>
+<head>
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript" src="couchdb.js"></script>
+
+<script type="text/javascript">
+	function callFunction() {
+		myJavaFunction("in your web browser!");
+	}
+	
+	function couchDBConn() {
+		var conn = new CouchDBConnect("localhost", 8088, "at(remail)org_freenetproject_devl", "casesensitive")
+		var res = conn.queryForClass("Cache")
+	}
+</script>
+
+</head>
+<body>
+	<form action="">
+    <input type="button" value="I'm a button!" onClick="callFunction()">  
+    </form>
+    <form action="">
+    <input type="button" value="Test connection" onClick="couchDBConn()">  
+    </form>
+</body>
+</html>

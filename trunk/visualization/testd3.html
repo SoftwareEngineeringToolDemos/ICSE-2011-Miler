@@ -1,0 +1,118 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<!-- Script to test if the d3 library for charts has been found and works -->
+<head>
+<meta  charset="UTF-8"> 
+
+<title>Test for d3 library</title>
+<style type="text/css">
+.chart rect {
+	fill: #70B3F4;
+	stroke: white;
+}
+
+.chart rect:hover {
+	fill: #F28049;
+}
+
+.chart text {
+	fill: white;
+}
+
+.chart text.line {
+	fill: gray;
+}
+</style>
+
+<!-- Import the library for the d3 charts -->
+<script type="text/javascript" src="./mbostock-d3/d3.js"></script>
+
+
+</head>
+
+<script type="text/javascript">
+function rotateText(x,y) { 
+	return "rotate(90 "+x+" "+y+")"
+}
+
+
+function loading(){
+	var elem=document.getElementById("text")
+	elem.appendChild(document.createTextNode("Trying to load the library ..."))
+	var v=d3.version
+	elem.appendChild(document.createTextNode(" Library found. Version: "+v))
+	
+	//try to make a chart
+	
+	var data = [{"time": "January 2011", "value": 86}, {"time": "February 2011", "value": 53}, 
+				{"time": "March 2011", "value": 28}, {"time": "April 2011", "value": 58}];
+	
+	var w = 25,h = 100;
+  
+	var x = d3.scale.linear()
+	  .domain([0, 1])
+	  .range([0, w]);
+  
+	var y = d3.scale.linear()
+	  .domain([0, 100])
+	  .rangeRound([0, h]);
+	
+	//append the chart to the end of the body
+     	
+	var chart=d3.select("div")
+  .append("svg:svg")
+     .attr("class", "chart")
+     .attr("width", w * (data.length+1))
+     .attr("height", h+h*2);
+  
+   //put the data
+   chart.selectAll("rect")
+     .data(data)
+   .enter().append("svg:rect")
+     .attr("x", function(d, i) { return x(i) + w/2; })
+     .attr("y", function(d) { return h - y(d.value) - .5; })
+     .attr("width", w)
+     .attr("height", function(d) { return y(d.value); });
+     
+     //make the bottom line
+     chart.append("svg:line")
+     .attr("x1", 0)
+     .attr("x2", w * (data.length+1))
+     .attr("y1", h - .5)
+     .attr("y2", h - .5)
+     .attr("stroke", "#000");
+     
+     //add a text to the bar
+     chart.selectAll("text")
+     .data(data)
+   .enter().append("svg:text")
+     .attr("x", function(d, i) { return x(i) + w/2 +2})
+     .attr("y", function(d) { return h - y(d.value) + 15})
+     .text(function(d) { return d.value});
+   
+     
+     //add a text to the bottom line  
+     for(var i=0; i<data.length; i++){
+     	 chart.append("svg:text")
+     	 	.attr("class", "line")
+     	 	.attr("x", w*i + w/2 +4)
+     	 	.attr("y", h+5)
+     	 	.attr("transform", rotateText(w*i + w/2 +4, h+5))
+     	 	.attr("alt", "ciao")
+     	 	.text(data[i].time);
+     } 
+     
+}
+</script>
+
+
+<body onLoad="loading()">
+
+<section id="text">
+</section>
+
+<div class="chartContainer">
+</div>
+	
+</body>
+</html>
