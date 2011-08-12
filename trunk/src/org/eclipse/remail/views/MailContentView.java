@@ -21,7 +21,7 @@ public class MailContentView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		browser = new Browser(parent, SWT.MOZILLA);
+		browser = new Browser(parent, SWT.WEBKIT);
 		// uncomment to use the jFace text viewer instead of the mozilla browser
 
 //		textViewer = new TextViewer(parent, SWT.MULTI | SWT.V_SCROLL |
