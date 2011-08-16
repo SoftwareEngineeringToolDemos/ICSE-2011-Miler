@@ -1,8 +1,30 @@
 <html>
 <head>
 
+<style type="text/css">
+.chart rect {
+	fill: #70B3F4;
+	stroke: white;
+}
+
+.chart rect:hover {
+	fill: #F28049;
+}
+
+.chart text {
+	fill: white;
+}
+
+.chart text.line {
+	fill: gray;
+}
+</style>
+
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript" src="couchdb.js"></script>
+<script type="text/javascript" src="mail.js"></script>
+<script type="text/javascript" src="barchart.js"></script>
+<script type="text/javascript" src="./mbostock-d3/d3.js"></script>
 
 <script type="text/javascript">
 	function callFunction() {
@@ -11,7 +33,67 @@
 	
 	function couchDBConn() {
 		var conn = new CouchDBConnect("localhost", 8088, "at(remail)org_freenetproject_devl", "casesensitive")
-		var res = conn.queryForClass("Cache")
+		conn.queryForClass("Cache", dataManagement)
+	}
+	
+	function dataManagement(jsonObject){
+		//alert(jsonObject.rows)
+		rows=jsonObject.rows
+		
+		var container=document.getElementById("mails")
+		var mailList=[]
+		
+		for (var i=0; i<rows.length; i++){
+			//alert(JSON.stringify(rows[i]))
+			var date=new Date(extractDate(rows[i].value.header))
+			var subject = extractSubject(rows[i].value.header);
+			var sender = extractSender(rows[i].value.header);
+			var list=extractList(rows[i].value.header);
+			var content=rows[i].value.body
+			
+			var newMail = new Mail(subject, sender, date, list, content)
+			mailList.push(newMail)
+		}
+		var text = document.createTextNode(mailList)
+		container.appendChild(text)
+
+		createData(mailList)
+	}
+	
+	function createData(mailList) {
+		var old = getOldestDate(mailList)
+		old=new Date(old.getFullYear(), old.getMonth())
+		var recent = getNewestDate(mailList)
+		recent=new Date(recent.getFullYear(), recent.getMonth())
+		alert(old.toString() + "  "+ recent.toString())
+		
+		//initialization of the data for the bar-chart
+		var datas=[]
+		var d = old
+		while(!(d.getFullYear()==recent.getFullYear() && d.getMonth()==recent.getMonth())){
+			datas.push({"date":d, "value":0})
+			if((d.getMonth()+1)==12)
+				d=new Date(d.getFullYear()+1, 0)
+			else
+				d=new Date(d.getFullYear(), d.getMonth()+1)
+			//alert(d.toString() + "  "+ recent.toString())
+		}
+		datas.push({"date":d, "value":0})
+		alert(datas.length)
+			
+		//fill the data
+		var max=0;
+		for(var i=0; i<mailList.length; i++){
+			var dt=mailList[i].date
+			for(var j=0; j<datas.length; j++){
+				if(dt.getFullYear()==datas[j].date.getFullYear() && dt.getMonth()==datas[j].date.getMonth()){
+					datas[j].value=datas[j].value+1;
+					if(datas[j].value>max)
+						max=datas[j].value;
+				}
+			}
+		}
+		createBarChart(datas, max)
 	}
 </script>
 
@@ -23,5 +105,10 @@
     <form action="">
     <input type="button" value="Test connection" onClick="couchDBConn()">  
     </form>
+    
+    <div class="chartContainer">
+    </div>
+    <div id="mails" style="visibility: hidden; ">
+    </div>
 </body>
 </html>

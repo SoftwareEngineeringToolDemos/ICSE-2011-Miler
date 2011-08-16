@@ -6,41 +6,29 @@
  	 this.port=port //server port
   	 this.database=database //the database name
  	 this.searchMethod=searchMethod //the name of the search method to use (ie casesensitive)
- 	  
+ 	 
  	 /*
  	  * Defines a function to get the result of a query
  	  */
- 	  this.queryForClass= function(classname) {  	  
- 	  	  uri = server+":"+port+"/"+database+"/_design/"+searchMethod+"-"+classname+"/_view/"+searchMethod
- 	  	  alert(uri)
- 	  	  // var req = new XMLHttpRequest()
- 	  	  // req.onreadystatechange = function() {
- 	  	  	  // if (req.readyState != 4) 
- 	  	  	  	  // return req.responseText;
- 	  	  // }
- 	  	  // req.open("GET", uri, true)
- 	  	  // req.send(null);
- 	  	  // var response = $.getJSON(uri, function(data) {
- 	  	  		  // var items = [];
-// 
- 	  	  		  // $.each(data, function(key, val) {
- 	  	  		  		  // items.push(key, val);
- 	  	  		  // });
- 	  	  		  // alert(items)
- 	  	  // });
- 	  	  //alert(JSON.stringify(response))
- 	  	  jQuery.makeAjaxCall(uri, alert, alert)
- 	  }
+ 	  this.queryForClass= function(classname, functionToCall) {  	  
+ 	  	  uri = "http://"+server+":"+port+"/"+database+"/_design/"+searchMethod+"-"+classname+"/_view/"+searchMethod+"?callback=?";
+ 	  	  //alert(uri) 	  	  
+ 	  	  this.makeAjaxCall(uri, functionToCall) 	  	  
+  	  }
+ 	  
+  	  /*
+  	   * Make the http requesto to couchdb
+  	   */
+ 	  this.makeAjaxCall = function(ajaxUrl, functionToCall) {
+		 $.ajax({
+				type: "GET",
+				url: ajaxUrl,
+				dataType: "jsonp",
+				accepts: "application/json",
+				success: function(data){functionToCall(data)},
+				error: function(jqXHR, textStatus, errorThrown){alert("failure "+ textStatus +" - "+errorThrown+ " - "+jqXHR.status)}
+		  });
+	  }
  }
- jQuery.makeAjaxCall = function(ajaxUrl, functionSuccess, functionFailure) {
- $.ajax({
-    type: "GET",
-        url: ajaxUrl,
-        contentType: "application/json; charset=utf-8",
-        data: {},
-        dataType: "json",
-        success: function(){alert(data)},
-        error: function(){alert("failure")}
-  });
- }
+ 
  
