@@ -1,6 +1,6 @@
 function createBarChart(data, maxValue){	
 	
-	alert(data[data.length-1].date.toString())
+	//alert(data[data.length-1].date.toString())
 	//size of the chart
 	var w = 25,h = maxValue*15;
   
@@ -41,7 +41,7 @@ function createBarChart(data, maxValue){
      .data(data)
    .enter().append("svg:text")
      .attr("x", function(d, i) { return x(i) + w/2 +2})
-     .attr("y", function(d) { return h - h/maxValue*(d.value-1) - h/maxValue*0.2})
+     .attr("y", function(d) { return h - h/maxValue*(d.value-1) - h/maxValue*0.1})
      .text(function(d) { return d.value});
    
      

@@ -50,7 +50,6 @@
 			var sender = extractSender(rows[i].value.header);
 			var list=extractList(rows[i].value.header);
 			var content=rows[i].value.body
-			
 			var newMail = new Mail(subject, sender, date, list, content)
 			mailList.push(newMail)
 		}
@@ -65,7 +64,7 @@
 		old=new Date(old.getFullYear(), old.getMonth())
 		var recent = getNewestDate(mailList)
 		recent=new Date(recent.getFullYear(), recent.getMonth())
-		alert(old.toString() + "  "+ recent.toString())
+		//alert(old.toString() + "  "+ recent.toString())
 		
 		//initialization of the data for the bar-chart
 		var datas=[]
@@ -79,7 +78,7 @@
 			//alert(d.toString() + "  "+ recent.toString())
 		}
 		datas.push({"date":d, "value":0})
-		alert(datas.length)
+		//alert(datas.length)
 			
 		//fill the data
 		var max=0;

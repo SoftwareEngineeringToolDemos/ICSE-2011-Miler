@@ -30,9 +30,10 @@ function Mail(subject, sender, date, list, body) {
 function extractDate(headers) {		
 	//split the string
 	hds=headers.split("', '")	
-	for (var i=0; i<hds.length; i++){		
-		if(hds[i].indexOf("Date:")!=-1)
-			return hds[i];
+	for (var i=0; i<hds.length; i++){	
+		var n=hds[i].indexOf("Date:")
+		if(n!=-1)
+			return hds[i].substring(n+"Date:".length,hds[i].length);
 	}
 }
 
