@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.remail.couchdb.util.CouchDBSearch;
 import org.eclipse.remail.modules.MailSearch;
 import org.eclipse.remail.modules.MboxSearch;
@@ -212,12 +213,27 @@ public class Search
 	 * 
 	 * @param mailList
 	 */
-	public static void updateMailView(final LinkedList<Mail> mailList)
-	{	
+	public static void updateMailView(final LinkedList<Mail> mailList) {
 		Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
-            	MailView.getViewer().setInput(mailList);
-            }
-         });
+			public void run() {
+				boolean set = false;
+				TreeViewer tree;
+				while (!set) {
+					tree = MailView.getViewer();
+					if (tree != null) {
+						set = true;
+						tree.setInput(mailList);
+						break;
+					} else {
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		});
 	}
 }
