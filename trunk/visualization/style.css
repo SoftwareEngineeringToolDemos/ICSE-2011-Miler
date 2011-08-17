@@ -1,0 +1,80 @@
+/* Import the font from google */
+@import url(http://fonts.googleapis.com/css?family=Ubuntu);
+
+/* Body style */
+body {
+	background-color: #F2F1F0;
+	font-family:"Ubuntu"
+}
+
+/* Style of the header */
+header {
+	padding: 0;
+	margin: 5px;
+	margin-top: 10px;
+	color: #839AA5;
+}
+header nav {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	margin-top: 5px;
+	display: inline;
+}
+
+header nav span {
+	background-color: #EFF1F2;
+	display: inline;
+	padding: 8px;
+	margin: 0;
+	margin-left: -5px;
+	border: 0;
+}
+header nav span:first-child  {
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	background-color: #A59D93; 
+	color: #fff;
+}
+header nav span:last-child  {
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+header nav span:hover {
+	background-color: #839AA5;
+	color: #fff;
+}
+header nav span:first-child:hover  {
+	background-color: #A59D93; 
+	color: #fff;
+}
+
+/* Style for the chart container */
+div.chartContainer {
+	margin: 10px;
+}
+
+.chart {
+	background-color: #fff;
+}
+
+/* Style of bars for bar-chart */
+.chart rect {
+	fill: #70B3F4;
+	stroke: white;
+}
+
+/* Style of bars for bar-chart when hover */
+.chart rect:hover {
+	fill: #F28049;
+}
+
+/* Style of text for charts */
+.chart text {
+	fill: white;
+}
+
+/* Style of lines for chart */
+.chart text.line {
+	fill: gray;
+}

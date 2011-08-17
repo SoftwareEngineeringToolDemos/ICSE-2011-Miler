@@ -214,26 +214,27 @@ public class Search
 	 * @param mailList
 	 */
 	public static void updateMailView(final LinkedList<Mail> mailList) {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				boolean set = false;
-				TreeViewer tree;
-				while (!set) {
-					tree = MailView.getViewer();
-					if (tree != null) {
-						set = true;
+		boolean set = false;
+
+		while (!set) {
+			final TreeViewer tree = MailView.getViewer();
+			if (tree != null) {
+				set = true;
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
 						tree.setInput(mailList);
-						break;
-					} else {
-						try {
-							Thread.sleep(5000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
 					}
+				});
+				break;
+			} else {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-		});
+		}
+
 	}
 }

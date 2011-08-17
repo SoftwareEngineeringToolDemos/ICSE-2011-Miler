@@ -1,8 +1,12 @@
+/*
+ * Creates a bar chart with the given data (an array of mapping dates and value)
+ * and the max maule present in the array
+ */
 function createBarChart(data, maxValue){	
 	
 	//alert(data[data.length-1].date.toString())
 	//size of the chart
-	var w = 25,h = maxValue*15;
+	var w = 25,h = maxValue*18;
   
 	var x = d3.scale.linear()
 	  .domain([0, 1])
@@ -12,12 +16,15 @@ function createBarChart(data, maxValue){
 	  .domain([0, 100])
 	  .rangeRound([0, h]);
 	
+	  // alert(data.length)
+	  // alert(w * (data.length+1))
+	  
 	//get the html element which will contain the chart and set attributes     	
 	var chart=d3.select(".chartContainer")
   .append("svg:svg")
      .attr("class", "chart")
      .attr("width", w * (data.length+1))
-     .attr("height", h+h*2);
+     .attr("height", h+200);
   
    //put the data
    chart.selectAll("rect")
@@ -57,6 +64,9 @@ function createBarChart(data, maxValue){
      
 }
 
+/*
+ * It rotatates the text
+ */
 function rotateText(x,y) { 
 	return "rotate(90 "+x+" "+y+")"
 }
