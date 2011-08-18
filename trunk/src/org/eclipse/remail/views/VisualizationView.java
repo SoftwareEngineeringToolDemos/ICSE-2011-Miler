@@ -13,6 +13,7 @@ import org.eclipse.remail.Activator;
 import org.eclipse.remail.couchdb.helper.CouchDBMethodName;
 import org.eclipse.remail.couchdb.util.CouchDBCreator;
 import org.eclipse.remail.couchdb.util.CouchDBSearch;
+import org.eclipse.remail.daemons.ChangeViewDaemon;
 import org.eclipse.remail.javascriptFunctions.BarSelection;
 import org.eclipse.remail.preferences.PreferenceConstants;
 import org.eclipse.remail.properties.MailingList;
@@ -42,13 +43,22 @@ public class VisualizationView extends ViewPart {
 	public static final String SCRIPT_NAME = "plotChartForClass";
 	public static final String HTML_PAGE_LOCATION = "platform:/plugin/org.eclipse.remail/visualization/chart.html";
 
+	private BarSelection barSelectionJavaScript;
+
 	@Override
 	public void createPartControl(Composite parent) {
 
 		browser = new Browser(parent, SWT.WEBKIT);
 
 		new CustomFunction(browser, "myJavaFunction");
-		new BarSelection(browser, BarSelection.getFUNCTION_NAME());
+		// get the name of the class to search
+		String classname = getSite().getWorkbenchWindow().getActivePage().getActiveEditor()
+				.getTitle();
+		// get the path of the class to search
+		String path = ChangeViewDaemon.getPath(getSite().getWorkbenchWindow().getActivePage()
+				.getActiveEditor().getEditorInput().getPersistable().toString());
+		barSelectionJavaScript = new BarSelection(browser, BarSelection.getFUNCTION_NAME(),
+				classname, path);
 
 		setBrowserUrl();
 		/**
@@ -102,6 +112,15 @@ public class VisualizationView extends ViewPart {
 			File file = new File(FileLocator.resolve(url).toURI());
 			String path = file.getAbsolutePath();
 			browser.setUrl("file://" + path);
+			// get the name of the class to search
+			String classname = getSite().getWorkbenchWindow().getActivePage().getActiveEditor()
+					.getTitle();
+			// get the path of the class to search
+			String pathClass = ChangeViewDaemon
+					.getPath(getSite().getWorkbenchWindow().getActivePage().getActiveEditor()
+							.getEditorInput().getPersistable().toString());
+			barSelectionJavaScript = new BarSelection(browser, BarSelection.getFUNCTION_NAME(),
+					classname, pathClass);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

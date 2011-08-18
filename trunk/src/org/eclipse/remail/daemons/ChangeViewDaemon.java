@@ -97,7 +97,7 @@ public class ChangeViewDaemon implements Runnable {
 	 *            the string
 	 * @return the path
 	 */
-	private String getPath(String string) {
+	public static String getPath(String string) {
 		String s = string.substring(string.indexOf("/src/") + 1, string.indexOf(")"));
 		// hint: the +1 is the length of the "/" before "src/"
 		return s;

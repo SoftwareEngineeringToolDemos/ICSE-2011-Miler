@@ -1,6 +1,10 @@
 package org.eclipse.remail.javascriptFunctions;
 
+import java.util.LinkedList;
+
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.remail.Mail;
+import org.eclipse.remail.Search;
 import org.eclipse.remail.util.LocalMailListSearchOnDate;
 import org.eclipse.remail.views.MailView;
 import org.eclipse.swt.browser.Browser;
@@ -17,14 +21,18 @@ public class BarSelection extends BrowserFunction {
 
 	private static String FUNCTION_NAME = "barSelected";
 
-	public BarSelection(Browser browser, String name) {
+	private String classname;
+	private String path;
+
+	public BarSelection(Browser browser, String name, String classname, String path) {
 		super(browser, name);
+		this.classname = classname;
+		this.path = path;
 	}
 
 	/**
 	 * Search in the list of mails something corresponding to the data passed as
-	 * argument.
-	 * It build the regular expession as "<month> .* <year>" 
+	 * argument. It build the regular expession as "<month> .* <year>"
 	 * 
 	 * @param arguments
 	 *            is the date. Where arguments[0] is the month and arguments[1]
@@ -36,36 +44,38 @@ public class BarSelection extends BrowserFunction {
 		String month = ((String) arguments[0]).substring(0, 3);
 		// arguments[1] is the year
 		String year = (String) arguments[1];
-		final String regex= month+" .* "+year;
-		
-//		System.err.println(month+" "+year);
-		
-		//do the search
-		Runnable thread = new Runnable() {
-			
+		final String regex = month + " .* " + year;
+
+		// System.err.println(month+" "+year);
+
+		Thread thread = new Thread(new Runnable() {
+
 			@Override
 			public void run() {
-				boolean set = false;
-				TreeViewer tree=null;
-				while (!set) {
-					tree = MailView.getViewer();
-					if(tree!=null)
-						set=true;
-					else{
-						try {
-							System.err.println("sleeping");
-							Thread.sleep(5000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
+				//updates the view with all the relative mail to the class
+				Search search = new Search();
+				Search.updateMailView(new LinkedList<Mail>());
+				LinkedList<Mail> mailList = search.Execute(classname, path, true);
+				if (mailList == null)
+					Search.updateMailView(new LinkedList<Mail>());
+				else {
+					Search.updateMailView(mailList);
+					TreeViewer tree = MailView.getViewer();
+					tree.setInput(mailList);
 				}
-				LocalMailListSearchOnDate search = new LocalMailListSearchOnDate(tree, regex);
-				search.search();
 			}
-		};
+		});
 		thread.run();
-		
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		// do the search on local mails
+		TreeViewer tree = MailView.getViewer();
+		LocalMailListSearchOnDate searchLocal = new LocalMailListSearchOnDate(tree, regex);
+		searchLocal.search();
+
 		return null;
 	}
 

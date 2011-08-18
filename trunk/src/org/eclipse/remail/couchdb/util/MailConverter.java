@@ -78,9 +78,9 @@ public class MailConverter {
 			s = s.replace("\n", "");
 			// I hate Java for non having a decent Switch-Case!
 			if (s.startsWith(SUBJECT_PREFIX)) {
-				subject = s;
+				subject = s.replace(SUBJECT_PREFIX, "");
 			} else if (s.startsWith(AUTHOR_PREFIX)) {
-				author = s;
+				author = s.replace(AUTHOR_PREFIX, "");
 			} else if (s.startsWith(PERMALINK_PREFIX)) {
 				permalink = s;
 			} else if (s.startsWith(THREADLINK_PREFIX)) {
