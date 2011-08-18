@@ -3,6 +3,7 @@ package org.eclipse.remail.util;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.remail.Mail;
 
@@ -10,48 +11,36 @@ import org.eclipse.remail.Mail;
  * Class used to implement a local search based on a keyword
  * on the mail list currently displayed to the user. 
  * 
+ * The keyword should be a date as string and the search is
+ * performed in the Data field of emails
+ * 
  * @author Lorenzo Baracchi <lorenzo.baracchi@usi.ch>
  *
  */
-public class LocalMailListSearch {
+public class LocalMailListSearchOnDate extends LocalMailListSearch {
 
-	protected TreeViewer viewer;
-	protected String keyword;
-	
-	public LocalMailListSearch(TreeViewer viewer, String keyword){
-		this.viewer=viewer;
-		this.keyword=keyword;
+	public LocalMailListSearchOnDate(TreeViewer viewer, String keyword) {
+		super(viewer, keyword);
 	}
-	
-	/**
-	 * Search for the keyword and update the given view
-	 */
+
+	@Override
 	public void search(){
-		
 		@SuppressWarnings("unchecked")
 		LinkedList<Mail> mailList= (LinkedList<Mail>)viewer.getInput();
 		LinkedList<Mail> searchResults = new LinkedList<Mail>();
-		
-		System.out.println("In: "+mailList);
-		//search
+//		System.out.println("In: "+mailList+"\n search: "+keyword);
 		Pattern p = Pattern.compile(keyword);
-//		System.out.println(p.pattern());
 		for(Mail mail : mailList){
-			Matcher subject = p.matcher(mail.getSubject());
-			Matcher text = p.matcher(mail.getText());
-
+			Matcher data = p.matcher(mail.getTimestamp().toString());
+			
 			boolean found=false;
-			while(subject.find()){
-				found=true;
-			}
-			while(text.find()){
+			while(data.find()){
 				found=true;
 			}
 			if(found)
 				searchResults.add(mail);
 		}
-		System.out.println("Found: "+searchResults);
-		//update view
+//		System.out.println("Found: "+searchResults);
 		viewer.setInput(searchResults);
 	}
 }

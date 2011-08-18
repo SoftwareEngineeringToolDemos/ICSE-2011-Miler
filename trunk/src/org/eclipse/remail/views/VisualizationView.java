@@ -13,6 +13,7 @@ import org.eclipse.remail.Activator;
 import org.eclipse.remail.couchdb.helper.CouchDBMethodName;
 import org.eclipse.remail.couchdb.util.CouchDBCreator;
 import org.eclipse.remail.couchdb.util.CouchDBSearch;
+import org.eclipse.remail.javascriptFunctions.BarSelection;
 import org.eclipse.remail.preferences.PreferenceConstants;
 import org.eclipse.remail.properties.MailingList;
 import org.eclipse.swt.SWT;
@@ -47,6 +48,7 @@ public class VisualizationView extends ViewPart {
 		browser = new Browser(parent, SWT.WEBKIT);
 
 		new CustomFunction(browser, "myJavaFunction");
+		new BarSelection(browser, BarSelection.getFUNCTION_NAME());
 
 		setBrowserUrl();
 		/**

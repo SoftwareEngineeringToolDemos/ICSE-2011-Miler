@@ -70,7 +70,7 @@ public class MailView extends ViewPart {
 		@SuppressWarnings("unchecked")
 		@Override
 		public Object[] getElements(Object inputElement) {
-//			return super.getElements(inputElement);
+			// return super.getElements(inputElement);
 			LinkedList<Mail> mailList = (LinkedList<Mail>) inputElement;
 			LinkedList<Mail> topLevelMails = new LinkedList<Mail>();
 			for (Mail mail : mailList) {
@@ -86,21 +86,19 @@ public class MailView extends ViewPart {
 			LinkedList<Mail> mailList = (LinkedList<Mail>) viewer.getInput();
 
 			LinkedList<Mail> children = new LinkedList<Mail>();
-			System.out.println("looking for child");
+			// System.out.println("looking for child");
 			for (Mail m : mailList) {
-//				System.out.println("  -- "+ mail.getThreadlink()+"  "+m.getThreadlink());
-				try{
-				if(m.getThreadlink().equals(mail.getThreadlink()) && (!mail.getTimestamp().equals(m.getTimestamp()))){
-//				if ((mail != null && mail.getPermalink() != null && !mail.getPermalink()
-//						.startsWith(m.getPermalink()))
-//						&& (m != null && m.getThreadlink() != null && m.getThreadlink().startsWith(
-//								mail.getThreadlink()))) {
-					children.add(m);
-					System.out.println(m.toString());
-				}
-//				else
-//					System.err.println(m.getThreadlink()+" "+mail.getThreadlink()+" - "+mail.getPermalink()+" "+m.getPermalink());
-				}catch (NullPointerException e) {
+				// System.out.println("  -- "+
+				// mail.getThreadlink()+"  "+m.getThreadlink());
+				try {
+					if (m.getThreadlink().equals(mail.getThreadlink())
+							&& (!mail.getTimestamp().equals(m.getTimestamp()))) {
+						children.add(m);
+						// System.out.println(m.toString());
+					}
+					// else
+					// System.err.println(m.getThreadlink()+" "+mail.getThreadlink()+" - "+mail.getPermalink()+" "+m.getPermalink());
+				} catch (NullPointerException e) {
 					// nothing to do
 				}
 			}

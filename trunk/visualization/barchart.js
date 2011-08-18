@@ -33,7 +33,8 @@ function createBarChart(data, maxValue){
      .attr("x", function(d, i) { return x(i) + w/2; })
      .attr("y", function(d) { return h - h/maxValue*d.value; })
      .attr("width", w)
-     .attr("height", function(d) { return h/maxValue*d.value; });
+     .attr("height", function(d) { return h/maxValue*d.value; })
+     .attr("onclick", function(d){return "barSelected('"+niceMonth(d.date)+"','"+d.date.getFullYear()+"')"});
      
      //make the bottom line
      chart.append("svg:line")
