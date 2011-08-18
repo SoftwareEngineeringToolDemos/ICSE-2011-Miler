@@ -62,7 +62,7 @@ public class MailView extends ViewPart {
 	 * The constructor.
 	 */
 	public MailView() {
-		
+
 	}
 
 	public class MailTreeContentProvider extends ArrayContentProvider implements
@@ -70,10 +70,11 @@ public class MailView extends ViewPart {
 		@SuppressWarnings("unchecked")
 		@Override
 		public Object[] getElements(Object inputElement) {
+//			return super.getElements(inputElement);
 			LinkedList<Mail> mailList = (LinkedList<Mail>) inputElement;
 			LinkedList<Mail> topLevelMails = new LinkedList<Mail>();
 			for (Mail mail : mailList) {
-				if ((hasChildren(mail) || getParent(mail) == null) && mail!=null)
+				if ((hasChildren(mail) || getParent(mail) == null) && mail != null)
 					topLevelMails.add(mail);
 			}
 			Collections.sort(topLevelMails);
@@ -85,11 +86,23 @@ public class MailView extends ViewPart {
 			LinkedList<Mail> mailList = (LinkedList<Mail>) viewer.getInput();
 
 			LinkedList<Mail> children = new LinkedList<Mail>();
-
+			System.out.println("looking for child");
 			for (Mail m : mailList) {
-				if (!mail.getPermalink().startsWith(m.getPermalink())
-						&& m.getThreadlink().startsWith(mail.getThreadlink()))
+//				System.out.println("  -- "+ mail.getThreadlink()+"  "+m.getThreadlink());
+				try{
+				if(m.getThreadlink().equals(mail.getThreadlink()) && (!mail.getTimestamp().equals(m.getTimestamp()))){
+//				if ((mail != null && mail.getPermalink() != null && !mail.getPermalink()
+//						.startsWith(m.getPermalink()))
+//						&& (m != null && m.getThreadlink() != null && m.getThreadlink().startsWith(
+//								mail.getThreadlink()))) {
 					children.add(m);
+					System.out.println(m.toString());
+				}
+//				else
+//					System.err.println(m.getThreadlink()+" "+mail.getThreadlink()+" - "+mail.getPermalink()+" "+m.getPermalink());
+				}catch (NullPointerException e) {
+					// nothing to do
+				}
 			}
 			Collections.sort(children);
 			return children.toArray();
@@ -100,7 +113,9 @@ public class MailView extends ViewPart {
 			LinkedList<Mail> mailList = (LinkedList<Mail>) viewer.getInput();
 			LinkedList<Mail> threadMails = new LinkedList<Mail>();
 			for (Mail m : mailList) {
-				if (mail!=null && m!=null &&  m.getThreadlink()!=null && mail.getThreadlink()!=null && (m.getThreadlink().startsWith(mail.getThreadlink())))
+				if (mail != null && m != null && m.getThreadlink() != null
+						&& mail.getThreadlink() != null
+						&& (m.getThreadlink().startsWith(mail.getThreadlink())))
 					threadMails.add(m);
 			}
 			if (threadMails.size() < 2) {
@@ -123,7 +138,9 @@ public class MailView extends ViewPart {
 			LinkedList<Mail> mailList = (LinkedList<Mail>) viewer.getInput();
 			LinkedList<Mail> threadMails = new LinkedList<Mail>();
 			for (Mail m : mailList) {
-				if (mail!=null && m!=null &&  m.getThreadlink()!=null && mail.getThreadlink()!=null && (m.getThreadlink().startsWith(mail.getThreadlink())))
+				if (mail != null && m != null && m.getThreadlink() != null
+						&& mail.getThreadlink() != null
+						&& (m.getThreadlink().startsWith(mail.getThreadlink())))
 					threadMails.add(m);
 			}
 			if (threadMails.size() < 2) {
@@ -155,7 +172,7 @@ public class MailView extends ViewPart {
 		public String getColumnText(Object element, int columnIndex) {
 			SimpleDateFormat df = new SimpleDateFormat("dd.MM. yyyy HH:mm");
 			Mail mail = (Mail) element;
-			try{				
+			try {
 				String author = mail.getAuthor().replaceAll("^(.+)\\s*\\(.*@.*\\).*$", "$1");
 				switch (columnIndex) {
 					case 0:
@@ -167,49 +184,50 @@ public class MailView extends ViewPart {
 					case 2:
 						return mail.getSubject();
 				}
-			} catch(NullPointerException e){
-				//if there is a mail with something null, we throw it away ;)
-				System.err.println("Null mail:"+mail.toString());
-				if(mail==null)
+			} catch (NullPointerException e) {
+				// if there is a mail with something null, we throw it away ;)
+				System.err.println("Null mail:" + mail.toString());
+				if (mail == null)
 					System.err.println("The mail is null!");
 			}
-			
+
 			return null;
 		}
 	}
 
-//	public class CheckStateProvider implements ICheckStateProvider {
-//
-//		@Override
-//		public boolean isChecked(Object element) {
-//			MailStateChecker mailStateChecker = new MailStateChecker((Mail) element, activeResource);
-//			return mailStateChecker.isVisible();
-//		}
-//
-//		@Override
-//		public boolean isGrayed(Object element) {
-//			return false;
-//		}
-//	}
-//
-//	public class CheckStateListener implements ICheckStateListener {
-//		@Override
-//		public void checkStateChanged(CheckStateChangedEvent event) {
-//			boolean checked = event.getChecked();
-//			Mail mail = (Mail) event.getElement();
-//			MailStateChecker mailStateChecker = new MailStateChecker(mail, activeResource);
-//			mailStateChecker.changeState(checked);
-//		}
-//	}
+	// public class CheckStateProvider implements ICheckStateProvider {
+	//
+	// @Override
+	// public boolean isChecked(Object element) {
+	// MailStateChecker mailStateChecker = new MailStateChecker((Mail) element,
+	// activeResource);
+	// return mailStateChecker.isVisible();
+	// }
+	//
+	// @Override
+	// public boolean isGrayed(Object element) {
+	// return false;
+	// }
+	// }
+	//
+	// public class CheckStateListener implements ICheckStateListener {
+	// @Override
+	// public void checkStateChanged(CheckStateChangedEvent event) {
+	// boolean checked = event.getChecked();
+	// Mail mail = (Mail) event.getElement();
+	// MailStateChecker mailStateChecker = new MailStateChecker(mail,
+	// activeResource);
+	// mailStateChecker.changeState(checked);
+	// }
+	// }
 
 	/**
 	 * This is a callback that will allows to create the view controls
 	 */
 	public void createPartControl(Composite parent) {
-		//viewer = new ContainerCheckedTreeViewer(parent, SWT.DEFAULT);
-		viewer= new TreeViewer(parent, SWT.MULTI);
-		
-		
+		// viewer = new ContainerCheckedTreeViewer(parent, SWT.DEFAULT);
+		viewer = new TreeViewer(parent, SWT.MULTI);
+
 		Tree tree = viewer.getTree();
 		tree.setHeaderVisible(true);
 
@@ -225,8 +243,9 @@ public class MailView extends ViewPart {
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(listener);
 		viewer.setContentProvider(new MailTreeContentProvider());
 		viewer.setLabelProvider(new MailTreeLabelProvider());
-//		viewer.setCheckStateProvider(new CheckStateProvider());
-//		viewer.addCheckStateListener(new CheckStateListener());
+		viewer.expandAll();
+		// viewer.setCheckStateProvider(new CheckStateProvider());
+		// viewer.addCheckStateListener(new CheckStateListener());
 
 		makeActions();
 		hookActions();
@@ -242,7 +261,7 @@ public class MailView extends ViewPart {
 		searchButton = new Button(inner, SWT.PUSH);
 		searchButton.setText("Search");
 		searchBox = new Text(inner, SWT.SINGLE | SWT.FOCUSED);
-		
+
 		/*
 		 * For the mail's Tree view, tells to occupy all the space left from the
 		 * other controls
@@ -276,8 +295,8 @@ public class MailView extends ViewPart {
 		 */
 		searchButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				String toSearch=searchBox.getText();
-				System.out.println("searching for : "+toSearch);
+				String toSearch = searchBox.getText();
+				System.out.println("searching for : " + toSearch);
 				LocalMailListSearch lmls = new LocalMailListSearch(viewer, toSearch);
 				lmls.search();
 			}
@@ -333,6 +352,7 @@ public class MailView extends ViewPart {
 				doubleClickAction.run();
 			}
 		});
+
 	}
 
 	private ISelectionListener listener = new ISelectionListener() {
@@ -354,8 +374,7 @@ public class MailView extends ViewPart {
 	}
 
 	private void loadFromCache(ICompilationUnit compilationUnit) {
-		if(compilationUnit!=null)
-		{
+		if (compilationUnit != null) {
 			IResource res = compilationUnit.getResource();
 			String name = res.getName();
 			String path = res.getLocation().toString();
@@ -363,7 +382,7 @@ public class MailView extends ViewPart {
 			if (CacheCouchDB.containsClass(name, path)) {
 				Search search = new Search();
 				IPath fullPath = res.getProjectRelativePath();
-//				System.out.println(fullPath.toString());
+				// System.out.println(fullPath.toString());
 				LinkedList<Mail> mailList = search.Execute(name, fullPath.toString(), true);
 				if (mailList == null)
 					Search.updateMailView(new LinkedList<Mail>());
@@ -372,7 +391,7 @@ public class MailView extends ViewPart {
 				System.out.println("|" + mailList.size() + "|");
 			}
 		}
-		
+
 		// System.out.println(name+" "+mailList);
 		/*
 		 * Uncomment to to use the cache
