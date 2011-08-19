@@ -8,31 +8,41 @@ package org.eclipse.remail.couchdb.helper;
  *
  */
 public class CouchDBMail {
-	private String id;
+	private String _id;
 	private String _rev;
 	private String body;
 	private String key;
-	private String header;	
+	private String header;
+	private String raters;
 	
 	public CouchDBMail (String id, String _rev, String body, String header, String start){
-		this.id=id;
+		this._id=id;
 		this._rev=_rev;
 		this.body=body;
 		this.header=header;
 		this.key=start;
 	}
 	
+	public CouchDBMail (String id, String _rev, String body, String header, String start, String raters){
+		this._id=id;
+		this._rev=_rev;
+		this.body=body;
+		this.header=header;
+		this.key=start;
+		this.raters=raters;
+	}
+	
 	@Override
 	public String toString()
 	{
-		return String.format("(id=%s, _rev=%s, body=%s, start=%s, header=%s)", id, _rev, body, key, header);
+		return String.format("(_id=%s, _rev=%s, body=%s, start=%s, header=%s)", _id, _rev, body, key, header);
 	}
 	
 	public String getId() {
-		return id;
+		return _id;
 	}
 	public void setId(String id) {
-		this.id = id;
+		this._id = id;
 	}
 	public String get_rev() {
 		return _rev;
