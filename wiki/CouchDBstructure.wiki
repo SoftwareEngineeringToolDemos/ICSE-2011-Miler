@@ -1,4 +1,6 @@
+#summary description of couchDB's structure
 #labels Phase-Implementation,Phase-Design
+
 = Introduction =
 
 This page contains information about the structure of databases used to stored emails by REmail.
