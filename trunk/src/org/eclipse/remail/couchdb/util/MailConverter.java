@@ -73,6 +73,8 @@ public class MailConverter {
 		String threadlink = null;
 		Date timeStamp = null;
 
+		String id=cdbMail.getId();
+		
 		for (String s : headerList) {
 			s = s.trim();
 			s = s.replace("\n", "");
@@ -100,7 +102,7 @@ public class MailConverter {
 				}
 			}
 		}
-		Mail mail = new Mail(0, subject, timeStamp, author, permalink, threadlink,
+		Mail mail = new Mail(id, subject, timeStamp, author, permalink, threadlink,
 				cdbMail.getBody(), nameSearched);
 
 		return mail;

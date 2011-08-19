@@ -98,7 +98,7 @@ public class MboxCore {
 			System.out.println("|");
 			if (date != null) {
 				System.out.println("X");
-				mailList.add(new Mail(0, subject, date, author, permalink,
+				mailList.add(new Mail("", subject, date, author, permalink,
 						threadlink, text.toString(), classname));
 			}
 		}

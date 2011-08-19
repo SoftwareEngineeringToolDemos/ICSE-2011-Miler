@@ -181,6 +181,8 @@ public class MailView extends ViewPart {
 
 					case 2:
 						return mail.getSubject();
+					case 3: //TODO
+						return "3/5";
 				}
 			} catch (NullPointerException e) {
 				// if there is a mail with something null, we throw it away ;)
@@ -229,9 +231,9 @@ public class MailView extends ViewPart {
 		Tree tree = viewer.getTree();
 		tree.setHeaderVisible(true);
 
-		String[] columnNames = new String[] { "Date", "Author", "Subject" };
-		int[] columnWidths = new int[] { 140, 150, 500 };
-		int[] columnAlignments = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT };
+		String[] columnNames = new String[] { "Date", "Author", "Subject", "Rating" };
+		int[] columnWidths = new int[] { 140, 150, 500 , 80};
+		int[] columnAlignments = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
 		for (int i = 0; i < columnNames.length; i++) {
 			TreeColumn treeColumn = new TreeColumn(tree, columnAlignments[i]);
 			treeColumn.setText(columnNames[i]);

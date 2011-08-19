@@ -21,10 +21,10 @@ public class MailTest {
 
 	@Before
 	public void setUp() throws Exception {
-		m1 = new Mail(0, "test mail 1", new Date(2011, 7, 13), "HelloWorld");
-		m2 = new Mail(0, "test mail 2", new Date(2011, 2, 13), "HelloWorld");
-		m3 = new Mail(0, "test mail 3", new Date(2011, 7, 10), "HelloWorld");
-		m4 = new Mail(0, "test mail 4", new Date(2011, 8, 3), "HelloWorld");
+		m1 = new Mail("id1", "test mail 1", new Date(2011, 7, 13), "HelloWorld");
+		m2 = new Mail("id2", "test mail 2", new Date(2011, 2, 13), "HelloWorld");
+		m3 = new Mail("id3", "test mail 3", new Date(2011, 7, 10), "HelloWorld");
+		m4 = new Mail("id4", "test mail 4", new Date(2011, 8, 3), "HelloWorld");
 
 		list1 = new LinkedList<Mail>();
 		list1.add(m4);

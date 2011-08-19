@@ -87,7 +87,7 @@ public class SQLiteMailListConstructor
 			rs2.next();
 			Date date = new Date();
 			date.setTime(Long.parseLong(rs2.getString("date")));
-			Mail mail = new Mail(0, rs2
+			Mail mail = new Mail("", rs2
 					.getString("subject"), date, rs2.getString("author"), rs2
 					.getString("permalink"), rs2.getString("threadlink"), rs2
 					.getString("text"), name);

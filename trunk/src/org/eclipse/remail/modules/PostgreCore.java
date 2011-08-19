@@ -63,7 +63,7 @@ public class PostgreCore
                 + "%' order by timestamp");
         mailList.clear();
         while (rs.next())
-            mailList.add(new Mail(rs.getInt("id"), rs.getString("subject"), rs.getDate("timestamp"), classname_orig));
+            mailList.add(new Mail(rs.getString("id"), rs.getString("subject"), rs.getDate("timestamp"), classname_orig));
         conn.close();
         return mailList;
     }
@@ -75,7 +75,7 @@ public class PostgreCore
                 + "%' order by timestamp");
         mailList.clear();
         while (rs.next())
-            mailList.add(new Mail(rs.getInt("id"), rs.getString("subject"), rs.getDate("timestamp"), classname));
+            mailList.add(new Mail(rs.getString("id"), rs.getString("subject"), rs.getDate("timestamp"), classname));
         conn.close();
         return mailList;
     }
@@ -93,7 +93,7 @@ public class PostgreCore
                 + "(\\.java|\\.class|\\s+)' order by timestamp");
         mailList.clear();
         while (rs.next())
-            mailList.add(new Mail(rs.getInt("id"), rs.getString("subject"), rs.getDate("timestamp"), classname));
+            mailList.add(new Mail(rs.getString("id"), rs.getString("subject"), rs.getDate("timestamp"), classname));
         conn.close();
         return mailList;
     }
@@ -109,7 +109,7 @@ public class PostgreCore
                 + ")?(\\.|\\\\|/|\\s)" + classname + "(\\.java|\\.class|\\s+|\"|,)' order by timestamp");
         mailList.clear();
         while (rs.next())
-            mailList.add(new Mail(rs.getInt("id"), rs.getString("subject"), rs.getDate("timestamp"), classname));
+            mailList.add(new Mail(rs.getString("id"), rs.getString("subject"), rs.getDate("timestamp"), classname));
         conn.close();
         return mailList;
     }

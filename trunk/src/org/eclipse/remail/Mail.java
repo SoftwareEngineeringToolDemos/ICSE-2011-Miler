@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
  * @author V. Humpa
  */
 public class Mail implements Comparable {
-	private int id;
+	private String id;
 	private String subject;
 	private String author;
 	private String permalink;
@@ -23,14 +23,14 @@ public class Mail implements Comparable {
 	private String classname; // name of the class searched
 	private String text;
 
-	public Mail(int id, String subject, Date timestamp, String classname) {
+	public Mail(String id, String subject, Date timestamp, String classname) {
 		this.setId(id);
 		this.setSubject(subject);
 		this.setTimestamp(timestamp);
 		this.setClassname(classname);
 	}
 
-	public Mail(int id, String subject, Date timestamp, String author, String permalink,
+	public Mail(String id, String subject, Date timestamp, String author, String permalink,
 			String threadlink, String text, String classname) {
 		this.setId(id);
 		this.setSubject(subject);
@@ -42,11 +42,11 @@ public class Mail implements Comparable {
 		this.setClassname(classname);
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
