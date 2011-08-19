@@ -1,0 +1,74 @@
+#summary Information on how to create databases for REmail
+#labels Phase-Deploy
+
+= Introduction =
+
+After having completed the installation of couchDB, you'll want to create databases and populate them with datas.
+This page contains the information you need to do this! 
+
+
+= Mail from the Past =
+
+This section describe how to import emails of your mailing-list, which have been sent before you installed REmail and are archived somewhere. 
+
+You have two opportunities to do this:
+  * import form an *Mbox* file
+  * fetch emails form *MarkMail*
+
+
+== Import from Mbox files ==
+
+[http://en.wikipedia.org/wiki/Mbox Mbox] is a generic file format used by most mailing-list archive to store emails.
+If you have such a file and want to import in a database for REmail, you can use the python script _ConvertFromMBOX.py_, which you should find in the REmail archive you've downloaded.
+To use the script, open a terminal, move to the directory the file is and run the following command:
+{{{
+$ python ConvertFromMBOX.py <mbox-file> <server-address> <database-name> 
+}}}
+where:
+  * _<mbox-file>_ is the path to the Mbox file you want to import
+  * _<server-address>_ is the address of the server running couchDB, the default is _"http://localhost:5984/"_
+  * _<database-name>_ is the name you want to give to your database
+
+
+== Fetch from MarkMail ==
+
+[http://markmail.org/ MarkMail] is a web server providing access to various mailing-lists. If MarkMail has the email of your mailing-list in it's database, probably this is the best method to use.
+To fetch mails from MarkMail you can use the script _FetcherThread.py_, which you should find in the REmail archive you've downloaded.
+To use the script, open a terminal, move to the directory the file is and run the following command:
+{{{
+$ python FetcherThread.py <mailing-list-name> <server-address>
+}}}
+where:
+ * _<mailing-list-name>_ is the name of the mailing list you want to import
+ * _<server-address>_ is the address of the server running couchDB, the default is _"http://localhost:5984/"
+
+
+= Mail from the Present =
+
+This section describe how to update you databases inserting newly arrived emails of your mailing-list.
+For this you need a configuration file, see the ConfigurationFileHelp, and an email account which is subscribed to the mailing-list you want to keep update.
+
+The email account must support POP connection to retrieve email. REmail will download *only* the emails relative to the given mailing-lists, leaving them on the server. Of course you *shouldn't delete* the emails before REmail checks for them. 
+
+== Manual ==
+
+You can manually download emails from your mail account and stores int he server by running the python script _POPclient.py_, which you should find in the REmail archive you've downloaded.
+To do this, open a terminal, move to the directory the file is and run the following command:
+{{{
+$ python POPclient.py
+}}}
+
+== Automatic ==
+
+Since manual updates are boring we have provided a bash scripts that automatically does it for you. You can find the scripts in the REmail archive you've downloaded.
+The scripts are:
+  * *REmailFetchDaemon.sh* to run the daemon
+  * *REmailKillDaemon.sh* to stop the daemon
+
+You can run them with the following commands:
+{{{
+$ ./REmailFetchDaemon.sh
+$ ./REmailKillDaemon.sh
+}}}
+
+Anyway,we suggest to add _REmailFetchDaemon.sh_ to the list of programs automatically running at your system starts-up.
