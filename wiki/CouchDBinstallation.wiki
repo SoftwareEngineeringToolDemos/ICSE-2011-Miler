@@ -1,0 +1,66 @@
+#summary help on installing couchDB
+#labels Phase-Deploy
+
+= Introduction =
+
+This page contains information on how you can install couchDB, needed by REmail, in your machine.
+You should take a look also to the [http://wiki.apache.org/couchdb/Installation installation help] of couchDB.
+
+
+= Dependencies =
+
+To run properly couchDB needs the following dependencies to be installed: Spidermonkey, Erlang, ICU, cURL.
+For a complete view of the requirements refer to [http://wiki.apache.org/couchdb/Installation#Dependencies this page].
+
+
+= Installing on GNU\Linux =
+
+Here you find some instruction on how to install couchDB on a linux system.
+For more complete information thake a look [http://wiki.apache.org/couchdb/Installation#System_specific_installation_guides here].
+
+== Ubuntu ==
+The fast way is open you terminal and type:
+{{{
+$ sudo aptitude install couchdb
+}}}
+If you need more instructions, you can go [http://wiki.apache.org/couchdb/Installing_on_Ubuntu here].
+
+== Fedora 10 ==
+You'll have to compile it from source.
+
+First install the dependencies:
+{{{
+# yum install icu libicu-devel js js-devel libcurl-devel libtool
+}}}
+Then download the source and compile it:
+{{{
+$ svn checkout http://svn.apache.org/repos/asf/couchdb/trunk couchdb
+$ cd couchdb
+$ ./bootstrap
+$ ./configure
+# make install
+}}}
+More info [http://wiki.apache.org/couchdb/Installing_on_Fedora10 here].
+
+= Installing on Mac OSX =
+You have two fast choice: HomeBrew and MacPort.
+Anyway you should refer to the [http://wiki.apache.org/couchdb/Installing_on_OSX couchdb documentation].
+
+== HomeBrew ==
+Find a terminal, open it and type:
+{{{
+$ brew install couchdb
+}}}
+
+== MacPort ==
+Find a terminal, open it and type:
+{{{
+$ sudo port install couchdb
+}}}
+
+= Installing on Windows =
+You can find some binary files for installation at the following links:
+  * http://wiki.apache.org/couchdb/Windows_binary_installer?action=show&redirect=Windows+binary+installer
+  * http://wiki.apache.org/couchdb/Installing_on_Windows#Windows_Installer
+
+But you'll probably need to build it from source, to do follows [http://wiki.apache.org/couchdb/Installing_on_Windows#Building_current_couchdb_versions these instruction].
