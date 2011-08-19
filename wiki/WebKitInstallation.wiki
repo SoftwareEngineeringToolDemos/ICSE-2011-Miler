@@ -1,0 +1,23 @@
+#summary Help on installing WebKit on your machine
+#labels Phase-Deploy
+
+= Introduction =
+
+This page contains information on how to install WebKit on your system.
+WebKit is neede by REmail to properly show emails and other things.
+You can find more information on the [http://www.eclipse.org/swt/faq.php#howusewebkit SWT FAQ page].
+
+
+= Installing on GNU/Linux =
+
+To have WebKit working you have to put WebKitGTK 1.2.0 or newer in the library load path.
+On most Linux distribution you have to install the package _libwebkitgtk_.
+
+= Mac OSX =
+
+You don't have to do nothing. WebKit is used by default on Apple system.
+
+= Windows =
+
+You'll have to install Safari. You can find it [http://www.apple.com/it/safari/download/ here].
+
