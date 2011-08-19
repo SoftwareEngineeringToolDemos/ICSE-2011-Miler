@@ -21,6 +21,8 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
+import org.eclipse.jdt.internal.core.JavaProject;
+
 /**
  * Class used to set the REmail properties of a project,
  * such as the mailing lists relative to that project and
@@ -43,7 +45,7 @@ public class RemailProperties extends PropertyPage implements
 	
 	private void setUp(){
 		try {
-			String property=((IResource)getElement()).getPersistentProperty(REMAIL_MAILING_LIST);
+			String property=((JavaProject)getElement()).getResource().getPersistentProperty(REMAIL_MAILING_LIST);
 			if(property!=null)
 				arrayMailingList=MailingList.stringToList(property);
 		} catch (CoreException e) {
