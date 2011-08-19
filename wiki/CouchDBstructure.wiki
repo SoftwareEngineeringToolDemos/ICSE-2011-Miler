@@ -1,0 +1,44 @@
+#labels Phase-Implementation,Phase-Design
+= Introduction =
+
+This page contains information about the structure of databases used to stored emails by REmail.
+This *is not* an help on how to set-up couchdb on your machine, if is that what you're looking for you should refer to [CouchDBinstallation]. 
+
+
+= Overview =
+
+We use couchDB to store emails relative to different mailing-lists.
+We create a different database for each mailing-list.
+
+== Databases ==
+
+The database's name is created based on the name of the mailing-list.
+Since couchDB allows only certain characters for the database's names, we replace _@_ with _-_ and _._ with _`_`_. Moreover we add at the beginning of the name the string _at(remail)_ to identify that this database is actually a database used by REmail.
+
+For example the list _your.maillist@mailman.org_ will be stored as _at(remail)your`_`maillist-maiman`_`org_.
+
+== Documents ==
+In each database there are 3 kind of documents used to stored the data:
+  # *Design* documents
+  # Documents storing *process information*
+  # Documents storing *email*
+
+=== Design documents ===
+Design documents are used by couchDB to make queries to the database (called _views_). 
+A design document can be identified by it's id beginning with the prefix _`_`design/_.
+Our views have ids in the form _`_`design/method-class_. Where:
+  * method is the search method used
+  * class is the class we want to search  
+
+=== Documents storing process information ===
+This kind of documents are used by REmail to store information needed by the process used to retrieve emails from different sources.
+They are:
+  * *lastEmail* is the id of the document storing the identifier of the last mail inserted in the database
+  * *_design/keyview*, even if it is actually a Design Document, it's more suitable to be here since it is used to provide all the document's keys stored in the database.  
+
+=== Documents storing email ===
+Documents which are not part of the two categories above! They can be recognized by an unique randomly generated id.
+They have the following fields:
+  * *key*, is used as an identifier, can be the date of the mail or a permalink to it.
+  * *headers*, is used to store the headers of the mail, the format in which they are stored is a json array.
+  * *body*, is the content of the email
