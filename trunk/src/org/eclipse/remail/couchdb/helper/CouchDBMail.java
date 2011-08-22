@@ -13,7 +13,7 @@ public class CouchDBMail {
 	private String body;
 	private String key;
 	private String header;
-	private String raters;
+	private Raters raters;
 	
 	public CouchDBMail (String id, String _rev, String body, String header, String start){
 		this._id=id;
@@ -23,7 +23,7 @@ public class CouchDBMail {
 		this.key=start;
 	}
 	
-	public CouchDBMail (String id, String _rev, String body, String header, String start, String raters){
+	public CouchDBMail (String id, String _rev, String body, String header, String start, Raters raters){
 		this._id=id;
 		this._rev=_rev;
 		this.body=body;

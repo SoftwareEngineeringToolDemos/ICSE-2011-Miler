@@ -5,9 +5,19 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.LinkedHashSet;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.remail.Activator;
 import org.eclipse.remail.Mail;
+import org.eclipse.remail.couchdb.util.CouchDBCreator;
+import org.eclipse.remail.couchdb.util.CouchDBSearch;
+import org.eclipse.remail.couchdb.util.RatingView;
+import org.eclipse.remail.properties.MailingList;
+import org.eclipse.remail.properties.RemailProperties;
 import org.eclipse.remail.util.ContentDecorator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -32,6 +42,8 @@ public class MailContentView extends ViewPart {
 	// public static TextViewer textViewer;
 
 	public static Browser browser; // currently used - shows email as html
+	
+	public static String mailID;
 
 	public Image emptyStar;
 	public Image fullStar;
@@ -131,6 +143,47 @@ public class MailContentView extends ViewPart {
 		Button sendRating = new Button(buttonContainer, SWT.PUSH);
 		sendRating.setText("Send Rating");
 		
+		sendRating.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String username = Activator.getUsername();
+								
+				//get all the projects in the workspace
+				IProject[] projects=ResourcesPlugin.getWorkspace().getRoot().getProjects();
+				LinkedHashSet<MailingList> arrayMailingList = new LinkedHashSet<MailingList>();
+				for(IProject prj :projects){					
+					try {
+						String prjLoc=prj.getLocation().toString();
+						String property=prj.getPersistentProperty(RemailProperties.REMAIL_MAILING_LIST);
+						if(property!=null){
+							arrayMailingList.addAll(MailingList.stringToList(property));
+						}
+					} catch (CoreException ex) {
+						ex.printStackTrace();
+					}
+				}
+				//get the databases names
+				for (MailingList ml : arrayMailingList){
+					String dbname = ml.getLocation().replace(".", "_");
+					dbname=dbname.replace("@", "-");
+					if(!dbname.startsWith(CouchDBCreator.PREFIX))
+						dbname=CouchDBCreator.PREFIX+dbname;
+					try{
+						System.out.println(mailID);
+						RatingView rate = new RatingView(mailID, userRating, username, dbname);
+						rate.update();
+					}catch(Exception ex){
+						ex.printStackTrace();
+					}
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		
 		
 		GridData browsLayout = new GridData();
 		browsLayout.horizontalAlignment = GridData.FILL;
@@ -144,15 +197,6 @@ public class MailContentView extends ViewPart {
 	public void setMail(Mail mail) {
 		String text = "";
 
-		// comment the following lines to use the Mozilla browser
-		// text = mail.getText();
-		// text = text.replaceAll("\\<br/>","\n");
-		// text = text.replaceAll("\\<.*?>","");
-		// text = StringEscapeUtils.unescapeHtml(text);
-		// Document document = new Document(text);
-		// textViewer.setDocument(document);
-
-		// uncomment the following to use the Mozilla browser
 		ContentDecorator cd = new ContentDecorator(mail);
 		cd.highLightPreviousMessages();
 		cd.makeHTML();
@@ -160,8 +204,9 @@ public class MailContentView extends ViewPart {
 		text = cd.getText();
 		browser.setText(text);
 		
-		System.err.println(mail.getId());
-
+		
+		mailID=mail.getId();
+		System.err.println(mailID);
 	}
 
 	@Override
