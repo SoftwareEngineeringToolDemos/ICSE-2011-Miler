@@ -22,6 +22,8 @@ public class Mail implements Comparable {
 	private Date timestamp;
 	private String classname; // name of the class searched
 	private String text;
+	
+	private double globalRating;
 
 	public Mail(String id, String subject, Date timestamp, String classname) {
 		this.setId(id);
@@ -104,6 +106,14 @@ public class Mail implements Comparable {
 
 	public String getText() {
 		return text;
+	}
+
+	public double getGlobalRating() {
+		return globalRating;
+	}
+
+	public void setGlobalRating(double globalRating) {
+		this.globalRating = globalRating;
 	}
 
 	/**

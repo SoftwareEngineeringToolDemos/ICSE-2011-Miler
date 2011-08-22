@@ -104,6 +104,16 @@ public class MailConverter {
 		}
 		Mail mail = new Mail(id, subject, timeStamp, author, permalink, threadlink,
 				cdbMail.getBody(), nameSearched);
+		
+		int[] ratings;
+		if(cdbMail.getRaters()!=null && cdbMail.getRaters().getRate()!=null && (ratings=cdbMail.getRaters().getRate()).length!=0){
+			int tot=0;
+			for(int r : ratings)
+				tot+=r;
+			mail.setGlobalRating(((double)tot)/ratings.length);
+		}
+		else
+			mail.setGlobalRating(-1);
 
 		return mail;
 	}

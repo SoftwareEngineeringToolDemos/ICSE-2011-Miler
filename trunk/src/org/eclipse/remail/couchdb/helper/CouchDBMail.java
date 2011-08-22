@@ -69,4 +69,8 @@ public class CouchDBMail {
 		this.key = start;
 	}
 
+	public Raters getRaters() {
+		return raters;
+	}
+
 }

@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.remail.Activator;
 import org.eclipse.remail.Mail;
 import org.eclipse.remail.couchdb.util.CouchDBCreator;
-import org.eclipse.remail.couchdb.util.CouchDBSearch;
 import org.eclipse.remail.couchdb.util.RatingView;
 import org.eclipse.remail.properties.MailingList;
 import org.eclipse.remail.properties.RemailProperties;
@@ -42,18 +41,20 @@ public class MailContentView extends ViewPart {
 	// public static TextViewer textViewer;
 
 	public static Browser browser; // currently used - shows email as html
-	
-	public static String mailID;
 
-	public Image emptyStar;
-	public Image fullStar;
-	
-	public int userRating=0;
+	public static String mailID;
+	public static int mailRate;
+
+	public static Image emptyStar;
+	public static Image fullStar;
+
+	public int userRating = 0;
+
+	static Group globalRateGroup;
+	static Button[] globalsButton = new Button[5];
 
 	@Override
 	public void createPartControl(Composite parent) {
-		
-	
 
 		URL url1, url2;
 		File file1 = null, file2 = null;
@@ -79,7 +80,7 @@ public class MailContentView extends ViewPart {
 		Composite page = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, false);
 		page.setLayout(layout);
-		
+
 		browser = new Browser(page, SWT.WEBKIT);
 
 		Composite buttonContainer = new Composite(page, SWT.NONE);
@@ -87,52 +88,44 @@ public class MailContentView extends ViewPart {
 		buttonContainer.setLayout(layout2);
 		buttonContainer.setLayoutData(new GridData(SWT.BEGINNING, SWT.BEGINNING, false, false));
 		// two button
-		Group button1 = new Group(buttonContainer, SWT.NONE);
-		button1.setText("Global rating");
-		for (int i = 0; i < 5; i++) {
-			final Button button = new Button(button1, SWT.TOGGLE);
-			button.setImage(fullStar);
-			if(i==4)
-				button.setImage(emptyStar);
-			button.setEnabled(false);
-		}
-		
-		button1.setLayout(new GridLayout(5, true));
+		globalRateGroup = new Group(buttonContainer, SWT.NONE);
+		globalRateGroup.setText("Global rating");
+		createbuttonsGlobalRating();
+
+		globalRateGroup.setLayout(new GridLayout(5, true));
 		Group button2 = new Group(buttonContainer, SWT.NONE);
 		button2.setText("Your rating");
-		final Button buttons[]= new Button[5];
+		final Button buttons[] = new Button[5];
 		for (int i = 0; i < 5; i++) {
-			final int rating=i+1;
+			final int rating = i + 1;
 			buttons[i] = new Button(button2, SWT.TOGGLE);
 			buttons[i].setImage(emptyStar);
 			buttons[i].addSelectionListener(new SelectionListener() {
-				
+
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					
-					int i=rating-1;
-					
-					if(buttons[i].getImage().equals(fullStar))
-					{
-						for(int j=i; j<5; j++){
-							if(buttons[j].getImage().equals(fullStar)){
-								buttons[j].setImage(emptyStar);	
+
+					int i = rating - 1;
+
+					if (buttons[i].getImage().equals(fullStar)) {
+						for (int j = i; j < 5; j++) {
+							if (buttons[j].getImage().equals(fullStar)) {
+								buttons[j].setImage(emptyStar);
 								buttons[j].setSelection(false);
 							}
-							
+
 						}
-						userRating=rating-1;
-					}
-					else{
-						for(int j=0; j<rating; j++){
-							buttons[j].setImage(fullStar);	
+						userRating = rating - 1;
+					} else {
+						for (int j = 0; j < rating; j++) {
+							buttons[j].setImage(fullStar);
 							buttons[j].setSelection(true);
 						}
-						userRating=rating;
+						userRating = rating;
 					}
-//					System.out.println(userRating);
+					// System.out.println(userRating);
 				}
-				
+
 				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
 				}
@@ -142,49 +135,49 @@ public class MailContentView extends ViewPart {
 
 		Button sendRating = new Button(buttonContainer, SWT.PUSH);
 		sendRating.setText("Send Rating");
-		
+
 		sendRating.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String username = Activator.getUsername();
-								
-				//get all the projects in the workspace
-				IProject[] projects=ResourcesPlugin.getWorkspace().getRoot().getProjects();
+
+				// get all the projects in the workspace
+				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 				LinkedHashSet<MailingList> arrayMailingList = new LinkedHashSet<MailingList>();
-				for(IProject prj :projects){					
+				for (IProject prj : projects) {
 					try {
-						String prjLoc=prj.getLocation().toString();
-						String property=prj.getPersistentProperty(RemailProperties.REMAIL_MAILING_LIST);
-						if(property!=null){
+						String prjLoc = prj.getLocation().toString();
+						String property = prj
+								.getPersistentProperty(RemailProperties.REMAIL_MAILING_LIST);
+						if (property != null) {
 							arrayMailingList.addAll(MailingList.stringToList(property));
 						}
 					} catch (CoreException ex) {
 						ex.printStackTrace();
 					}
 				}
-				//get the databases names
-				for (MailingList ml : arrayMailingList){
+				// get the databases names
+				for (MailingList ml : arrayMailingList) {
 					String dbname = ml.getLocation().replace(".", "_");
-					dbname=dbname.replace("@", "-");
-					if(!dbname.startsWith(CouchDBCreator.PREFIX))
-						dbname=CouchDBCreator.PREFIX+dbname;
-					try{
+					dbname = dbname.replace("@", "-");
+					if (!dbname.startsWith(CouchDBCreator.PREFIX))
+						dbname = CouchDBCreator.PREFIX + dbname;
+					try {
 						System.out.println(mailID);
 						RatingView rate = new RatingView(mailID, userRating, username, dbname);
 						rate.update();
-					}catch(Exception ex){
+					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
 				}
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
-		
-		
+
 		GridData browsLayout = new GridData();
 		browsLayout.horizontalAlignment = GridData.FILL;
 		browsLayout.grabExcessHorizontalSpace = true;
@@ -192,6 +185,18 @@ public class MailContentView extends ViewPart {
 		browsLayout.grabExcessVerticalSpace = true;
 		browser.setLayoutData(browsLayout);
 
+	}
+
+	private void createbuttonsGlobalRating() {
+		for (int i = 0; i < 5; i++) {
+			if (globalsButton[i] == null)
+				globalsButton[i] = new Button(globalRateGroup, SWT.TOGGLE);
+			if (i < mailRate)
+				globalsButton[i].setImage(fullStar);
+			else
+				globalsButton[i].setImage(emptyStar);
+			globalsButton[i].setEnabled(false);
+		}
 	}
 
 	public void setMail(Mail mail) {
@@ -203,10 +208,10 @@ public class MailContentView extends ViewPart {
 		cd.insertHeader();
 		text = cd.getText();
 		browser.setText(text);
-		
-		
-		mailID=mail.getId();
-		System.err.println(mailID);
+
+		mailID = mail.getId();
+		mailRate = ((Double) mail.getGlobalRating()).intValue();
+		createbuttonsGlobalRating();
 	}
 
 	@Override

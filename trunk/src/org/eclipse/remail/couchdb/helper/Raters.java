@@ -18,10 +18,11 @@ public class Raters {
 	
 	public String toString()
 	{
-		String s="";
+		String s="{";
 		for (int i=0; i<raterName.length; i++){
 			s+=raterName[i]+":"+rating[i]+",";
 		}
+		s=s+"}";
 		return s;
 	}
 	
@@ -31,5 +32,13 @@ public class Raters {
 	
 	public int[] getRate(){
 		return rating;
+	}
+	
+	public void setRaters(String[] raterName){
+		this.raterName=raterName;
+	}
+	
+	public void setRate(int[] rating){
+		this.rating=rating;
 	}
 }

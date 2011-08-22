@@ -3,6 +3,7 @@ package org.eclipse.remail.couchdb.helper;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Class used to convert the JSON string response received from couchdb
@@ -34,7 +35,10 @@ public class CouchDBResponse {
 	 * @return the java object
 	 */
 	public static CouchDBResponse parseJson (String json){
-		Gson gson = new Gson();
+//		Gson gson = new Gson();
+		GsonBuilder gb = new GsonBuilder();
+		gb.registerTypeAdapter(Raters.class, new RaterClassDeserializer());
+		Gson gson = gb.create();
 		CouchDBResponse reply= gson.fromJson(json, CouchDBResponse.class);
 		return reply;
 	}

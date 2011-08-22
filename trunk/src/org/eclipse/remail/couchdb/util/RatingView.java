@@ -113,8 +113,8 @@ public class RatingView implements CouchDBView {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(this.mapURI);
-		System.out.println(responseValue);
+//		System.out.println(this.mapURI);
+//		System.out.println(responseValue);
 	}
 
 }
