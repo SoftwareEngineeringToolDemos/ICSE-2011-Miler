@@ -66,7 +66,7 @@ public class CouchDBSearch implements MailSearch {
 			dbname=dbname.replace("@", "-");
 			if(!dbname.startsWith(CouchDBCreator.PREFIX))
 				dbname=CouchDBCreator.PREFIX+dbname;
-			System.out.println("using: "+Activator.getHost()+" "+Activator.getPort()+" "+dbname);
+//			System.out.println("using: "+Activator.getHost()+" "+Activator.getPort()+" "+dbname);
 			Database db = dbSession.getDatabase(dbname);
 			// add the view to the database
 			CaseSensitiveView csv = new CaseSensitiveView(name, dbname);

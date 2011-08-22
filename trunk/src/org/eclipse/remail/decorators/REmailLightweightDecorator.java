@@ -135,14 +135,14 @@ public class REmailLightweightDecorator implements ILightweightLabelDecorator
 			mailList = search.caseSensitiveSearch(path, name);
 		else if (method.contains("searchInsensitive"))
 			mailList = search.caseInsensitiveSearch(path, name);
-//		else if (method.contains("searchStrict"))
-//			mailList = search.strictRegexpSearch(path, name);
-//		else if (method.contains("searchLoose"))
-//			mailList = search.looseRegexpSearch(path, name);
-//		else if (method.contains("searchDict"))
-//			mailList = search.dictionarySearch(path, name);
-//		else if (method.contains("searchCamel"))
-//			mailList = search.camelCaseSearch(path, name);
+		else if (method.contains("searchStrict"))
+			mailList = search.strictRegexpSearch(path, name);
+		else if (method.contains("searchLoose"))
+			mailList = search.looseRegexpSearch(path, name);
+		else if (method.contains("searchDict"))
+			mailList = search.dictionarySearch(path, name);
+		else if (method.contains("searchCamel"))
+			mailList = search.camelCaseSearch(path, name);
 		
 		/*
 		 * Uncomment the following lines to use the SQLite cache.

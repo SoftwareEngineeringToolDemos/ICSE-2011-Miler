@@ -77,41 +77,48 @@ public class MailContentView extends ViewPart {
 		// two button
 		Group button1 = new Group(buttonContainer, SWT.NONE);
 		button1.setText("Global rating");
-		final Button buttons[]= new Button[5];
 		for (int i = 0; i < 5; i++) {
-			buttons[i] = new Button(button1, SWT.TOGGLE);
-			buttons[i].setImage(fullStar);
+			final Button button = new Button(button1, SWT.TOGGLE);
+			button.setImage(fullStar);
 			if(i==4)
-				buttons[i].setImage(emptyStar);
-			buttons[i].setEnabled(false);
+				button.setImage(emptyStar);
+			button.setEnabled(false);
 		}
 		
 		button1.setLayout(new GridLayout(5, true));
 		Group button2 = new Group(buttonContainer, SWT.NONE);
 		button2.setText("Your rating");
+		final Button buttons[]= new Button[5];
 		for (int i = 0; i < 5; i++) {
 			final int rating=i+1;
-			final Button button = new Button(button2, SWT.TOGGLE);
-			button.setImage(emptyStar);
-			if(i==0){
-				button.setImage(fullStar);
-				button.setSelection(true);
-			}
-			button.addSelectionListener(new SelectionListener() {
+			buttons[i] = new Button(button2, SWT.TOGGLE);
+			buttons[i].setImage(emptyStar);
+			buttons[i].addSelectionListener(new SelectionListener() {
 				
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					
-					if(button.getImage().equals(fullStar))
+					int i=rating-1;
+					
+					if(buttons[i].getImage().equals(fullStar))
 					{
-						button.setImage(emptyStar);
+						for(int j=i; j<5; j++){
+							if(buttons[j].getImage().equals(fullStar)){
+								buttons[j].setImage(emptyStar);	
+								buttons[j].setSelection(false);
+							}
+							
+						}
 						userRating=rating-1;
 					}
 					else{
-						button.setImage(fullStar);
+						for(int j=0; j<rating; j++){
+							buttons[j].setImage(fullStar);	
+							buttons[j].setSelection(true);
+						}
 						userRating=rating;
 					}
-					System.out.println(userRating);
+//					System.out.println(userRating);
 				}
 				
 				@Override

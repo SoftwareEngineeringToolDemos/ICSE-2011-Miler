@@ -99,7 +99,7 @@
             class="org.eclipse.remail.views.MailView"
             icon="icons/remail.png"
             id="org.eclipse.emailrecommender.MailView"
-            name="E-mails"
+            name="Emails"
             restorable="true">
       </view>
       <view
@@ -107,7 +107,7 @@
             class="org.eclipse.remail.views.MailContentView"
             icon="icons/remail.png"
             id="org.eclipse.emailrecommender.MailContentView"
-            name="E-mail Content"
+            name="Email Content"
             restorable="true">
       </view>
       <view
@@ -115,7 +115,7 @@
             class="org.eclipse.remail.views.MailWriter"
             icon="icons/remail.png"
             id="org.eclipse.emailrecommender.MailWriter"
-            name="E-mail Writer"
+            name="Email Writer"
             restorable="false">
       </view>
       <view
@@ -123,7 +123,7 @@
             class="org.eclipse.remail.views.VisualizationView"
             icon="icons/remail.png"
             id="org.eclipse.emailrecommender.VisualizationView"
-            name="E-mails Visualization"
+            name="Emails Visualization"
             restorable="true">
       </view>
    </extension>
