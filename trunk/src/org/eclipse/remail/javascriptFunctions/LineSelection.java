@@ -4,23 +4,23 @@ import org.eclipse.swt.browser.Browser;
 
 /**
  * This is the class responsible of take care of the javascript function call
- * for the function "barSelected"
+ * for the function "lineSelected"
  * 
  * @author Lorenzo Baracchi <lorenzo.baracchi@usi.ch>
  * 
  */
-public class BarSelection extends SelectionInterface {
+public class LineSelection extends SelectionInterface{
 
-	private static String FUNCTION_NAME = "barSelected";
-
-	public BarSelection(Browser browser, String name, String classname, String path) {
+	private static String FUNCTION_NAME = "lineSelected";
+	
+	public LineSelection(Browser browser, String name, String classname, String path) {
 		super(browser, name);
 		this.classname = classname;
 		this.path = path;
 	}
 
-
-	public static String getFUNCTION_NAME() {
+	public static String getFUNCTION_NAME(){		
 		return FUNCTION_NAME;
 	}
+	
 }

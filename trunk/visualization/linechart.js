@@ -1,6 +1,6 @@
 /*
  * Creates a line chart with the given data (an array of mapping dates and value)
- * and the max maule present in the array
+ * and the max vaule present in the array
  */
 function createLineChart(data, maxValue){
 	var w = 25,h = (maxValue+1)*18;
@@ -16,7 +16,7 @@ function createLineChart(data, maxValue){
 	var rem=d3.select(".chart")
 	rem.remove()
 	
-	var width= w * (data.length+1);
+	var width= w * (data.length+1) + w*5;
 	
 	//get the html element which will contain the chart and set attributes  
 	var chart=d3.select(".chartContainer")
@@ -31,7 +31,20 @@ function createLineChart(data, maxValue){
    .enter().append("svg:circle")
      .attr("cx", function(d, i) { return x(i) + w; })
      .attr("cy", function(d) { return h - h/(maxValue+1)*d.value; })
-     .attr("r", "5");
+     .attr("onmouseover", function(d){return "visibleText('"+dateToNiceString(d.date)+"')"})
+     .attr("onmouseout", function(d){return "invisibleText('"+dateToNiceString(d.date)+"')"})
+     .attr("onclick", function(d){return "lineSelected('"+niceMonth(d.date)+"','"+d.date.getFullYear()+"')"})
+     .attr("r", "6");
+   //make text for circles
+   chart.selectAll("text")
+     .data(data)
+   .enter().append("svg:text")
+     .attr("class", "colored")
+     .attr("x", function(d, i) { return x(i) + w/2; })
+   	 .attr("y", function(d) { return h - h/(maxValue+1)*d.value -5; })
+   	 .attr("visibility", "hidden")
+   	 .attr("id",function(d){return dateToNiceString(d.date)})  
+   	 .text(function(d){return dateToNiceString(d.date)+" #emails:"+d.value});
      
    //make the bottom line
      chart.append("svg:line")
@@ -76,6 +89,15 @@ function createLineChart(data, maxValue){
    	   	.attr("y1", startY)
    	   	.attr("y2", endY)
    	   	.attr("stroke", "#70B3F4")
-   	   	.attr("stroke-width", 2);
+   	   	.attr("stroke-width", 3);
    }
+}
+
+function visibleText(id) {
+	var text=document.getElementById(id)
+	text.setAttribute("visibility","visible");
+}
+function invisibleText(id){
+	var text=document.getElementById(id)
+	text.setAttribute("visibility","hidden");
 }

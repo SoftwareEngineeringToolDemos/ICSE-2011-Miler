@@ -1,6 +1,6 @@
 /*
  * Creates a bar chart with the given data (an array of mapping dates and value)
- * and the max maule present in the array
+ * and the max vaule present in the array
  */
 function createBarChart(data, maxValue){	
 	

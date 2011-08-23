@@ -15,6 +15,7 @@ import org.eclipse.remail.couchdb.util.CouchDBCreator;
 import org.eclipse.remail.couchdb.util.CouchDBSearch;
 import org.eclipse.remail.daemons.ChangeViewDaemon;
 import org.eclipse.remail.javascriptFunctions.BarSelection;
+import org.eclipse.remail.javascriptFunctions.LineSelection;
 import org.eclipse.remail.preferences.PreferenceConstants;
 import org.eclipse.remail.properties.MailingList;
 import org.eclipse.swt.SWT;
@@ -44,21 +45,32 @@ public class VisualizationView extends ViewPart {
 	public static final String HTML_PAGE_LOCATION = "platform:/plugin/org.eclipse.remail/visualization/chart.html";
 
 	private BarSelection barSelectionJavaScript;
+	private LineSelection lineSelectionJavaScript;
 
-	@Override
-	public void createPartControl(Composite parent) {
-
-		browser = new Browser(parent, SWT.WEBKIT);
-
-		new CustomFunction(browser, "myJavaFunction");
+	/**
+	 * Set the javascript functions to react on user's clicks 
+	 */
+	private void setJavascriptFunctionsOnBrowser() {
 		// get the name of the class to search
 		String classname = getSite().getWorkbenchWindow().getActivePage().getActiveEditor()
 				.getTitle();
 		// get the path of the class to search
 		String path = ChangeViewDaemon.getPath(getSite().getWorkbenchWindow().getActivePage()
 				.getActiveEditor().getEditorInput().getPersistable().toString());
+		//set function for bar-chart
 		barSelectionJavaScript = new BarSelection(browser, BarSelection.getFUNCTION_NAME(),
 				classname, path);
+		//set function for line-chart
+		lineSelectionJavaScript = new LineSelection(browser, LineSelection.getFUNCTION_NAME(),
+				classname, path);
+	}
+
+	@Override
+	public void createPartControl(Composite parent) {
+
+		browser = new Browser(parent, SWT.WEBKIT);
+
+		setJavascriptFunctionsOnBrowser();
 
 		setBrowserUrl();
 		/**
@@ -86,8 +98,6 @@ public class VisualizationView extends ViewPart {
 
 			@Override
 			public void changed(ProgressEvent event) {
-				// TODO Auto-generated method stub
-
 			}
 		});
 
@@ -112,15 +122,7 @@ public class VisualizationView extends ViewPart {
 			File file = new File(FileLocator.resolve(url).toURI());
 			String path = file.getAbsolutePath();
 			browser.setUrl("file://" + path);
-			// get the name of the class to search
-			String classname = getSite().getWorkbenchWindow().getActivePage().getActiveEditor()
-					.getTitle();
-			// get the path of the class to search
-			String pathClass = ChangeViewDaemon
-					.getPath(getSite().getWorkbenchWindow().getActivePage().getActiveEditor()
-							.getEditorInput().getPersistable().toString());
-			barSelectionJavaScript = new BarSelection(browser, BarSelection.getFUNCTION_NAME(),
-					classname, pathClass);
+			setJavascriptFunctionsOnBrowser();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -133,21 +135,6 @@ public class VisualizationView extends ViewPart {
 	@Override
 	public void setFocus() {
 
-	}
-
-	/**
-	 * A class representing a function which will be called from javascript
-	 */
-	class CustomFunction extends BrowserFunction {
-
-		CustomFunction(Browser browser, String name) {
-			super(browser, name);
-		}
-
-		public Object function(Object[] arguments) {
-			System.out.println("You have pressed a button \n" + arguments[0]);
-			return null;
-		}
 	}
 
 	/**

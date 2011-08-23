@@ -96,3 +96,7 @@ div.chartContainer {
 .chart text.line {
 	fill: #A59D93;
 }
+
+.chart text.colored {
+	fill: #A59D93;
+}
