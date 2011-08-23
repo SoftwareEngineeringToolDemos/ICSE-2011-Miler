@@ -76,6 +76,22 @@ div.chartContainer {
 	fill: white;
 }
 
+/* Style of circles for line-chart */
+.chart circle {
+	fill: #70B3F4;
+	stroke: white;
+}
+
+/* Style of circles for line-chart when hover */
+.chart circle:hover {
+	fill: #F28049;
+}
+
+/* Style for the rule's line */
+.chart text.rule {
+	fill: #A59D93;
+}
+
 /* Style of lines for chart */
 .chart text.line {
 	fill: #A59D93;

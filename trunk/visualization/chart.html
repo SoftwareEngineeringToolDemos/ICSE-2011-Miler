@@ -42,16 +42,21 @@ function plotChartForClass(classname, server, port, database, searchMethod, fun)
 	var conn = new CouchDBConnect(server, port, database, searchMethod)
 	conn.queryForClass(classname, dataManagement)
 }
+
+//just a test function
+function testInBrowser(){
+	plotChartForClass("Cache", "localhost", 8088, ['at(remail)org_freenetproject_devl'], "casesensitive")
+}
 </script>
 
 </head>
-<body>
+<body >
 	
 	<!-- All the type of charts -->
 	<header>
 	<nav>
 		<span>Charts:</span>
-		<span onclick="createcreateBarChart(dataStored, maxStoredValue)">Bars</span>
+		<span onclick="createBarChart(dataStored, maxStoredValue)">Bars</span>
 		<span onclick="createLineChart(dataStored, maxStoredValue)">Lines</span>
 	</nav>
 	</header>

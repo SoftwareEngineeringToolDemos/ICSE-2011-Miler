@@ -16,8 +16,8 @@ function createBarChart(data, maxValue){
 	  .domain([0, 100])
 	  .rangeRound([0, h]);
 	
-	  // alert(data.length)
-	  // alert(w * (data.length+1))
+	var rem=d3.select(".chart")
+	rem.remove()
 	  
 	//get the html element which will contain the chart and set attributes     	
 	var chart=d3.select(".chartContainer")
