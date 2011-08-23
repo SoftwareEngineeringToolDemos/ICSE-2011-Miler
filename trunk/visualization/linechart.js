@@ -10,8 +10,8 @@ function createLineChart(data, maxValue){
 	  .range([0, w]);
   
 	var y = d3.scale.linear()
-	  .domain([0, 100])
-	  .rangeRound([0, h]);
+	  .domain([0, maxValue])
+	  .rangeRound([h/(maxValue), h]);
 	  
 	var rem=d3.select(".chart")
 	rem.remove()
@@ -23,14 +23,14 @@ function createLineChart(data, maxValue){
 	.append("svg:svg")
      .attr("class", "chart")
      .attr("width", width)
-     .attr("height", h+5);
+     .attr("height", h+15);
      
     //put the data
    chart.selectAll("circle")
      .data(data)
    .enter().append("svg:circle")
      .attr("cx", function(d, i) { return x(i) + w; })
-     .attr("cy", function(d) { return h - h/(maxValue+1)*d.value; })
+     .attr("cy", function(d) { return h-y(d.value)+h/maxValue; })
      .attr("onmouseover", function(d){return "visibleText('"+dateToNiceString(d.date)+"')"})
      .attr("onmouseout", function(d){return "invisibleText('"+dateToNiceString(d.date)+"')"})
      .attr("onclick", function(d){return "lineSelected('"+niceMonth(d.date)+"','"+d.date.getFullYear()+"')"})
@@ -41,23 +41,14 @@ function createLineChart(data, maxValue){
    .enter().append("svg:text")
      .attr("class", "colored")
      .attr("x", function(d, i) { return x(i) + w/2; })
-   	 .attr("y", function(d) { return h - h/(maxValue+1)*d.value -5; })
+   	 .attr("y", function(d) { return h - y(d.value) +0.5*h/maxValue; })
    	 .attr("visibility", "hidden")
    	 .attr("id",function(d){return dateToNiceString(d.date)})  
    	 .text(function(d){return dateToNiceString(d.date)+" #emails:"+d.value});
      
-   //make the bottom line
-     chart.append("svg:line")
-     .attr("x1", 0)
-     .attr("x2", w * (data.length+1))
-     .attr("y1", h - .5)
-     .attr("y2", h - .5)
-     .attr("stroke", "#000");
-     
     //make the line references
-    var numLines=Math.floor(maxValue/5)
 	chart.selectAll("line")
-     .data(y.ticks(numLines))
+     .data(y.ticks(10))
    .enter().append("svg:line")
      .attr("x1", 0)
      .attr("x2", width)
@@ -66,15 +57,23 @@ function createLineChart(data, maxValue){
      .attr("stroke", "#ccc");
      
     //text on the line references
-     for(var i=0; i<=numLines; i++){
-     	 chart.append("svg:text")
-     	 	.attr("class", "rule")
-     	 	.attr("x", 0)
-     	 	.attr("y", h - h/(maxValue+1)*(i*5))
-     	 	.attr("dx", 10)
-     	 	.attr("text-anchor", "middle")
-     	 	.text(i*5);
-     }
+     chart.selectAll("text.rule")
+     	.data(y.ticks(10))
+     .enter().append("svg:text")
+     	.attr("class", "rule")
+     	.attr("x", 0)
+     	.attr("y", y)
+     	.attr("dx", 10)
+     	.attr("text-anchor", "middle")
+     	.text(function(d){return maxValue-d});
+     	
+   //make the bottom line
+     chart.append("svg:line")
+     .attr("x1", 0)
+     .attr("x2", width)
+     .attr("y1", h - .5)
+     .attr("y2", h - .5)
+     .attr("stroke", "#000");
     
    //draw the lines
    var circles = chart.selectAll("circle");
