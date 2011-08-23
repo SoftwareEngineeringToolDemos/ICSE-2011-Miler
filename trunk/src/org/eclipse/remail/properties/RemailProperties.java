@@ -3,6 +3,7 @@ package org.eclipse.remail.properties;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
+import org.eclipse.core.internal.resources.Project;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
@@ -45,10 +46,16 @@ public class RemailProperties extends PropertyPage implements
 	
 	private void setUp(){
 		try {
-			String property=((JavaProject)getElement()).getResource().getPersistentProperty(REMAIL_MAILING_LIST);
+			String property="";
+			if(getElement() instanceof JavaProject)
+				property=((JavaProject)getElement()).getResource().getPersistentProperty(REMAIL_MAILING_LIST);
+			else
+				property=((Project)getElement()).getPersistentProperty(REMAIL_MAILING_LIST);
 			if(property!=null)
 				arrayMailingList=MailingList.stringToList(property);
 		} catch (CoreException e) {
+			e.printStackTrace();
+		} catch (ClassCastException e) {
 			e.printStackTrace();
 		}
 	}

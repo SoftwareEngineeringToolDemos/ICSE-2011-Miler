@@ -15,6 +15,8 @@
 <script type="text/javascript" src="mail.js"></script>
 <!-- Import the functions used to plot a bar-chart -->
 <script type="text/javascript" src="barchart.js"></script>
+<!-- Import the functions used to plot a line-chart -->
+<script type="text/javascript" src="linechart.js"></script>
 <!-- Import the functions used to create data -->
 <script type="text/javascript" src="datacreator.js"></script>
 <!-- Impot the d3 library to make nice charts -->
@@ -30,6 +32,10 @@
  *	-searchMethod: the searchMethod to use
  *	-fun: (optional) the function to be used to plot the data
  */
+ 
+ var dataStored=[];
+ var maxStoredValue=0;
+
 function plotChartForClass(classname, server, port, database, searchMethod, fun) {
 	fun = typeof(fun) != 'undefined' ? fun : createDataForMonthBarChart;
 	
@@ -45,8 +51,8 @@ function plotChartForClass(classname, server, port, database, searchMethod, fun)
 	<header>
 	<nav>
 		<span>Charts:</span>
-		<span>Bars</span>
-		<span>Lines</span>
+		<span onclick="createcreateBarChart(dataStored, maxStoredValue)">Bars</span>
+		<span onclick="createLineChart(dataStored, maxStoredValue)">Lines</span>
 	</nav>
 	</header>
 	

@@ -82,7 +82,7 @@ public class ChangeViewDaemon implements Runnable {
 		//query the database and update the view
 		
 		QueryDatabase job = new QueryDatabase(classname, path);
-		job.setPriority(Job.LONG);
+		job.setPriority(Job.SHORT);
 		job.schedule();
 
 	}

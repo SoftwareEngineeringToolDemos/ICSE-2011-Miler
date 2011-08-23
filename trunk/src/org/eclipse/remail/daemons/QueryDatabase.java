@@ -44,9 +44,10 @@ public class QueryDatabase extends Job {
 		LinkedList<Mail> mailList = search.Execute(classname, path, true);
 		if (mailList == null)
 			Search.updateMailView(new LinkedList<Mail>());
-		else
+		else {
 			Search.updateMailView(mailList);
-//		System.out.println("|" + mailList.size() + "|");
+			System.out.println("|" + mailList.size() + "|");
+		}
 		return Status.OK_STATUS;
 	}
 

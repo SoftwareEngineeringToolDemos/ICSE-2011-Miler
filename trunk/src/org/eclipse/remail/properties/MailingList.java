@@ -104,11 +104,11 @@ public class MailingList implements Comparable{
 		String[] lines = s.split("\n");
 		for(String str: lines){
 			String[] sp = str.split(DELIMITER);
-			if(sp.length==3){
+//			if(sp.length==3){
 				MailingList m = new MailingList(sp[0]);//, sp[1], sp[2]);
 				list.add(m);
-			}else
-				System.err.println("mail list format error: "+str);
+//			}else
+//				System.err.println("mail list format error: "+str);
 		}
 		
 		return list;

@@ -181,11 +181,12 @@ public class MailView extends ViewPart {
 
 					case 2:
 						return mail.getSubject();
-					case 3: //TODO
+					case 3: 
 						if(mail.getGlobalRating()==-1)
 							return "not rated";
 						else
-							return mail.getGlobalRating()+" on 5";
+							//return mail.getGlobalRating()+" on 5";
+							return String.format("%.2f on 5", mail.getGlobalRating());
 				}
 			} catch (NullPointerException e) {
 				// if there is a mail with something null, we throw it away ;)

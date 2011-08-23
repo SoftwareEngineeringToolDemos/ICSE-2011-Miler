@@ -68,5 +68,7 @@ function createDataForMonthBarChart(mailList) {
 			}
 		}
 	}
-	createBarChart(datas, max)
+	dataStored=datas
+	maxStoredValue=max
+	createBarChart(datas, max)	
 }

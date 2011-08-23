@@ -72,7 +72,7 @@ public class Search {
 					e.printStackTrace();
 				}
 			String method = store.getString(PreferenceConstants.P_METHOD);
-
+//			System.out.println(method+" "+store.getString(PreferenceConstants.P_SOURCE));
 			Calendar now = Calendar.getInstance();
 			Long startExecution = now.getTimeInMillis();
 
