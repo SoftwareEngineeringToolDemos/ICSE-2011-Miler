@@ -6,7 +6,15 @@ function createBarChart(data, maxValue){
 	
 	//alert(data[data.length-1].date.toString())
 	//size of the chart
-	var w = 25,h = maxValue*18;
+	var winWidth=window.innerWidth
+	var winHeight=window.innerHeight*3/4-60
+	
+	var w = winWidth/(data.length+2)
+	if(w<22)
+		w=22
+  	if(w>30)
+  		w=30
+	var h = winHeight;
   
 	var x = d3.scale.linear()
 	  .domain([0, 1])
@@ -24,7 +32,7 @@ function createBarChart(data, maxValue){
   .append("svg:svg")
      .attr("class", "chart")
      .attr("width", w * (data.length+1))
-     .attr("height", h+200);
+     .attr("height", h+100);
   
    //put the data
    chart.selectAll("rect")
@@ -49,7 +57,7 @@ function createBarChart(data, maxValue){
      .data(data)
    .enter().append("svg:text")
      .attr("x", function(d, i) { return x(i) + w/2 +2})
-     .attr("y", function(d) { return h - h/maxValue*(d.value-1) - h/maxValue*0.1})
+     .attr("y", function(d) { return h - h/maxValue*(d.value) + 12+1}) // 12 is the font size 
      .text(function(d) { return d.value});
    
      
@@ -63,6 +71,7 @@ function createBarChart(data, maxValue){
      	 	.text(dateToNiceString(data[i].date));
      } 
      
+     chartShown="bar"
 }
 
 /*

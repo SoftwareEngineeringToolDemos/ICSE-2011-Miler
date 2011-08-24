@@ -3,7 +3,14 @@
  * and the max vaule present in the array
  */
 function createLineChart(data, maxValue){
-	var w = 25,h = (maxValue+1)*18;
+	
+	var winWidth=window.innerWidth
+	var winHeight=window.innerHeight*3/4
+	
+	var w = winWidth/(data.length+3)
+	if(w<10)
+		w=10
+	var h = winHeight;
 	
 	var x = d3.scale.linear()
 	  .domain([0, 1])
@@ -29,7 +36,7 @@ function createLineChart(data, maxValue){
    chart.selectAll("circle")
      .data(data)
    .enter().append("svg:circle")
-     .attr("cx", function(d, i) { return x(i) + w; })
+     .attr("cx", function(d, i) { return x(i) + w*2; })
      .attr("cy", function(d) { return h-y(d.value)+h/maxValue; })
      .attr("onmouseover", function(d){return "visibleText('"+dateToNiceString(d.date)+"')"})
      .attr("onmouseout", function(d){return "invisibleText('"+dateToNiceString(d.date)+"')"})
@@ -40,7 +47,7 @@ function createLineChart(data, maxValue){
      .data(data)
    .enter().append("svg:text")
      .attr("class", "colored")
-     .attr("x", function(d, i) { return x(i) + w/2; })
+     .attr("x", function(d, i) { return x(i) + w; })
    	 .attr("y", function(d) { return h - y(d.value) +0.5*h/maxValue; })
    	 .attr("visibility", "hidden")
    	 .attr("id",function(d){return dateToNiceString(d.date)})  
@@ -90,6 +97,8 @@ function createLineChart(data, maxValue){
    	   	.attr("stroke", "#70B3F4")
    	   	.attr("stroke-width", 3);
    }
+   
+   chartShown="line"
 }
 
 function visibleText(id) {

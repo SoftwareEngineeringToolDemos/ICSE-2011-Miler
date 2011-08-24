@@ -26,7 +26,7 @@ function dataManagement(jsonObject, fun){
 	}
 	
 	var text = document.createTextNode(mailList)
-	container.appendChild(text)
+	//container.appendChild(text)
 
 	fun(mailList)
 }

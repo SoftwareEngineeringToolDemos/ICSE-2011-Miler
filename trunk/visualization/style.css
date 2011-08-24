@@ -26,8 +26,8 @@ header nav span {
 	background-color: #EFF1F2;
 	display: inline;
 	padding: 8px;
-	padding-top: 4px;
-	padding-bottom: 4px;
+	padding-top: 2px;
+	padding-bottom: 2px;
 	margin: 0;
 	margin-left: -5px;
 	border: 1px solid #A59D93;
@@ -35,8 +35,6 @@ header nav span {
 header nav span:first-child  {
 	border-top-left-radius: 10px;
 	border-bottom-left-radius: 10px;
-	background-color: #A59D93; 
-	color: #fff;
 }
 header nav span:last-child  {
 	border-top-right-radius: 10px;

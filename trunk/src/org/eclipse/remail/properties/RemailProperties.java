@@ -25,73 +25,73 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.jdt.internal.core.JavaProject;
 
 /**
- * Class used to set the REmail properties of a project,
- * such as the mailing lists relative to that project and
- * the username, password for each mailing list
+ * Class used to set the REmail properties of a project, such as the mailing
+ * lists relative to that project and the username, password for each mailing
+ * list
+ * 
  * @author Lorenzo Baracchi <lorenzo.baracchi@usi.ch>
- *
+ * 
  */
-public class RemailProperties extends PropertyPage implements
-                 IWorkbenchPropertyPage {
+public class RemailProperties extends PropertyPage implements IWorkbenchPropertyPage {
 
 	protected List listMailinglist;
 	protected LinkedHashSet<MailingList> arrayMailingList = new LinkedHashSet<MailingList>();
 	Button addButton;
 	Button editButton;
 	Button removeButton;
-	
-	public static final QualifiedName REMAIL_MAILING_LIST = new 
-			QualifiedName("org.eclipse.remail", 
+
+	public static final QualifiedName REMAIL_MAILING_LIST = new QualifiedName("org.eclipse.remail",
 			"MAIL_LIST");
-	
-	private void setUp(){
+
+	private void setUp() {
 		try {
-			String property="";
-			if(getElement() instanceof JavaProject)
-				property=((JavaProject)getElement()).getResource().getPersistentProperty(REMAIL_MAILING_LIST);
+			String property = "";
+			if (getElement() instanceof JavaProject)
+				property = ((JavaProject) getElement()).getResource().getPersistentProperty(
+						REMAIL_MAILING_LIST);
 			else
-				property=((Project)getElement()).getPersistentProperty(REMAIL_MAILING_LIST);
-			if(property!=null)
-				arrayMailingList=MailingList.stringToList(property);
+				property = ((Project) getElement()).getPersistentProperty(REMAIL_MAILING_LIST);
+			if (property != null)
+				arrayMailingList = MailingList.stringToList(property);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		} catch (ClassCastException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected Control createContents(Composite parent) {
 		setUp();
 		Group panel = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		GridLayout layout= new GridLayout();
+		GridLayout layout = new GridLayout();
 		panel.setLayout(layout);
 		panel.setText("List of mailing list relative to the project");
-		
+
 		GridData gd1 = new GridData();
-		gd1.verticalAlignment=SWT.BEGINNING;
+		gd1.verticalAlignment = SWT.BEGINNING;
 		panel.setLayoutData(gd1);
-				
-		//create the place where to put the list and buttons
+
+		// create the place where to put the list and buttons
 		Composite innerPanel = new Composite(panel, SWT.NONE);
 		GridLayout innerLayout = new GridLayout(2, false);
 		innerPanel.setLayout(innerLayout);
-		listMailinglist = new List (innerPanel, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-		for(MailingList m : arrayMailingList){
+		listMailinglist = new List(innerPanel, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+		for (MailingList m : arrayMailingList) {
 			listMailinglist.add(m.toString());
 		}
-		
+
 		GridData gd2 = new GridData();
 		gd2.horizontalAlignment = GridData.FILL;
 		gd2.grabExcessHorizontalSpace = true;
-		gd2.verticalAlignment= GridData.FILL;
-		gd2.grabExcessVerticalSpace=true;
+		gd2.verticalAlignment = GridData.FILL;
+		gd2.grabExcessVerticalSpace = true;
 		innerPanel.setLayoutData(gd2);
 		listMailinglist.setLayoutData(gd2);
-		
-		//create the place where to put buttons
+
+		// create the place where to put buttons
 		Composite buttonPanel = new Composite(innerPanel, SWT.NONE);
-		GridLayout buttonLayout= new GridLayout();
+		GridLayout buttonLayout = new GridLayout();
 		buttonPanel.setLayout(buttonLayout);
 		addButton = new Button(buttonPanel, SWT.PUSH);
 		addButton.setText("Add");
@@ -106,62 +106,64 @@ public class RemailProperties extends PropertyPage implements
 		 * Listener For the list of mails
 		 */
 		listMailinglist.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String[] sel = listMailinglist.getSelection();
-				if(sel.length==0){
+				if (sel.length == 0) {
 					editButton.setEnabled(false);
 					removeButton.setEnabled(false);
 				}
-				if(sel.length==1){
+				if (sel.length == 1) {
 					editButton.setEnabled(true);
 					removeButton.setEnabled(true);
 				}
-				if(sel.length>1){
+				if (sel.length > 1) {
 					editButton.setEnabled(false);
 					removeButton.setEnabled(true);
 				}
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				//We don't need a default selection!
+				// We don't need a default selection!
 			}
 		});
-		
+
 		/*
 		 * Listener for the add button
 		 */
 		addButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				RemailPropertiesMailinglist rpm= new RemailPropertiesMailinglist(new MailingList(), listMailinglist, arrayMailingList);
+				RemailPropertiesMailinglist rpm = new RemailPropertiesMailinglist(
+						new MailingList(), listMailinglist, arrayMailingList);
 				rpm.createAddDialog();
 			}
 		});
-				
+
 		/*
 		 * Listener for the edit button
 		 */
 		editButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				String[] sel = listMailinglist.getSelection();
-				RemailPropertiesMailinglist rpm= new RemailPropertiesMailinglist(new MailingList(), listMailinglist, arrayMailingList, sel[0]);
+				RemailPropertiesMailinglist rpm = new RemailPropertiesMailinglist(
+						new MailingList(), listMailinglist, arrayMailingList, sel[0]);
 				rpm.createEditDialog();
 			}
 		});
-		
+
 		/*
 		 * Listener for the remove button
 		 */
 		removeButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				String[] sel = listMailinglist.getSelection();
-				for(String s : sel){
+				for (String s : sel) {
 					Iterator<MailingList> it = arrayMailingList.iterator();
-					while(it.hasNext()){
+					while (it.hasNext()) {
 						MailingList m = it.next();
-						if(m.equals(new MailingList(s)))//, "", "")))
+						if (m.equals(new MailingList(s)))// , "", "")))
 							it.remove();
 					}
 					listMailinglist.remove(s);
@@ -170,24 +172,29 @@ public class RemailProperties extends PropertyPage implements
 		});
 		return panel;
 	}
-	
+
 	@Override
 	public boolean performOk() {
 		try {
-			//set the properties
-			((IResource) getElement()).setPersistentProperty(
-					REMAIL_MAILING_LIST,
-					MailingList.listToString(arrayMailingList));
+			// set the properties
+			if (getElement() instanceof IResource) {
+				((IResource) getElement()).setPersistentProperty(REMAIL_MAILING_LIST,
+						MailingList.listToString(arrayMailingList));
+
+			} else {
+				((JavaProject) getElement()).getCorrespondingResource().setPersistentProperty(
+						REMAIL_MAILING_LIST, MailingList.listToString(arrayMailingList));
+			}
 			System.out.println(MailingList.listToString(arrayMailingList));
-			
-			//create databases in couchdb
-			for(MailingList ml : arrayMailingList){
-				String mailList=ml.getLocation();
-				mailList=mailList.replace(".", "_");
-				mailList=mailList.replace("@", "-");
-				System.out.println("Creating database "+mailList);
+
+			// create databases in couchdb
+			for (MailingList ml : arrayMailingList) {
+				String mailList = ml.getLocation();
+				mailList = mailList.replace(".", "_");
+				mailList = mailList.replace("@", "-");
+				System.out.println("Creating database " + mailList);
 				CouchDBCreator create = new CouchDBCreator(mailList);
-				boolean r=create.createDatabase();
+				boolean r = create.createDatabase();
 				System.out.println(r);
 			}
 		} catch (CoreException e) {

@@ -75,7 +75,7 @@ public class CouchDBSearch implements MailSearch {
 
 			// get the view
 			HttpGetView hgv = new HttpGetView(csv.getMapURI());
-			System.out.println("Request: \n"+csv.getMapURI());
+//			System.out.println("Request: \n"+csv.getMapURI());
 			String response = hgv.sendRequest();
 			//System.out.println("Response: \n"+response);
 
@@ -156,14 +156,14 @@ public class CouchDBSearch implements MailSearch {
 		for(String prj : mapProjectsMailingList.keySet()){
 			if(path.startsWith("/")){
 				//its a full path
-				System.out.println("looking for:"+ path);
+//				System.out.println("looking for:"+ path);
 				if(path.contains(prj)){
 					list.addAll(mapProjectsMailingList.get(prj));
 				}
 			}else{
 				//its a relative path
 				String search=prj+"/"+path;
-				System.out.println("looking for:"+ search);
+//				System.out.println("looking for:"+ search);
 				File file = new File(search);
 				if(file.exists()){
 					list.addAll(mapProjectsMailingList.get(prj));

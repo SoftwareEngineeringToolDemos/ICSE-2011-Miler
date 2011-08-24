@@ -35,12 +35,26 @@
  
  var dataStored=[];
  var maxStoredValue=0;
+ var chartShown="bar"
 
 function plotChartForClass(classname, server, port, database, searchMethod, fun) {
 	fun = typeof(fun) != 'undefined' ? fun : createDataForMonthBarChart;
 	
 	var conn = new CouchDBConnect(server, port, database, searchMethod)
 	conn.queryForClass(classname, dataManagement)
+}
+
+/* the function that takes care of re-sizing
+ * the chart
+ */
+window.onresize = function() {
+	//alert("Resize all the things! ")
+	if(chartShown=="bar"){
+		   createBarChart(dataStored, maxStoredValue)
+	}
+	else if(chartShown=="line"){
+		   createLineChart(dataStored, maxStoredValue)
+	}
 }
 
 //just a test function
@@ -55,7 +69,6 @@ function testInBrowser(){
 	<!-- All the type of charts -->
 	<header>
 	<nav>
-		<span>Charts:</span>
 		<span onclick="createBarChart(dataStored, maxStoredValue)">Bars</span>
 		<span onclick="createLineChart(dataStored, maxStoredValue)">Lines</span>
 	</nav>
