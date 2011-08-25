@@ -22,12 +22,12 @@ You have two opportunities to do this:
 If you have such a file and want to import in a database for REmail, you can use the python script _ConvertFromMBOX.py_, which you should find in the REmail archive you've downloaded.
 To use the script, open a terminal, move to the directory the file is and run the following command:
 {{{
-$ python ConvertFromMBOX.py <mbox-file> <server-address> <database-name> 
+$ python ConvertFromMBOX.py <mbox-file> <database-name> <server-address> 
 }}}
 where:
   * _<mbox-file>_ is the path to the Mbox file you want to import
-  * _<server-address>_ is the address of the server running couchDB, the default is _"http://localhost:5984/"_
   * _<database-name>_ is the name you want to give to your database
+  * _<server-address>_ is the address of the server running couchDB, the default is _"http://localhost:5984/"_
 
 
 == Fetch from MarkMail ==
