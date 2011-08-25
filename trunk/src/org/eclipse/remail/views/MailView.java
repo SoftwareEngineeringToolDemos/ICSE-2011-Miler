@@ -181,11 +181,11 @@ public class MailView extends ViewPart {
 
 					case 2:
 						return mail.getSubject();
-					case 3: 
-						if(mail.getGlobalRating()==-1)
+					case 3:
+						if (mail.getGlobalRating() == -1)
 							return "not rated";
 						else
-							//return mail.getGlobalRating()+" on 5";
+							// return mail.getGlobalRating()+" on 5";
 							return String.format("%.2f on 5", mail.getGlobalRating());
 				}
 			} catch (NullPointerException e) {
@@ -236,7 +236,7 @@ public class MailView extends ViewPart {
 		tree.setHeaderVisible(true);
 
 		String[] columnNames = new String[] { "Date", "Author", "Subject", "Rating" };
-		int[] columnWidths = new int[] { 140, 150, 500 , 80};
+		int[] columnWidths = new int[] { 140, 150, 500, 80 };
 		int[] columnAlignments = new int[] { SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT };
 		for (int i = 0; i < columnNames.length; i++) {
 			TreeColumn treeColumn = new TreeColumn(tree, columnAlignments[i]);
@@ -369,11 +369,15 @@ public class MailView extends ViewPart {
 	};
 
 	public void processSelection(IWorkbenchPart sourcepart, ISelection selection) {
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection ss = (IStructuredSelection) selection;
-			if (ss.getFirstElement() instanceof ICompilationUnit)
-				this.activeResource = ((ICompilationUnit) ss.getFirstElement()).getResource();
-			this.loadFromCache((ICompilationUnit) ss.getFirstElement());
+		try {
+			if (selection instanceof IStructuredSelection) {
+				IStructuredSelection ss = (IStructuredSelection) selection;
+				if (ss.getFirstElement() instanceof ICompilationUnit)
+					this.activeResource = ((ICompilationUnit) ss.getFirstElement()).getResource();
+				this.loadFromCache((ICompilationUnit) ss.getFirstElement());
+			}
+		} catch (ClassCastException e) {
+
 		}
 	}
 

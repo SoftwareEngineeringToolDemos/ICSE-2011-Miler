@@ -34,7 +34,7 @@ for account in config['accounts']:
     remailPort=account['remail-port']
     maillists = account['mailing_lists']
     
-    REmailS=remailServ+":"+remailPort
+    REmailS=remailServ+":"+str(remailPort)
 
     #print username
     #print password

@@ -55,7 +55,7 @@ def addMessageToDatabase(msg):
 
 # server where couchdb is
 try:
-	servName=sys.arv[3]
+	servName=sys.argv[3]
 except IndexError:
 	servName='http://localhost:5984/'
 server = couchdb.Server(servName)
@@ -72,6 +72,7 @@ print "Opening mbox"
 mboxFile=open(MBOX, 'r')
 msg=None 
 oldLine=""
+numMessages=0
 for line in mboxFile:
 	line=line.decode('utf-8', 'ignore')
 	if isNewMessage(line, oldLine):
@@ -81,7 +82,9 @@ for line in mboxFile:
 		else:
 			# add the message to the database
 			addMessageToDatabase(msg)
-			#print('.'),
+			numMessages=numMessages+1
+			if((numMessages%10)==0):
+				print(str(numMessages)+' messagges added')
 			# create a new message
 			msg=Message(line)				
 	else:
@@ -89,4 +92,5 @@ for line in mboxFile:
 	oldLine=line		
 # add the last message to the database
 addMessageToDatabase(msg)
-#print('.'),
+print(str(numMessages)+'messagge added\n')
+print("Finished Importing!")
