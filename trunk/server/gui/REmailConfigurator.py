@@ -20,6 +20,14 @@ except:
 	print "try: export PYTHONPATH=",
 	print "/usr/local/lib/python2.2/site-packages/"
 	sys.exit(1)
+	
+
+# convert a list of mailing list in a list of string
+def convert_MailList_to_String(mailList):
+	   strings=[]
+	   for s in mailList:
+	   		 strings.append(s["name"])
+	   return strings
 
 # class responsible to create and handle the gui
 class appgui:
@@ -36,6 +44,7 @@ class appgui:
 			"on_checkDaemon_clicked": self.checkDaemon_clicked,
 			"on_REmailConfigurator_destroy" : self.on_REmailConfigurator_destroy,
 			"on_accountList_changed": self.comboChanged,
+			"on_saveChanges_clicked":self.saveConfiguration,
 			 "on_exit_clicked":self.destroyChild
 		}		
 		self.interface.signal_autoconnect( self.dic )
@@ -115,7 +124,7 @@ class appgui:
 		   accountSelected=self.interface.get_widget('accountList').get_active_text()
 		   if not(accountSelected=="-- New --"):
 		   		 for account in self.config['accounts']:
-		   		 	    print "'"+account['username']+"' '"+accountSelected+"'"
+		   		 	    #print "'"+account['username']+"' '"+accountSelected+"'"
 		   		 	    if accountSelected==account['username']:
 		   		 	    		 self.interface.get_widget('accName').set_text(account['username'])
 							 self.interface.get_widget('accPassword').set_text(account['password'])
@@ -123,9 +132,59 @@ class appgui:
 							 self.interface.get_widget('emailPort').set_text(str(account['port']))
 							 self.interface.get_widget('remailServ').set_text(account['remail-server'])
 							 self.interface.get_widget('remailPort').set_text(str(account['remail-port']))
-							 
-		   		 	
-		   
+							 textBuffer=self.interface.get_widget('listMailingList').get_buffer() # convert_MailList_to_String(account['mailing_lists']))
+							 textArr=convert_MailList_to_String(account['mailing_lists'])
+							 text=""
+							 first=True
+							 for t in textArr:
+							 	    if first:
+							 	    		  text=t
+							 	    		  first=False
+							 	    else:
+							 	    		  text=text+"\n"+t
+							 textBuffer.set_text(text)
+		   else:
+		  		self.interface.get_widget('accName').set_text("")
+				self.interface.get_widget('accPassword').set_text("")
+				self.interface.get_widget('emailServ').set_text("")
+				self.interface.get_widget('emailPort').set_text("")
+				self.interface.get_widget('remailServ').set_text("")
+				self.interface.get_widget('remailPort').set_text("")
+				self.interface.get_widget('listMailingList').get_buffer().set_text("")	   
+	
+	#utility function to set the account
+	def _setAccount(self,account):
+		   account['username']=self.interface.get_widget('accName').get_text()
+		   account['password']=self.interface.get_widget('accPassword').get_text()
+		   account['server']=self.interface.get_widget('emailServ').get_text()
+		   account['port']=self.interface.get_widget('remailPort').get_text()
+		   account['remail-server']=self.interface.get_widget('remailServ').get_text()
+		   account['remail-port']=self.interface.get_widget('remailPort').get_text()
+		   buff=self.interface.get_widget('listMailingList').get_buffer()
+		   text=buff.get_text(buff.get_start_iter(), buff.get_end_iter())
+		   arr=text.split("\n")
+		   account['mailing_lists']=[] #reset
+		   for s in arr:
+		   		 account['mailing_lists'].append({"name":s})
+		   #print account['mailing_lists']
+	
+	#save the configuration file
+	def saveConfiguration(self, data):	   		
+		   print "saving config..."
+		   newAccount=True
+		   usr=self.interface.get_widget('accName').get_text()
+		   for account in self.config['accounts']:		   		
+		   		 if(usr==account['username']):
+		   		 	    #edit the account
+		   		 	    newAccount=False
+		   		 	    self._setAccount(account)
+		   if newAccount:
+		   		 account={'username':'','password':'','server':'','port':'','remail-server':'','remail-port':'','mailing_lists':''}
+		   		 self.config['accounts'].append(account)
+		   		 self._setAccount(account)
+		   stream = file('../mailinglist.config', 'w')		 
+		   yaml.dump(self.config, stream)
+		   		 	    
 	#handler to destroy the editor window	   
 	def destroyChild(self, data):
 		   self.editor_window.hide()

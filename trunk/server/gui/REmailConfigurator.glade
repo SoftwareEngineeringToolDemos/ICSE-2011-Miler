@@ -20,7 +20,7 @@
                 <property name="label" translatable="yes">Accounts:</property>
               </widget>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">False</property>
                 <property name="padding">15</property>
                 <property name="position">0</property>
@@ -28,6 +28,7 @@
             </child>
             <child>
               <widget class="GtkComboBox" id="accountList">
+                <property name="width_request">250</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="entry_text_column">0</property>
@@ -38,22 +39,6 @@
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkButton" id="addNewAccount">
-                <property name="label" translatable="yes">Add</property>
-                <property name="width_request">100</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_action_appearance">False</property>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="padding">15</property>
-                <property name="position">2</property>
               </packing>
             </child>
           </widget>
@@ -145,6 +130,7 @@
             </child>
             <child>
               <widget class="GtkEntry" id="accName">
+                <property name="width_request">250</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
@@ -160,6 +146,7 @@
             </child>
             <child>
               <widget class="GtkEntry" id="accPassword">
+                <property name="width_request">250</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
@@ -177,6 +164,7 @@
             </child>
             <child>
               <widget class="GtkEntry" id="emailServ">
+                <property name="width_request">250</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
@@ -194,6 +182,7 @@
             </child>
             <child>
               <widget class="GtkEntry" id="emailPort">
+                <property name="width_request">250</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
@@ -211,6 +200,7 @@
             </child>
             <child>
               <widget class="GtkEntry" id="remailServ">
+                <property name="width_request">250</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
@@ -228,6 +218,7 @@
             </child>
             <child>
               <widget class="GtkEntry" id="remailPort">
+                <property name="width_request">250</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
@@ -287,6 +278,7 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
+                    <signal name="clicked" handler="on_saveChanges_clicked" swapped="no"/>
                   </widget>
                   <packing>
                     <property name="x">282</property>
@@ -320,7 +312,51 @@
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
+            <property name="pack_type">end</property>
             <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHBox" id="hbox3">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="spacing">1</property>
+            <child>
+              <widget class="GtkLabel" id="label19">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Mailing lists:</property>
+              </widget>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkTextView" id="listMailingList">
+                <property name="width_request">250</property>
+                <property name="height_request">60</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="tooltip" translatable="yes">Add or remove  mailing list's address.
+One line for each address</property>
+                <property name="pixels_above_lines">1</property>
+                <property name="accepts_tab">False</property>
+              </widget>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="padding">1</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="padding">8</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </widget>
