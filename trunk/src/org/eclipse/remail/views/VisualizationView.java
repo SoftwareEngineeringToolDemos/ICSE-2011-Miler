@@ -8,6 +8,9 @@ import java.net.URL;
 import java.util.LinkedHashSet;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.remail.Activator;
 import org.eclipse.remail.couchdb.helper.CouchDBMethodName;
@@ -41,7 +44,7 @@ public class VisualizationView extends ViewPart {
 			.substring(0, System.getProperty("eclipse.home.location").length() - 1)
 			.replace("file:", "");
 
-	public static final String SCRIPT_NAME = "plotChartForClass";
+	public static final String SCRIPT_NAME = "plotChartForClass";	
 	public static final String HTML_PAGE_LOCATION = "platform:/plugin/org.eclipse.remail/visualization/chart.html";
 
 	private BarSelection barSelectionJavaScript;
@@ -117,10 +120,17 @@ public class VisualizationView extends ViewPart {
 	 * Set the url to open
 	 */
 	protected void setBrowserUrl() {
+		String path=null;
+		URL url=null;
+		File file=null;
 		try {
-			URL url = new URL(HTML_PAGE_LOCATION);
-			File file = new File(FileLocator.resolve(url).toURI());
-			String path = file.getAbsolutePath();
+								
+			url = new URL(HTML_PAGE_LOCATION);
+			file = new File(FileLocator.resolve(url).toURI());
+//			URL url = new URL(HTML_PAGE_LOCATION);
+//			File file =new File(FileLocator.find(url).toURI());
+			path = file.getAbsolutePath();
+//			System.err.println(path);
 			browser.setUrl("file://" + path);
 			setJavascriptFunctionsOnBrowser();
 		} catch (MalformedURLException e) {
@@ -129,6 +139,17 @@ public class VisualizationView extends ViewPart {
 			e.printStackTrace();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
+		} catch (IllegalArgumentException e){
+			try {
+				//browser.setText("<html>"+path+"<br>"+url.toString()+"<br>"+(FileLocator.resolve(url))+"</html>");
+				String s=FileLocator.resolve(url).toString();
+				s=s.replace("jar:file:", "");
+				s=s.replace(".jar!", "");
+				browser.setUrl(s);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 

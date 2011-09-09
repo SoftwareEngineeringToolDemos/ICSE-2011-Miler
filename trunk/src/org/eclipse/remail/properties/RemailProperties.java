@@ -43,6 +43,7 @@ public class RemailProperties extends PropertyPage implements IWorkbenchProperty
 	public static final QualifiedName REMAIL_MAILING_LIST = new QualifiedName("org.eclipse.remail",
 			"MAIL_LIST");
 
+	@SuppressWarnings("restriction")
 	private void setUp() {
 		try {
 			String property = "";

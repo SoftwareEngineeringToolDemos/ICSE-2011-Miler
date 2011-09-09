@@ -22,11 +22,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GCData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.part.ViewPart;
 
@@ -56,13 +59,13 @@ public class MailContentView extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 
-		URL url1, url2;
-		File file1 = null, file2 = null;
+		URL url1=null, url2=null;
+		String file1 = null, file2 = null;
 		try {
 			url1 = new URL("platform:/plugin/org.eclipse.remail/icons/empty-star.png");
-			file1 = new File(FileLocator.resolve(url1).toURI());
+			file1 = new File(FileLocator.resolve(url1).toURI()).toString();
 			url2 = new URL("platform:/plugin/org.eclipse.remail/icons/full-star.png");
-			file2 = new File(FileLocator.resolve(url2).toURI());
+			file2 = new File(FileLocator.resolve(url2).toURI()).toString();
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,10 +75,50 @@ public class MailContentView extends ViewPart {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IllegalArgumentException e){
+			String s;
+			try {
+				url1 = new URL("platform:/plugin/org.eclipse.remail/icons/empty-star.png");
+				if(url1!=null){
+					s = FileLocator.resolve(url1).toString();
+					s=s.replace("jar:file:", "");
+					s=s.replace(".jar!", "");
+					file1=s;
+				}
+				url2 = new URL("platform:/plugin/org.eclipse.remail/icons/full-star.png");
+				if(url2!=null){
+					s = FileLocator.resolve(url2).toString();
+					s=s.replace("jar:file:", "");
+					s=s.replace(".jar!", "");
+					file2=s;
+				}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}		
 		}
 
-		emptyStar = new Image(parent.getDisplay(), file1.toString());
-		fullStar = new Image(parent.getDisplay(), file2.toString());
+		try{
+			emptyStar = new Image(parent.getDisplay(), file1.toString());
+			fullStar = new Image(parent.getDisplay(), file2.toString());
+		}catch(NullPointerException e){
+//			Device d = new Device() {
+//				
+//				@Override
+//				public long internal_new_GC(GCData data) {
+//					// TODO Auto-generated method stub
+//					return 0;
+//				}
+//				
+//				@Override
+//				public void internal_dispose_GC(long handle, GCData data) {
+//					// TODO Auto-generated method stub
+//					
+//				}
+//			};
+//			emptyStar = new Image(d, file1.toString());
+//			fullStar = new Image(d, file2.toString());
+		}
 
 		Composite page = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, false);
