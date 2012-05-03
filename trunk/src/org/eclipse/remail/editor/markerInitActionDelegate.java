@@ -41,7 +41,10 @@ public class markerInitActionDelegate implements IEditorActionDelegate
 	public void setActiveEditor(IAction action, IEditorPart targetEditor)
 	{
 		editor = targetEditor;
-		resource = ResourceUtil.getResource(editor.getEditorInput());
+		IEditorInput iei = editor.getEditorInput();
+		if (iei == null)
+			return;
+		resource = ResourceUtil.getResource(iei);
 		project = resource.getProject();
 	}
 	

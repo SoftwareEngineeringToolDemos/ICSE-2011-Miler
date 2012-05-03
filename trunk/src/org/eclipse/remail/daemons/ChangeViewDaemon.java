@@ -2,6 +2,7 @@ package org.eclipse.remail.daemons;
 
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
@@ -68,7 +69,12 @@ public class ChangeViewDaemon implements Runnable {
 	 */
 	private void updateCurrentView() {
 		//get the class name
-		ITextEditor editor = (ITextEditor) window.getActivePage().getActiveEditor();
+		IEditorPart iepart = window.getActivePage().getActiveEditor();
+		if (iepart == null)
+			return;
+		if (!(iepart instanceof ITextEditor))
+			return;
+		ITextEditor editor = (ITextEditor) iepart;
 		String classname = editor.getTitle();
 		classname = classname.split("\\.")[0];
 		

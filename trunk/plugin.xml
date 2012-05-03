@@ -184,7 +184,7 @@
             value="true">
       </persistent>
    </extension>
-   <extension point="org.eclipse.ui.editorActions"> 
+<!--   <extension point="org.eclipse.ui.editorActions"> 
 <editorContribution 
       id="org.eclipse.remail.markerInit" 
    targetID="org.eclipse.jdt.ui.CompilationUnitEditor">
@@ -196,8 +196,8 @@
       toolbarPath="Normal/additions"
          class="org.eclipse.remail.editor.markerInitActionDelegate"> 
       </action> 
-   </editorContribution>
-</extension>
+   </editorContribution> 
+</extension>-->
    <extension
          point="org.eclipse.jdt.ui.javaEditorTextHovers">
       <hover
