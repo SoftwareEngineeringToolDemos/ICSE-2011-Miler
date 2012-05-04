@@ -11,6 +11,10 @@ public class CouchDBMailContainer {
 	private String key;
 	private CouchDBMail value;
 	
+	public CouchDBMailContainer(){
+		
+	}
+	
 	public CouchDBMailContainer (String id, String key, CouchDBMail value)
 	{
 		this.id=id;

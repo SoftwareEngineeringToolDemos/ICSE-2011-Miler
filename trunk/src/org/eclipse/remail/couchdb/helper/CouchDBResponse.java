@@ -1,6 +1,7 @@
 package org.eclipse.remail.couchdb.helper;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,9 +15,13 @@ import com.google.gson.GsonBuilder;
 public class CouchDBResponse {
 	private int total_rows;
 	private int offset;
-	private ArrayList<CouchDBMailContainer> rows;
+	private LinkedList<CouchDBMailContainer> rows;
 	
-	public CouchDBResponse (int total_rows, int offset, ArrayList<CouchDBMailContainer> rows){
+	public CouchDBResponse(){
+		
+	}
+	
+	public CouchDBResponse (int total_rows, int offset, LinkedList<CouchDBMailContainer> rows){
 		this.total_rows=total_rows;
 		this.offset=offset;
 		this.rows=rows;
@@ -55,10 +60,10 @@ public class CouchDBResponse {
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
-	public ArrayList<CouchDBMailContainer> getRows() {
+	public LinkedList<CouchDBMailContainer> getRows() {
 		return rows;
 	}
-	public void setRows(ArrayList<CouchDBMailContainer> rows) {
+	public void setRows(LinkedList<CouchDBMailContainer> rows) {
 		this.rows = rows;
 	}
 }

@@ -14,7 +14,7 @@ public enum CouchDBMethodName {
 	SEARCH_CAMEL ("searchcamel");
 	
 	private final String name;
-	
+		
 	CouchDBMethodName (String name){
 		this.name=name;
 	}

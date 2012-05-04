@@ -45,7 +45,7 @@ public class MailConverter {
 			final CouchDBResponse cdbResponse, final String nameSearched) {
 		LinkedList<Mail> mailList = new LinkedList<Mail>();
 
-		ArrayList<CouchDBMailContainer> cdbMCArray = cdbResponse.getRows();
+		LinkedList<CouchDBMailContainer> cdbMCArray = cdbResponse.getRows();
 		for (CouchDBMailContainer cdbMC : cdbMCArray) {
 			Mail mail = convertCouchDBMailToMail(cdbMC.getValue(), nameSearched);
 			mailList.add(mail);

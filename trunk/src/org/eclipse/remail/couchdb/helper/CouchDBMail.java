@@ -15,6 +15,10 @@ public class CouchDBMail {
 	private String header;
 	private Raters raters;
 	
+	public CouchDBMail (){
+		
+	}
+	
 	public CouchDBMail (String id, String _rev, String body, String header, String start){
 		this._id=id;
 		this._rev=_rev;
