@@ -156,7 +156,6 @@ public class MailContentView extends ViewPart {
 								buttons[j].setImage(emptyStar);
 								buttons[j].setSelection(false);
 							}
-
 						}
 						userRating = rating - 1;
 					} else {

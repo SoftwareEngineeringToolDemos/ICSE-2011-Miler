@@ -319,6 +319,8 @@ public class MailView extends ViewPart {
 					try {
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 								.showView("org.eclipse.emailrecommender.MailContentView");
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+								.showView("org.eclipse.emailrecommender.MailSummaryView");
 					} catch (PartInitException e) {
 						MessageDialog.openError(null, "Error",
 								"Error in showing the view: " + e.getMessage());
@@ -326,6 +328,8 @@ public class MailView extends ViewPart {
 					}
 					MailContentView mw = new MailContentView();
 					mw.setMail(mail);
+					MailSummaryView sw = new MailSummaryView();
+					sw.setMail(mail);
 				}
 			}
 		};

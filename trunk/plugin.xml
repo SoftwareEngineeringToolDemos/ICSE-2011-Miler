@@ -112,6 +112,14 @@
       </view>
       <view
             category="org.eclipse.emailrecommender.category1"
+            class="org.eclipse.remail.views.MailSummaryView"
+            icon="icons/remail.png"
+            id="org.eclipse.emailrecommender.MailSummaryView"
+            name="Email Summary"
+            restorable="true">
+      </view>
+      <view
+            category="org.eclipse.emailrecommender.category1"
             class="org.eclipse.remail.views.MailWriter"
             icon="icons/remail.png"
             id="org.eclipse.emailrecommender.MailWriter"
