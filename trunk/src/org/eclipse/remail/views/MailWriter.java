@@ -123,6 +123,46 @@ public class MailWriter extends ViewPart {
 	private String[] getArrayAccounts() {
 		return storedAccounts.toDisplay();
 	}
+	
+	private void buttonsBar(Composite outerView) {
+		GridData gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		gd.verticalAlignment = GridData.FILL;
+		gd.grabExcessVerticalSpace = true;
+		
+		
+		buttonBar = new CoolBar(outerView, SWT.HORIZONTAL);
+		
+		
+		CoolItem buttonItem = new CoolItem(buttonBar, SWT.NONE | SWT.DROP_DOWN);
+		
+		Composite composite = new Composite(buttonBar, SWT.NONE);
+	    composite.setLayout(new GridLayout(3, true));
+	    
+	    
+	    sendButton = new Button(composite, SWT.PUSH | SWT.FLAT);
+		sendButton.setText("Send");
+		sendButton.pack();
+		
+/*		attachButton = new Button(composite, SWT.PUSH | SWT.FLAT);
+		attachButton.setText("Attach");
+		attachButton.pack();
+		
+		attachList = new org.eclipse.swt.widgets.List(composite, SWT.BORDER | SWT.MULTI
+				| SWT.V_SCROLL | SWT.H_SCROLL);
+		attachList.setLayoutData(gd);
+		attachList.pack(); */
+		
+		
+		composite.pack();
+		
+		Point size = composite.getSize();
+	    buttonItem.setControl(composite);
+	    buttonItem.setSize(buttonItem.computeSize(size.x, size.y));
+	}
+	
+
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -138,29 +178,7 @@ public class MailWriter extends ViewPart {
 		allView.setLayoutData(gd1);
 
 		// Buttons
-		buttonBar = new CoolBar(allView, SWT.HORIZONTAL);
-		CoolItem sendItem = new CoolItem(buttonBar, SWT.NONE);
-		sendButton = new Button(buttonBar, SWT.PUSH | SWT.FLAT);
-		sendButton.setText("Send");
-		sendButton.pack();
-		Point size = sendButton.getSize();
-		sendItem.setControl(sendButton);
-		sendItem.setSize(size.x * 2, size.y);
-		CoolItem attachItem = new CoolItem(buttonBar, SWT.NONE);
-		attachButton = new Button(buttonBar, SWT.PUSH | SWT.FLAT);
-		attachButton.setText("Attach");
-		attachButton.pack();
-		size = attachButton.getSize();
-		attachItem.setControl(attachButton);
-		attachItem.setSize(size.x * 2, size.y);
-		CoolItem attachItemList = new CoolItem(buttonBar, SWT.NONE);
-		attachList = new org.eclipse.swt.widgets.List(buttonBar, SWT.BORDER | SWT.MULTI
-				| SWT.V_SCROLL | SWT.H_SCROLL);
-		attachList.setLayoutData(gd1);
-		attachList.pack();
-		size = attachList.getSize();
-		attachItemList.setControl(attachList);
-		attachItemList.setSize(size.x * 12, size.y * 2);
+		this.buttonsBar(allView);
 
 		// style for the headers
 		Group headers = new Group(allView, SWT.SHADOW_ETCHED_IN);
@@ -264,7 +282,7 @@ public class MailWriter extends ViewPart {
 						// send email
 						sender = new EmailSender(from, to, subject, bodyContent);
 					}
-					if (attachList.getItemCount() != 0) {
+					if (attachList != null && (attachList.getItemCount() != 0)) {
 						sender.setAttachments(attachList.getItems());
 					}
 					sender.send();
@@ -274,7 +292,7 @@ public class MailWriter extends ViewPart {
 			}
 		});
 
-		attachButton.addSelectionListener(new SelectionAdapter() {
+		/*attachButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog fd = new FileDialog(new Shell(), SWT.OPEN);
 				fd.setText("Add Attachment");
@@ -282,7 +300,7 @@ public class MailWriter extends ViewPart {
 				System.out.println(selected);
 				attachList.add(selected);
 			}
-		});
+		});*/
 	}
 
 	@Override

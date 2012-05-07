@@ -147,7 +147,6 @@ public class EmailSender {
 		System.out.println("Server: -" + account.getServer() + "-");
 		System.out.println("Port: -" + account.getPort() + "-");
 		System.out.println("Username: -" + account.getUsername() + "-");
-		System.out.println("Password: -" + account.getPassword() + "-");
 
 		// set username and password
 		Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
