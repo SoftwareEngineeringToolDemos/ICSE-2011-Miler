@@ -19,7 +19,9 @@ public class MailSummaryView extends ViewPart {
 	}
 	
 	public void setMail(Mail mail){
+		//System.err.println("NEW SUMMARY");
 		Summary sm = new Summary(mail);
+		//System.err.println("FATTO NEW SUMMARY");
 		textArea.setText(sm.getSummary());
 	}
 

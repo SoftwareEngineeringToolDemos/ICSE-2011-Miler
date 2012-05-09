@@ -14,12 +14,16 @@ public class Summary {
 	
 	
 	private String summUpMail(){
+		FeaturesExtractor fe = new FeaturesExtractor(mail);
 		return mail.getText();
 	}
+	
 	
 	public String getSummary(){
 		return summary;
 	}
+	
+	
 	
 
 }
