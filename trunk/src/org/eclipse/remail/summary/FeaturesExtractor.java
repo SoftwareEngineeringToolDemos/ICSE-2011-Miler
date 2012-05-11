@@ -19,7 +19,7 @@ public class FeaturesExtractor {
 	// Key: id sentence (from 0). Value: sentence.
 	private HashMap<Integer, String> sentencesTable;
 
-	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm 
+	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant
 	private double[][] featuresTable;
 
 	private HashSet<String> stopwords;
@@ -251,7 +251,7 @@ public class FeaturesExtractor {
 					numStopws++;
 				}
 			}
-			featuresTable[i][1] = (double)numStopws;
+			featuresTable[i][1] = (double)numStopws/(double)words.length;
 		}
 	}
 
@@ -260,21 +260,100 @@ public class FeaturesExtractor {
 	}
 
 	private void extractRelativePosNorm(){
-		// TODO
+		for(int i=0; i<sentencesTable.size(); i++){
+			featuresTable[i][3] = (double)i/(double)sentencesTable.size();
+		}
 	}
 
 	private void extractSubjectWordsNorm(){
-		// TODO
+		String[] subj = subject.split(" ");
+		for(int k=0; k<subj.length; k++)
+			subj[k] = normalizeWord(subj[k].trim());
+		for(int i=0; i<sentencesTable.size(); i++){
+			String[] sent = sentencesTable.get(i).split(" ");
+			int subjwords = 0;
+			for(int j=0; j<sent.length; j++){
+				sent[j] = normalizeWord(sent[j].trim());
+				for(int s=0; s<subj.length; s++){
+					if(sent[j].equals(subj[s]))
+						subjwords++;
+				}
+			}
+			featuresTable[i][4] = (double)subjwords/(double)sent.length;
+		}
 	}
+	
+	
+	private void determineRelevance(){
+		for(int i=0; i<featuresTable.length;i++){
+			if(featuresTable[i][1] > 0.142857){
+				if(featuresTable[i][4] > 0.045455){
+					if(featuresTable[i][1] > 0.484848){
+						if(featuresTable[i][3] > 0.633333){
+							featuresTable[i][5] = 0.0;
+						} else {
+							featuresTable[i][5] = 1.0;
+						}
+					} else {
+						featuresTable[i][5] = 1.0;
+					}
+				} else {
+					
+					if(featuresTable[i][3] > 0.756757){
+						featuresTable[i][5] = 0.0;
+					} else {
+						if(featuresTable[i][1] > 0.555556){
+							if(featuresTable[i][3] > 0.45){
+								featuresTable[i][5] = 0.0;
+							} else {
+								if(featuresTable[i][3] > 0.153856){
+									featuresTable[i][5] = 1.0;
+								} else {
+									featuresTable[i][5] = 0.0;
+								}
+							}
+						} else {
+							featuresTable[i][5] = 1.0;
+						}
+					}
+					
+				}	
+			} else {
+				if(featuresTable[i][2] > 0.153846){
+					if(featuresTable[i][0] > 40){
+						featuresTable[i][5] = 0.0;
+					} else {
+						if(featuresTable[i][2] > 0.4){
+							featuresTable[i][5] = 0.0;
+						} else {
+							if(featuresTable[i][3] > 0.653061){
+								featuresTable[i][5] = 0.0;
+							} else {
+								featuresTable[i][5] = 1.0;
+							}
+						}
+					}
+				} else {
+					featuresTable[i][5] = 0.0;
+				}
+			}
+		}
+		
+	}
+	
 
+	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant
 	private void createFeaturesTable(){
-		featuresTable = new double[sentencesTable.size()][5];
+		featuresTable = new double[sentencesTable.size()][6];
 		extractNumberChars();
 		extractNumberStopwordsNorm();
+		extractRelativePosNorm();
 		for(int i = 0; i<sentencesTable.size(); i++){
 			System.out.println("KEY: " + i + ", VALUE: " + sentencesTable.get(i));
 			System.out.println("CHARS: " + featuresTable[i][0]);
-			System.out.println("STOPWORDS: " + featuresTable[i][1] + "\n");
+			System.out.println("STOPWORDS_NORM: " + featuresTable[i][1]);
+			System.out.println("REL_POS_NORM: " + featuresTable[i][3]);
+			System.out.println("SUBJ_WORDS_NORM: " + featuresTable[i][4] + "\n");
 		}
 	}
 
