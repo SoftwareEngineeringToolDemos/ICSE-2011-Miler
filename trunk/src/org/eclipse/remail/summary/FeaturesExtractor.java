@@ -1,8 +1,6 @@
 package org.eclipse.remail.summary;
 
 import java.text.BreakIterator;
-import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -10,9 +8,9 @@ import java.util.StringTokenizer;
 
 import org.eclipse.remail.Mail;
 
-public class FeaturesExtractor {
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
-	//	private static final PATTERN = "(?x) \w+\:/\S+ | i\.e\. | e\.g\. | \w+(/\w+)+ | \w+(\\w+)+ | \w+((-|_|\.)(?!(as|java|php|c|h)\W|\w+\()\w+)+ | \w+ | -\d+";
+public class FeaturesExtractor {
 
 	private String subject;
 
@@ -24,10 +22,11 @@ public class FeaturesExtractor {
 
 	private HashSet<String> stopwords;
 
+	private MaxentTagger tagger;
 
 
-
-	public FeaturesExtractor(Mail mail){
+	public FeaturesExtractor(Mail mail, MaxentTagger mailTagger){
+		tagger = mailTagger;
 		createStopwords();
 		subject = mail.getSubject();
 		createSentencesTable(mail.getText());
@@ -206,7 +205,7 @@ public class FeaturesExtractor {
 		return w;
 	}
 
-	
+
 	private String normalizeWord(String wordToNormalize){
 		while(wordToNormalize.endsWith(".") || wordToNormalize.endsWith(",") || wordToNormalize.endsWith("?") || wordToNormalize.endsWith("!") || 
 				wordToNormalize.endsWith(":") || wordToNormalize.endsWith(";") || wordToNormalize.endsWith("(") || wordToNormalize.endsWith(")") ||
@@ -256,8 +255,27 @@ public class FeaturesExtractor {
 	}
 
 	private void extractNumberVerbsNorm(){
-		// TODO
+		for(int i=0; i<sentencesTable.size(); i++){
+			int numVerbs = 0;
+			StringTokenizer st = new StringTokenizer(sentencesTable.get(i));
+			String s = "";
+			while(st.hasMoreTokens()){
+				String token = st.nextToken();
+				if(!token.contains("0") && !token.contains("1") && !token.contains("2") && !token.contains("3") && 
+						!token.contains("4") && !token.contains("5") && !token.contains("6") && !token.contains("7") && 
+						!token.contains("8") && !token.contains("9"))
+					s += token;
+			}
+			String[] taggedWords = tagger.tagString(s).split(" ");
+			for(int j=0; j<taggedWords.length; j++){
+				if(taggedWords[j].endsWith("/VBG") || taggedWords[j].endsWith("/VBD") || taggedWords[j].endsWith("/VBN") || taggedWords[j].endsWith("/VBP") ||
+						taggedWords[j].endsWith("/VBZ") || taggedWords[j].endsWith("/VB"))
+					numVerbs++;
+			}
+			featuresTable[i][2] = (double)numVerbs/(double)taggedWords.length;
+		}
 	}
+
 
 	private void extractRelativePosNorm(){
 		for(int i=0; i<sentencesTable.size(); i++){
@@ -282,8 +300,8 @@ public class FeaturesExtractor {
 			featuresTable[i][4] = (double)subjwords/(double)sent.length;
 		}
 	}
-	
-	
+
+
 	private void determineRelevance(){
 		for(int i=0; i<featuresTable.length;i++){
 			if(featuresTable[i][1] > 0.142857){
@@ -298,7 +316,7 @@ public class FeaturesExtractor {
 						featuresTable[i][5] = 1.0;
 					}
 				} else {
-					
+
 					if(featuresTable[i][3] > 0.756757){
 						featuresTable[i][5] = 0.0;
 					} else {
@@ -316,11 +334,11 @@ public class FeaturesExtractor {
 							featuresTable[i][5] = 1.0;
 						}
 					}
-					
+
 				}	
 			} else {
 				if(featuresTable[i][2] > 0.153846){
-					if(featuresTable[i][0] > 40){
+					if(featuresTable[i][0] > 40.0){
 						featuresTable[i][5] = 0.0;
 					} else {
 						if(featuresTable[i][2] > 0.4){
@@ -338,23 +356,40 @@ public class FeaturesExtractor {
 				}
 			}
 		}
-		
+
 	}
-	
+
 
 	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant
 	private void createFeaturesTable(){
 		featuresTable = new double[sentencesTable.size()][6];
 		extractNumberChars();
 		extractNumberStopwordsNorm();
+		extractNumberVerbsNorm();
 		extractRelativePosNorm();
+		extractSubjectWordsNorm();
+		determineRelevance();
 		for(int i = 0; i<sentencesTable.size(); i++){
-			System.out.println("KEY: " + i + ", VALUE: " + sentencesTable.get(i));
-			System.out.println("CHARS: " + featuresTable[i][0]);
-			System.out.println("STOPWORDS_NORM: " + featuresTable[i][1]);
-			System.out.println("REL_POS_NORM: " + featuresTable[i][3]);
-			System.out.println("SUBJ_WORDS_NORM: " + featuresTable[i][4] + "\n");
+//			System.out.println("KEY: " + i + ", VALUE: " + sentencesTable.get(i));
+//			System.out.println("CHARS: " + featuresTable[i][0]);
+//			System.out.println("STOPWORDS_NORM: " + featuresTable[i][1]);
+//			System.out.println("NUM_VERBS_NORM: " + featuresTable[i][2]);
+//			System.out.println("REL_POS_NORM: " + featuresTable[i][3]);
+//			System.out.println("SUBJ_WORDS_NORM: " + featuresTable[i][4]);
+			System.out.println("RELEVANCE: " + featuresTable[i][5] + "\n");
 		}
+	}
+
+	public int getMailLength(){
+		return sentencesTable.size();
+	}
+
+	public String getSentenceAtPosition(int positionSentence){
+		return sentencesTable.get(positionSentence);
+	}
+
+	public double getRelevanceAtPosition(int positionSentence){
+		return featuresTable[positionSentence][5];
 	}
 
 
