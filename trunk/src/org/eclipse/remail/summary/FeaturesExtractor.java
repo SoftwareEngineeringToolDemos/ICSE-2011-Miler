@@ -41,7 +41,8 @@ public class FeaturesExtractor {
 		String newContent = "";
 		for(int i=0; i<contentLines.length; i++){
 			if(contentLines[i] != null && contentLines[i].length() > 0){
-				if(contentLines[i].charAt(0) != '>'){
+				if(contentLines[i].charAt(0) != '>' && !(contentLines[i].startsWith("On ") && contentLines[i].endsWith(" wrote:")
+						&& i+1<contentLines.length && contentLines[i+1].charAt(0) == '>')){
 					newContent += contentLines[i];
 				}
 			}
@@ -302,6 +303,7 @@ public class FeaturesExtractor {
 	}
 
 
+	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant
 	private void determineRelevance(){
 		for(int i=0; i<featuresTable.length;i++){
 			if(featuresTable[i][1] > 0.142857){
@@ -370,7 +372,7 @@ public class FeaturesExtractor {
 		extractSubjectWordsNorm();
 		determineRelevance();
 		for(int i = 0; i<sentencesTable.size(); i++){
-//			System.out.println("KEY: " + i + ", VALUE: " + sentencesTable.get(i));
+			System.out.println("KEY: " + i + ", VALUE: " + sentencesTable.get(i));
 //			System.out.println("CHARS: " + featuresTable[i][0]);
 //			System.out.println("STOPWORDS_NORM: " + featuresTable[i][1]);
 //			System.out.println("NUM_VERBS_NORM: " + featuresTable[i][2]);

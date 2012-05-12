@@ -22,7 +22,7 @@ public class Summary {
 		FeaturesExtractor fe = new FeaturesExtractor(mail, tagger);
 		for(int i=0; i<fe.getMailLength(); i++){
 			if(fe.getRelevanceAtPosition(i) == 1.0)
-				summary += fe.getSentenceAtPosition(i) + "\n";
+				summary += fe.getSentenceAtPosition(i) + "\n\n";
 		}
 		return summary;
 	}
