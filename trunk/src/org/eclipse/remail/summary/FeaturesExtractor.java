@@ -336,7 +336,6 @@ public class FeaturesExtractor {
 							featuresTable[i][5] = 1.0;
 						}
 					}
-
 				}	
 			} else {
 				if(featuresTable[i][2] > 0.153846){
