@@ -17,7 +17,7 @@ public class FeaturesExtractor {
 	// Key: id sentence (from 0). Value: sentence.
 	private HashMap<Integer, String> sentencesTable;
 
-	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant
+	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant, Col 6: depth
 	private double[][] featuresTable;
 
 	private HashSet<String> stopwords;
@@ -269,8 +269,8 @@ public class FeaturesExtractor {
 			}
 			String[] taggedWords = tagger.tagString(s).split(" ");
 			for(int j=0; j<taggedWords.length; j++){
-				if(taggedWords[j].endsWith("/VBG") || taggedWords[j].endsWith("/VBD") || taggedWords[j].endsWith("/VBN") || taggedWords[j].endsWith("/VBP") ||
-						taggedWords[j].endsWith("/VBZ") || taggedWords[j].endsWith("/VB"))
+				if(taggedWords[j].endsWith("/VBG") || taggedWords[j].endsWith("/VBD") || taggedWords[j].endsWith("/VBN") || 
+						taggedWords[j].endsWith("/VBP") || taggedWords[j].endsWith("/VBZ") || taggedWords[j].endsWith("/VB"))
 					numVerbs++;
 			}
 			featuresTable[i][2] = (double)numVerbs/(double)taggedWords.length;
@@ -303,7 +303,7 @@ public class FeaturesExtractor {
 	}
 
 
-	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant
+	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant, Col 6: depth
 	private void determineRelevance(){
 		for(int i=0; i<featuresTable.length;i++){
 			if(featuresTable[i][1] > 0.142857){
@@ -311,29 +311,36 @@ public class FeaturesExtractor {
 					if(featuresTable[i][1] > 0.484848){
 						if(featuresTable[i][3] > 0.633333){
 							featuresTable[i][5] = 0.0;
+							featuresTable[i][6] = 4.0;
 						} else {
 							featuresTable[i][5] = 1.0;
+							featuresTable[i][6] = 4.0;
 						}
 					} else {
 						featuresTable[i][5] = 1.0;
+						featuresTable[i][6] = 3.0;
 					}
 				} else {
-
 					if(featuresTable[i][3] > 0.756757){
 						featuresTable[i][5] = 0.0;
+						featuresTable[i][6] = 3.0;
 					} else {
 						if(featuresTable[i][1] > 0.555556){
 							if(featuresTable[i][3] > 0.45){
 								featuresTable[i][5] = 0.0;
+								featuresTable[i][6] = 5.0;
 							} else {
 								if(featuresTable[i][3] > 0.153856){
 									featuresTable[i][5] = 1.0;
+									featuresTable[i][6] = 6.0;
 								} else {
 									featuresTable[i][5] = 0.0;
+									featuresTable[i][6] = 6.0;
 								}
 							}
 						} else {
 							featuresTable[i][5] = 1.0;
+							featuresTable[i][6] = 4.0;
 						}
 					}
 				}	
@@ -341,19 +348,24 @@ public class FeaturesExtractor {
 				if(featuresTable[i][2] > 0.153846){
 					if(featuresTable[i][0] > 40.0){
 						featuresTable[i][5] = 0.0;
+						featuresTable[i][6] = 3.0;
 					} else {
 						if(featuresTable[i][2] > 0.4){
 							featuresTable[i][5] = 0.0;
+							featuresTable[i][6] = 4.0;
 						} else {
 							if(featuresTable[i][3] > 0.653061){
 								featuresTable[i][5] = 0.0;
+								featuresTable[i][6] = 5.0;
 							} else {
 								featuresTable[i][5] = 1.0;
+								featuresTable[i][6] = 5.0;
 							}
 						}
 					}
 				} else {
 					featuresTable[i][5] = 0.0;
+					featuresTable[i][6] = 2.0;
 				}
 			}
 		}
@@ -361,9 +373,9 @@ public class FeaturesExtractor {
 	}
 
 
-	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant
+	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant, Col 6: depth
 	private void createFeaturesTable(){
-		featuresTable = new double[sentencesTable.size()][6];
+		featuresTable = new double[sentencesTable.size()][7];
 		extractNumberChars();
 		extractNumberStopwordsNorm();
 		extractNumberVerbsNorm();
@@ -377,7 +389,8 @@ public class FeaturesExtractor {
 //			System.out.println("NUM_VERBS_NORM: " + featuresTable[i][2]);
 //			System.out.println("REL_POS_NORM: " + featuresTable[i][3]);
 //			System.out.println("SUBJ_WORDS_NORM: " + featuresTable[i][4]);
-			System.out.println("RELEVANCE: " + featuresTable[i][5] + "\n");
+			System.out.println("RELEVANCE: " + featuresTable[i][5]);
+			System.out.println("DEPTH: " + featuresTable[i][6] + "\n");
 		}
 	}
 
@@ -391,6 +404,10 @@ public class FeaturesExtractor {
 
 	public double getRelevanceAtPosition(int positionSentence){
 		return featuresTable[positionSentence][5];
+	}
+	
+	public double getDepthAtPosition(int positionSentence){
+		return featuresTable[positionSentence][6];
 	}
 
 

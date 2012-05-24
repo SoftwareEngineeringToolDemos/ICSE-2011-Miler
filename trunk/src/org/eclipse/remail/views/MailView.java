@@ -329,7 +329,7 @@ public class MailView extends ViewPart {
 					MailContentView mw = new MailContentView();
 					mw.setMail(mail);
 					MailSummaryView sw = new MailSummaryView();
-					sw.setMail(mail);
+					sw.setMailSummary(mail);
 				}
 			}
 		};
