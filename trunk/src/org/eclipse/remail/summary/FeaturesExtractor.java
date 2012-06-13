@@ -34,15 +34,18 @@ public class FeaturesExtractor {
 	}
 
 
-
-
+	/**
+	 * Create a table storing the id (integer starting from 0) of a sentence and 
+	 * the sentence itself (String).
+	 * @param fullContent The content of the email.
+	 */
 	private void createSentencesTable(String fullContent){
 		String[] contentLines = fullContent.split("\n");
 		String newContent = "";
 		for(int i=0; i<contentLines.length; i++){
 			if(contentLines[i] != null && contentLines[i].length() > 0){
 				if(contentLines[i].charAt(0) != '>' && !(contentLines[i].startsWith("On ") && contentLines[i].endsWith(" wrote:")
-						&& i+1<contentLines.length && contentLines[i+1].charAt(0) == '>')){
+						&& i+1<contentLines.length && contentLines[i+1].length() > 0 && contentLines[i+1].charAt(0) == '>')){
 					newContent += contentLines[i];
 				}
 			}
@@ -59,6 +62,10 @@ public class FeaturesExtractor {
 	}
 
 
+	/**
+	 * For each sentence, compute how many characters it is composed of 
+	 * and insert this value in the column 0 of the Features table.
+	 */
 	private void extractNumberChars(){
 		for(int i=0; i<featuresTable.length; i++){
 			featuresTable[i][0] = (double)sentencesTable.get(i).length();
@@ -66,6 +73,9 @@ public class FeaturesExtractor {
 	}
 
 
+	/**
+	 * Add to the set stopwords all the English stopwords.
+	 */
 	private void createStopwords(){
 		stopwords = new HashSet<String>();
 		stopwords.add("a");
@@ -197,6 +207,11 @@ public class FeaturesExtractor {
 	}
 
 
+	/**
+	 * @param stringToRemoveEnding The String where the given char must be removed.
+	 * @param endingChar The ending character to be removed from the String.
+	 * @return The initial String without the given character.
+	 */
 	private String removePunctuation(String stringToRemoveEnding, String endingChar){
 		String[] ws = stringToRemoveEnding.split(".");
 		String w = "";
@@ -207,6 +222,10 @@ public class FeaturesExtractor {
 	}
 
 
+	/**
+	 * @param wordToNormalize A word where the ending characters (like ".", ",", "?", "!", ":", ";", "(", ")", "[", "]", "{", "}", ".")
+	 * @return The word without the disturbing ending characters.
+	 */
 	private String normalizeWord(String wordToNormalize){
 		while(wordToNormalize.endsWith(".") || wordToNormalize.endsWith(",") || wordToNormalize.endsWith("?") || wordToNormalize.endsWith("!") || 
 				wordToNormalize.endsWith(":") || wordToNormalize.endsWith(";") || wordToNormalize.endsWith("(") || wordToNormalize.endsWith(")") ||
@@ -241,6 +260,10 @@ public class FeaturesExtractor {
 	}
 
 
+	/**
+	 * For each sentence, compute normalized number of stop-words the sentence contains 
+	 * and insert this value in the column 0 of the Features table.
+	 */
 	private void extractNumberStopwordsNorm(){
 		for(int i=0; i<sentencesTable.size(); i++){
 			String[] words = sentencesTable.get(i).split(" ");
@@ -255,6 +278,11 @@ public class FeaturesExtractor {
 		}
 	}
 
+	
+	/**
+	 * For each sentence, compute normalized number of verbs the sentence contains 
+	 * and insert this value in the column 0 of the Features table.
+	 */
 	private void extractNumberVerbsNorm(){
 		for(int i=0; i<sentencesTable.size(); i++){
 			int numVerbs = 0;
@@ -265,8 +293,9 @@ public class FeaturesExtractor {
 				if(!token.contains("0") && !token.contains("1") && !token.contains("2") && !token.contains("3") && 
 						!token.contains("4") && !token.contains("5") && !token.contains("6") && !token.contains("7") && 
 						!token.contains("8") && !token.contains("9"))
-					s += token;
+					s = s + token + " ";
 			}
+			System.out.println("S:    " + s);
 			String[] taggedWords = tagger.tagString(s).split(" ");
 			for(int j=0; j<taggedWords.length; j++){
 				if(taggedWords[j].endsWith("/VBG") || taggedWords[j].endsWith("/VBD") || taggedWords[j].endsWith("/VBN") || 
@@ -278,12 +307,21 @@ public class FeaturesExtractor {
 	}
 
 
+	/**
+	 * For each sentence, compute normalized relative position of the sentence in the mail
+	 * and insert this value in the column 0 of the Features table.
+	 */
 	private void extractRelativePosNorm(){
 		for(int i=0; i<sentencesTable.size(); i++){
 			featuresTable[i][3] = (double)i/(double)sentencesTable.size();
 		}
 	}
 
+	
+	/**
+	 * For each sentence, compute normalized number of words of the thread subject the sentence contains
+	 * and insert this value in the column 0 of the Features table.
+	 */
 	private void extractSubjectWordsNorm(){
 		String[] subj = subject.split(" ");
 		for(int k=0; k<subj.length; k++)
@@ -303,6 +341,10 @@ public class FeaturesExtractor {
 	}
 
 
+	/**
+	 * For each sentence, compute the relevance according to some machine learning conditions
+	 * and insert this value in the column 0 of the Features table.
+	 */
 	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant, Col 6: depth
 	private void determineRelevance(){
 		for(int i=0; i<featuresTable.length;i++){
@@ -373,7 +415,10 @@ public class FeaturesExtractor {
 	}
 
 
-	// Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant, Col 6: depth
+	/**
+	 * Create the table with all the values of the features for each sentence inserted.
+	 * Col 0: chars, Col 1: num_stopw_norm, Col 2: num_verbs_norm, Col 3: rel_pos_norm, Col 4: subj_words_norm , Col 5: relevant, Col 6: depth
+	 */
 	private void createFeaturesTable(){
 		featuresTable = new double[sentencesTable.size()][7];
 		extractNumberChars();
@@ -398,14 +443,29 @@ public class FeaturesExtractor {
 		return sentencesTable.size();
 	}
 
+	/**
+	 * @param positionSentence Id/Position of the sentence in the table.
+	 * @return The sentence in String format.
+	 */
 	public String getSentenceAtPosition(int positionSentence){
 		return sentencesTable.get(positionSentence);
 	}
 
+	
+	/**
+	 * @param positionSentence Id/Position of the sentence in the table.
+	 * @return The relevance of that sentence.
+	 */
 	public double getRelevanceAtPosition(int positionSentence){
 		return featuresTable[positionSentence][5];
 	}
 	
+	
+	/**
+	 * @param positionSentence Id/Position of the sentence in the table.
+	 * @return The condition-depth where the relevance of the sentence 
+	 *         is established in the method determineRelevance()
+	 */
 	public double getDepthAtPosition(int positionSentence){
 		return featuresTable[positionSentence][6];
 	}

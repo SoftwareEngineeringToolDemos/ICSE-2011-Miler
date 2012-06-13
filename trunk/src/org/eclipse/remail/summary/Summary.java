@@ -5,14 +5,14 @@ import org.eclipse.remail.Mail;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class Summary {
-	
+
 	private Mail mail;
 	private String summary;
 	private String shortSummary;
 	private int lengthSummary;
 	private MaxentTagger tagger;
 	private FeaturesExtractor extractor; 
-	
+
 	public Summary(Mail mailToSumm, MaxentTagger taggerMail){
 		mail = mailToSumm;
 		tagger = taggerMail;
@@ -21,19 +21,27 @@ public class Summary {
 		summary = summUpMail();
 		shortSummary = makeShortSummary();
 	}
-	
-	
+
+
+	/**
+	 * @return The summary of the mail., composed of the sentences with relevance=1
+	 **/
 	private String summUpMail(){
 		String summary = "";	
 		for(int i=0; i<extractor.getMailLength(); i++){
-			if(extractor.getRelevanceAtPosition(i) == 1.0)
+			if(extractor.getRelevanceAtPosition(i) == 1.0){
 				lengthSummary++;
 				summary += extractor.getSentenceAtPosition(i) + "\n\n";
+			}
 		}
 		return summary;
 	}
-	
-	
+
+
+	/**
+	 * @return The short version of the summary, if the email is more than 4 sentences long.
+	 * 		   Otherwise the summary itself.
+	 */
 	private String makeShortSummary(){
 		if(extractor.getMailLength() < 4){
 			return summary;
@@ -55,21 +63,25 @@ public class Summary {
 					i++;
 				}
 			}
-			return shortSummary;
+			if(lengthShortSummary > 0){
+				return shortSummary;
+			} else {
+				return summary;
+			}
 		}
 	}
-	
-	
+
+
 	public String getSummary(){
 		return summary;
 	}
-	
-	
+
+
 	public String getShortSummary(){
 		return shortSummary;
 	}
-	
-	
-	
+
+
+
 
 }

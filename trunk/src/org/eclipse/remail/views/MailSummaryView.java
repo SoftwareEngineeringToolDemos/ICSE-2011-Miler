@@ -52,6 +52,7 @@ public class MailSummaryView extends ViewPart {
 			e.printStackTrace();
 		}
 
+		// button to visualize the short version of the summary
 		shorten = new Button(container, SWT.PUSH);
 		shorten.setText("Shorten");
 		shorten.addSelectionListener(new SelectionAdapter() {
