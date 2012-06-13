@@ -295,7 +295,6 @@ public class FeaturesExtractor {
 						!token.contains("8") && !token.contains("9"))
 					s = s + token + " ";
 			}
-			System.out.println("S:    " + s);
 			String[] taggedWords = tagger.tagString(s).split(" ");
 			for(int j=0; j<taggedWords.length; j++){
 				if(taggedWords[j].endsWith("/VBG") || taggedWords[j].endsWith("/VBD") || taggedWords[j].endsWith("/VBN") || 
