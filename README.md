@@ -8,7 +8,7 @@ This repository _is not_ the original repository for this tool.Here are some lin
 * <a href="https://www.youtube.com/watch?v=MspFmsA1p_A">A Video of the Tool.</a>
 * <a href="https://code.google.com/p/r-email/downloads/list">The Original Download Link.</a>
 
-In this repository, for ExampleTool you will find:
+In this repository, for Miler you will find:
 * :white_check_mark: <a href="https://code.google.com/p/r-email/source/checkout">Source code (available).</a>
 * :white_check_mark: <a href="https://code.google.com/p/r-email/downloads/list">The original tool (available).</a>
 
