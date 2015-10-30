@@ -4,8 +4,8 @@ This repository contains information related to the tool Miler presented in ICSE
 The tool was originally presented in <a href="http://dl.acm.org.prox.lib.ncsu.edu/citation.cfm?id=1985793.1985984&coll=DL&dl=GUIDE&CFID=722556246&CFTOKEN=87998291">this paper.</a>
 
 This repository _is not_ the original repository for this tool.Here are some links to the original project:
-* <a href="https://code.google.com/p/r-email/">Original-Project-Page.</a>
-* <a href="https://www.youtube.com/watch?v=MspFmsA1p_A">Original-demo-link.</a>
+* <a href="https://code.google.com/p/r-email/">The Original Project Page.</a>
+* <a href="https://www.youtube.com/watch?v=MspFmsA1p_A">A Video of the Tool.</a>
 
 In this repository, for ExampleTool you will find:
 * :x: Source code (not available)
