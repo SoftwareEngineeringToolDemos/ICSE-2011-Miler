@@ -6,6 +6,7 @@ The tool was originally presented in <a href="http://dl.acm.org.prox.lib.ncsu.ed
 This repository _is not_ the original repository for this tool.Here are some links to the original project:
 * <a href="https://code.google.com/p/r-email/">The Original Project Page, including source code.</a>
 * <a href="https://www.youtube.com/watch?v=MspFmsA1p_A">A Video of the Tool.</a>
+* <a href="https://code.google.com/p/r-email/downloads/list">The Original Download Link.</a>
 
 In this repository, for ExampleTool you will find:
 * :white_check_mark: <a href="https://code.google.com/p/r-email/source/checkout">Source code (available).</a>
