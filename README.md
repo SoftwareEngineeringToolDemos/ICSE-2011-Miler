@@ -9,7 +9,7 @@ This repository _is not_ the original repository for this tool.Here are some lin
 
 In this repository, for ExampleTool you will find:
 * :white_check_mark: <a href="https://code.google.com/p/r-email/source/checkout">Source code (available)
-* :white_check_mark: Executable tool (not available)
+* :x: Executable tool (not available)
 
 I thank Dr.Alberto Bacchelli and Mr.Vitezslav Humpa for helping me with the project.
 
