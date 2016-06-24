@@ -9,8 +9,9 @@ This repository _is not_ the original repository for this tool.Here are some lin
 * <a href="https://code.google.com/p/r-email/downloads/list">The Original Download Link.</a>
 
 In this repository, for Miler you will find:
-* :white_check_mark: <a href="https://code.google.com/p/r-email/source/checkout">Source code (available).</a>
-* :white_check_mark: <a href="https://code.google.com/p/r-email/downloads/list">The original tool (available).</a>
+* :x: Source code (not available).
+* :x: The original tool (not available).
+* :x: Virtual machine containing tool (not available)
 
 I thank Dr.Alberto Bacchelli and Mr.Vitezslav Humpa for helping me with the project.
 
