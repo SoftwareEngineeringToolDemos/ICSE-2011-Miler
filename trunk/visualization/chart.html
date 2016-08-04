@@ -1,0 +1,84 @@
+<!DOCTYPE html> 
+<html lang="en">
+<!--This script is used to draws different charts -->
+
+<head>
+<meta  charset="UTF-8"> 
+<link rel="stylesheet" type="text/css" href="style.css" /> 
+
+<title>Chart</title>
+<!-- Import JQuery -->
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<!-- Import the class used to connect to couchdb -->
+<script type="text/javascript" src="couchdb.js"></script>
+<!-- Import the class used to store email -->
+<script type="text/javascript" src="mail.js"></script>
+<!-- Import the functions used to plot a bar-chart -->
+<script type="text/javascript" src="barchart.js"></script>
+<!-- Import the functions used to plot a line-chart -->
+<script type="text/javascript" src="linechart.js"></script>
+<!-- Import the functions used to create data -->
+<script type="text/javascript" src="datacreator.js"></script>
+<!-- Impot the d3 library to make nice charts -->
+<script type="text/javascript" src="./mbostock-d3/d3.js"></script>
+
+<!-- Contains the function which should be called to make the chart -->
+<script type="text/javascript">
+/* Function to creates the chart, parameters:
+ *	-classname: the class to search
+ *	-server: the server where couchdb is
+ *	-port: the server's port
+ *	-database: the name of the database
+ *	-searchMethod: the searchMethod to use
+ *	-fun: (optional) the function to be used to plot the data
+ */
+ 
+ var dataStored=[];
+ var maxStoredValue=0;
+ var chartShown="bar"
+
+function plotChartForClass(classname, server, port, database, searchMethod, fun) {
+	fun = typeof(fun) != 'undefined' ? fun : createDataForMonthBarChart;
+	
+	var conn = new CouchDBConnect(server, port, database, searchMethod)
+	conn.queryForClass(classname, dataManagement)
+}
+
+/* the function that takes care of re-sizing
+ * the chart
+ */
+window.onresize = function() {
+	//alert("Resize all the things! ")
+	if(chartShown=="bar"){
+		   createBarChart(dataStored, maxStoredValue)
+	}
+	else if(chartShown=="line"){
+		   createLineChart(dataStored, maxStoredValue)
+	}
+}
+
+//just a test function
+function testInBrowser(){
+	plotChartForClass("Cache", "localhost", 8088, ['at(remail)org_freenetproject_devl'], "casesensitive")
+}
+</script>
+
+</head>
+<body>
+	
+	<!-- All the type of charts -->
+	<header>
+	<nav>
+		<span onclick="createBarChart(dataStored, maxStoredValue)">Bars</span>
+		<span onclick="createLineChart(dataStored, maxStoredValue)">Lines</span>
+	</nav>
+	</header>
+	
+	<!-- Where the chart will be drawn -->
+	<div class="chartContainer">
+    </div>
+    <!-- A container where mails will be stored -->
+    <div id="mails" style="visibility: hidden; ">
+    </div>
+</body>
+</html>

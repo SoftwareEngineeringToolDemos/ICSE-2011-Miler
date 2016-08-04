@@ -1,0 +1,47 @@
+#summary how to write a configuration file for POP
+#labels Phase-Deploy
+
+= Introduction =
+
+This page contains the information relative to the configuration files used by the POP-client to retrieve the emails from an email account.
+
+The file you need to modify is _mailinglist.config_, which you sould find in the REmail's archive you've downloaded. 
+
+
+= An example =
+
+Your configuration file should looks like the following:
+{{{
+# File containing all the mailing list used
+
+#each account has an username, a password, the server location and its port
+#moreover it has a list of mailing list
+ accounts:
+#an example
+    - username: remail2@sback.it
+      password: anotherPass
+      server:   pop.gmail.com
+      port:     995
+      remail-server: http://localhost
+      remail-port: 5984
+      mailing_lists:
+        - name: qualcosa@pincopallino.it
+        - name: qualcosaltro@interestingProjects.com
+    - username: remail.again@sback.it
+      password: Password
+      server:   pop.gmail.com
+      port:     995
+      remail-server: http://localhost
+      remail-port: 5984
+      mailing_lists:
+        - name: foo@bar.ch
+        - name: qualcosaltro@interestingProjects.com
+}}}
+where:
+ * *username* is the username you use to connect to your email account
+ * *password* is the password of the email account
+ * *server* is the pop mail-server of your mail account
+ * *port* is the port of the server
+ * *remail-server* is the server where remail is intalled
+ * *remail-port* is the port of the remail server
+ * *mailing_lists* is a list of mailing list

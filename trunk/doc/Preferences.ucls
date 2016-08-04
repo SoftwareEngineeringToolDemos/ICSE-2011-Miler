@@ -1,0 +1,84 @@
+<class-diagram version="0.9.86" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.preferences.PreferenceConstants" 
+    project="REmail" file="/REmail/src/org/eclipse/remail/preferences/PreferenceConstants.java" binary="false">    
+    <position x="200" y="156" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.preferences.PreferencePane" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/preferences/PreferencePane.java" binary="false">    
+    <position x="277" y="103" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.preferences.PreferencePaneSources" 
+    project="REmail" file="/REmail/src/org/eclipse/remail/preferences/PreferencePaneSources.java" binary="false">    
+    <position x="409" y="103" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.preferences.PreferencePaneMbox" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/preferences/PreferencePaneMbox.java" binary="false">    
+    <position x="350" y="155" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.preferences.PreferencePanePostgre" 
+    project="REmail" file="/REmail/src/org/eclipse/remail/preferences/PreferencePanePostgre.java" binary="false">    
+    <position x="488" y="155" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.preferences.PreferencePaneFilters" 
+    project="REmail" file="/REmail/src/org/eclipse/remail/preferences/PreferencePaneFilters.java" binary="false">    
+    <position x="259" y="211" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.preferences.FilePathEditor" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/preferences/FilePathEditor.java" binary="false">    
+    <position x="506" y="208" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="org.eclipse.remail.preferences.FilterListEditor" project="REmail" 
+    file="/REmail/src/org/eclipse/remail/preferences/FilterListEditor.java" binary="false">    
+    <position x="392" y="215" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <dependency>    
+    <source project="REmail" name="org.eclipse.remail.preferences.PreferencePaneFilters" 
+      file="/REmail/src/org/eclipse/remail/preferences/PreferencePaneFilters.java" binary="false"/>    
+    <target project="REmail" name="org.eclipse.remail.preferences.FilterListEditor" 
+      file="/REmail/src/org/eclipse/remail/preferences/FilterListEditor.java" binary="false"/>  
+  </dependency>  
+  <dependency>    
+    <source project="REmail" name="org.eclipse.remail.preferences.PreferencePaneMbox" 
+      file="/REmail/src/org/eclipse/remail/preferences/PreferencePaneMbox.java" binary="false"/>    
+    <target project="REmail" name="org.eclipse.remail.preferences.FilePathEditor" 
+      file="/REmail/src/org/eclipse/remail/preferences/FilePathEditor.java" binary="false"/>  
+  </dependency>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false"/>    
+    <operations public="false" package="false" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

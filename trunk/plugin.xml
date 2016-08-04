@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
+         <command
+               commandId="org.eclipse.remail.sendEmail"
+               icon="icons/remail.png"
+               id="org.eclipse.remail.menus.SendEmailsMenu"
+               label="Send Email about this"
+               style="push">
+            <visibleWhen>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.eclipse.jdt.ui.navigator.ProjectExplorer">
+         <command
+               commandId="org.eclipse.remail.sendEmail"
+               icon="icons/remail.png"
+               id="org.eclipse.remail.menus.SendEmailsMenu2"
+               label="Send Email about this"
+               style="push">
+            <visibleWhen>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:#CompilationUnitEditorContext?after=additions">
+         <command
+               commandId="org.eclipse.remail.sendCodeByEmail"
+               icon="icons/remail.png"
+               id="org.eclipse.remail.sendCodeByEmail"
+               label="Send code by Email"
+               style="push">
+            <visibleWhen>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.eclipse.remail.SingleSearchClass"
+            name="Search">
+      </command>
+      <command
+            id="org.eclipse.remail.SingleSearchProject"
+            name="Search">
+      </command>
+      <command
+            id="org.eclipse.remail.SingleSearchPackage"
+            name="Search">
+      </command>
+      <command
+            id="org.eclipse.remail.sendEmail"
+            name="sendEmail">
+      </command>
+      <command
+            id="org.eclipse.remail.sendCodeByEmail"
+            name="SendCodeByEMail">
+      </command>
+   </extension>
+   <extension
+         id="lars"
+         name="lars"
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.eclipse.remail.SelectionProcessor"
+            commandId="org.eclipse.remail.SingleSearchClass">
+      </handler>
+      <handler
+            class="org.eclipse.remail.SelectionProcessor"
+            commandId="org.eclipse.remail.SingleSearchProject">
+      </handler>
+      <handler
+            class="org.eclipse.remail.SelectionProcessor"
+            commandId="org.eclipse.remail.SingleSearchPackage">
+      </handler>
+      <handler
+            class="org.eclipse.remail.menus.SendEmailsMenu"
+            commandId="org.eclipse.remail.sendEmail">
+      </handler>
+      <handler
+            class="org.eclipse.remail.menus.SendCodeByEmailsMenu"
+            commandId="org.eclipse.remail.sendCodeByEmail">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="org.eclipse.emailrecommender.category1"
+            name="REmail">
+      </category>
+      <view
+            category="org.eclipse.emailrecommender.category1"
+            class="org.eclipse.remail.views.MailView"
+            icon="icons/remail.png"
+            id="org.eclipse.emailrecommender.MailView"
+            name="Emails"
+            restorable="true">
+      </view>
+      <view
+            category="org.eclipse.emailrecommender.category1"
+            class="org.eclipse.remail.views.MailContentView"
+            icon="icons/remail.png"
+            id="org.eclipse.emailrecommender.MailContentView"
+            name="Email Content"
+            restorable="true">
+      </view>
+      <view
+            category="org.eclipse.emailrecommender.category1"
+            class="org.eclipse.remail.views.MailSummaryView"
+            icon="icons/remail.png"
+            id="org.eclipse.emailrecommender.MailSummaryView"
+            name="Email Summary"
+            restorable="true">
+      </view>
+      <view
+            category="org.eclipse.emailrecommender.category1"
+            class="org.eclipse.remail.views.MailWriter"
+            icon="icons/remail.png"
+            id="org.eclipse.emailrecommender.MailWriter"
+            name="Email Writer"
+            restorable="false">
+      </view>
+      <view
+            category="org.eclipse.emailrecommender.category1"
+            class="org.eclipse.remail.views.VisualizationView"
+            icon="icons/remail.png"
+            id="org.eclipse.emailrecommender.VisualizationView"
+            name="Emails Visualization"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.eclipse.remail.preferences.PreferencePane"
+            id="org.eclipse.remail.preferences.PreferencePane"
+            name="REmail">
+      </page>
+      <page
+            category="org.eclipse.remail.preferences.PreferencePane"
+            class="org.eclipse.remail.preferences.PreferencePaneFilters"
+            id="org.eclipse.remail.preferences.PreferencePaneFilters"
+            name="Message Filters">
+      </page>
+      <page
+            category="org.eclipse.remail.preferences.PreferencePane"
+            class="org.eclipse.remail.preferences.PreferencePaneCouchdb"
+            id="org.eclipse.remail.preferences.PreferencePaneCouchdb"
+            name="CouchDB">
+      </page>
+      <page
+            category="org.eclipse.remail.preferences.PreferencePane"
+            class="org.eclipse.remail.preferences.PreferencePaneEmailUser"
+            id="org.eclipse.remail.preferences.PreferencePaneEmailUser"
+            name="SMTP User Account">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipse.remail.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+         <decorator
+            objectClass="org.eclipse.core.resources.IResource"
+            adaptable="true"
+            label="REmail"
+            state="true"
+            lightweight= "true"
+            quadrant = "BOTTOM_RIGHT"
+            class="org.eclipse.remail.decorators.REmailLightweightDecorator"
+            id="org.eclipse.remail.decorators.REmailLightweightDecorator">
+         <description>
+            %DecoratorStandard.desc
+         </description>
+    </decorator>
+   </extension>
+   <extension
+         id="remailmarker"
+         name="Remail Marker"
+         point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.taskmarker"/>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+<!--   <extension point="org.eclipse.ui.editorActions"> 
+<editorContribution 
+      id="org.eclipse.remail.markerInit" 
+   targetID="org.eclipse.jdt.ui.CompilationUnitEditor">
+   <action
+         id="org.eclipse.remail.editor.action1" 
+         label="Mark classes" 
+         icon="icons/remail.png"
+         tooltip="REmail: Mark discussed classes"
+      toolbarPath="Normal/additions"
+         class="org.eclipse.remail.editor.markerInitActionDelegate"> 
+      </action> 
+   </editorContribution> 
+</extension>-->
+   <extension
+         point="org.eclipse.jdt.ui.javaEditorTextHovers">
+      <hover
+            activate="false"
+            class="org.eclipse.remail.editor.MailHover"
+            description="Cool Hover"
+            id="REmail.hover1"
+            label="Hooover">
+      </hover>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            adaptable="false"
+            class="org.eclipse.remail.properties.RemailProperties"
+            icon="icons/remail.png"
+            id="org.eclipse.remail.properties.RemailProperties"
+            name="REmail Properties">
+      </page>
+   </extension>
+</plugin>
